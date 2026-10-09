@@ -199,3 +199,56 @@ html[lang="vi"] .rsvp .script-title{
   }
   .polaroid-board.two-photos .p2{margin-top:26px}
 }
+
+
+/* RSVP contrast + Vietnamese typography fix */
+.rsvp-card,
+.rsvp-card label,
+.rsvp-card legend,
+.rsvp-card span,
+.rsvp-card p{
+  color:var(--ink);
+}
+.rsvp-card input,
+.rsvp-card select,
+.rsvp-card textarea{
+  color:var(--ink);
+  background:#fffdfa;
+  border-color:#d8b7a2;
+}
+.rsvp-card input::placeholder,
+.rsvp-card textarea::placeholder{
+  color:#9a756d;
+  opacity:1;
+}
+.rsvp-card select option{
+  color:var(--ink);
+  background:#fffdfa;
+}
+.choice span{
+  color:var(--ink);
+  background:#fffdfa;
+}
+.choice input:checked + span{
+  background:var(--red);
+  color:#fff;
+  border-color:var(--red);
+}
+.submit-btn,
+.submit-btn span{
+  color:#fff !important;
+}
+.rsvp .section-heading .script-title{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-style:italic;
+  font-weight:500;
+  letter-spacing:.01em;
+  color:var(--ivory);
+  font-size:clamp(44px,7vw,64px);
+}
+.rsvp .section-heading h2{
+  color:var(--ivory);
+}
+.form-status{
+  color:#8e5f59 !important;
+}
