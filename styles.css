@@ -1,8 +1,8 @@
 :root{
-  --red:#b6322f;
-  --red-dark:#8e2422;
-  --red-deep:#761b1a;
-  --red-soft:#d96d62;
+  --red:#98131b;
+  --red-dark:#7d0e16;
+  --red-deep:#650911;
+  --red-soft:#c94b4c;
   --ivory:#fbf3e8;
   --paper:#fff8ee;
   --cream:#f1dfc8;
@@ -19,7 +19,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .red-paper{position:relative;background:
  radial-gradient(circle at 20% 15%,rgba(255,255,255,.07),transparent 28%),
  linear-gradient(135deg,rgba(255,255,255,.035) 0 1px,transparent 1px 6px),
- var(--red);color:var(--ivory)}
+ linear-gradient(150deg,#9f151d 0%,#8c1018 52%,#710b12 100%);color:var(--ivory)}
 .paper{background:
  radial-gradient(circle at 15% 15%,rgba(151,93,67,.045),transparent 25%),
  repeating-linear-gradient(0deg,rgba(115,72,55,.018) 0 1px,transparent 1px 4px),
@@ -31,7 +31,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .flower{position:absolute;color:#eadbc6;opacity:.78;z-index:-1}
 .flower-a{width:250px;left:-70px;top:70px;transform:rotate(-14deg)}
 .flower .petals{fill:#f5ead7;stroke:#d9c9ae;stroke-width:.8}
-.hero-card{position:relative;width:min(100%,610px);min-height:520px;padding:85px 56px 58px;text-align:center;background:linear-gradient(165deg,#c9473d,#ae2d2b 55%,#a12927);clip-path:polygon(50% 0,100% 25%,100% 100%,0 100%,0 25%);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hero-card{position:relative;width:min(100%,610px);min-height:520px;padding:85px 56px 58px;text-align:center;background:linear-gradient(165deg,#b92429,#98131b 55%,#7d0e16);clip-path:polygon(50% 0,100% 25%,100% 100%,0 100%,0 25%);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center}
 .eyebrow,.section-kicker{letter-spacing:.32em;font-size:12px;font-weight:600}
 .hero h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(64px,14vw,112px);line-height:.68;margin:22px 0 24px;display:grid;gap:6px}
 .hero h1 b{font-weight:400;font-style:italic;font-size:.7em;color:#f3c9b9}
@@ -112,3 +112,24 @@ button,a{-webkit-tap-highlight-color:transparent}
   .event-card,.polaroid,.rsvp-card{animation:fadeUp .7s ease both;animation-timeline:view();animation-range:entry 10% cover 30%}
   @keyframes fadeUp{from{opacity:.2;transform:translateY(18px)}to{opacity:1}}
 }
+
+/* Invitation-v3 refinement: preserve the deep red/ivory printed-card look */
+.event-card,.event-card *{color:var(--ink)}
+.event-card .pin{color:var(--red)}
+.event-date{font-weight:500}
+.event-meta strong{font-weight:600}
+.events:before,.events:after{
+  content:"";position:absolute;pointer-events:none;z-index:0;width:180px;height:260px;
+  opacity:.92;background-repeat:no-repeat;background-size:contain;
+  filter:drop-shadow(0 12px 15px rgba(58,5,10,.18));
+}
+.events:before{
+  left:-42px;top:18px;transform:rotate(-9deg);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 260'%3E%3Cg fill='none' stroke='%23b39a73' stroke-width='2'%3E%3Cpath d='M90 260C88 180 88 112 116 42'/%3E%3Cpath d='M94 187C60 172 38 143 29 112'/%3E%3Cpath d='M101 145C137 130 151 103 157 77'/%3E%3C/g%3E%3Cg fill='%23fff5e8' stroke='%23d9c4a5' stroke-width='1.4'%3E%3Cellipse cx='29' cy='104' rx='28' ry='15' transform='rotate(-22 29 104)'/%3E%3Cellipse cx='50' cy='88' rx='27' ry='14' transform='rotate(42 50 88)'/%3E%3Cellipse cx='155' cy='70' rx='30' ry='16' transform='rotate(-18 155 70)'/%3E%3Cellipse cx='133' cy='52' rx='28' ry='14' transform='rotate(45 133 52)'/%3E%3C/g%3E%3C/svg%3E");
+}
+.events:after{
+  right:-50px;bottom:18px;transform:rotate(168deg);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 260'%3E%3Cg fill='none' stroke='%23b39a73' stroke-width='2'%3E%3Cpath d='M90 260C88 180 88 112 116 42'/%3E%3Cpath d='M94 187C60 172 38 143 29 112'/%3E%3Cpath d='M101 145C137 130 151 103 157 77'/%3E%3C/g%3E%3Cg fill='%23fff5e8' stroke='%23d9c4a5' stroke-width='1.4'%3E%3Cellipse cx='29' cy='104' rx='28' ry='15' transform='rotate(-22 29 104)'/%3E%3Cellipse cx='50' cy='88' rx='27' ry='14' transform='rotate(42 50 88)'/%3E%3Cellipse cx='155' cy='70' rx='30' ry='16' transform='rotate(-18 155 70)'/%3E%3Cellipse cx='133' cy='52' rx='28' ry='14' transform='rotate(45 133 52)'/%3E%3C/g%3E%3C/svg%3E");
+}
+.event-grid,.section-heading{position:relative;z-index:1}
+@media(max-width:640px){.events:before,.events:after{width:125px;height:185px;opacity:.8}}
