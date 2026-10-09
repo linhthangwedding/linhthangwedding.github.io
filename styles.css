@@ -1,7 +1,7 @@
 :root{
-  --red:#98131b;
-  --red-dark:#7d0e16;
-  --red-deep:#650911;
+  --red:#8b1018;
+  --red-dark:#700a12;
+  --red-deep:#56070d;
   --red-soft:#c94b4c;
   --ivory:#fbf3e8;
   --paper:#fff8ee;
@@ -133,3 +133,24 @@ button,a{-webkit-tap-highlight-color:transparent}
 }
 .event-grid,.section-heading{position:relative;z-index:1}
 @media(max-width:640px){.events:before,.events:after{width:125px;height:185px;opacity:.8}}
+
+/* v5: force correct contrast, Vietnamese font support, cleaner 2-photo layout */
+.event-card,.event-card *{color:var(--ink)!important}
+.event-card .event-date,.event-card .event-time,.event-card .event-type,.event-card .event-meta{opacity:1!important;text-shadow:none!important}
+html[lang="vi"] .events .script-title,
+html[lang="vi"] .rsvp .script-title{
+  font-family:"Cormorant Garamond",serif!important;
+  font-style:italic;
+  font-weight:500;
+  letter-spacing:.01em;
+}
+.polaroid-board{min-height:430px;display:flex;justify-content:center;align-items:flex-start;gap:28px;padding-top:18px}
+.polaroid{position:relative!important;left:auto!important;right:auto!important;top:auto!important;width:min(42%,290px)}
+.p1{transform:rotate(-5deg)!important}
+.p2{transform:rotate(4deg)!important;margin-top:34px}
+@media(max-width:640px){
+  .polaroid-board{min-height:650px;display:block;position:relative}
+  .polaroid{position:absolute!important;width:72%}
+  .p1{left:2%!important;top:20px!important}
+  .p2{right:2%!important;left:auto!important;top:290px!important;margin-top:0}
+}
