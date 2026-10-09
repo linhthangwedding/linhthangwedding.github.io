@@ -67,16 +67,7 @@
         <h2 data-i18n="celebrationsSub">Wedding Celebrations</h2>
       </div>
 
-      <div class="event-grid">
-        <article class="event-card paper">
-          <p class="event-type" data-i18n="brideEvent">NHÀ GÁI · ĐÁM HỎI</p>
-          <div class="event-date">16.02.2027</div>
-          <div class="event-meta">
-            <span class="pin">⌖</span>
-            <div><strong data-i18n="hotel">Khách sạn ABC</strong><br><span data-i18n="nghean">Nghệ An</span></div>
-          </div>
-        </article>
-
+      <div class="event-grid single-event">
         <article class="event-card paper">
           <p class="event-type" data-i18n="groomEvent">NHÀ TRAI · ĐÁM CƯỚI</p>
           <div class="event-date">28.02.2027</div>
@@ -129,15 +120,7 @@
         </fieldset>
 
         <div id="yesBranch" class="branch hidden">
-          <label>
-            <span data-i18n="whichEvent">Bạn sẽ tham dự buổi nào?</span>
-            <select name="event">
-              <option value="" data-i18n="selectOne">Chọn một</option>
-              <option value="nghe-an" data-i18n="brideEventOption">Nghệ An · Đám hỏi</option>
-              <option value="hcm" data-i18n="groomEventOption">TP.HCM · Đám cưới</option>
-              <option value="both" data-i18n="bothEvents">Cả hai</option>
-            </select>
-          </label>
+          <input type="hidden" name="event" value="hcm">
           <label>
             <span data-i18n="partySize">Tổng số khách tham dự</span>
             <input type="number" name="party_size" min="1" max="10" inputmode="numeric" value="1">
