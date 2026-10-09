@@ -262,3 +262,66 @@ html[lang="vi"] .rsvp .script-title{
 .event-grid.single-event .event-card{
   width:100%;
 }
+
+
+/* Wedding event hierarchy: time first, date second, venue in matching serif */
+.event-time-primary{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-size:clamp(58px,8vw,84px);
+  line-height:.95;
+  font-weight:500;
+  margin:24px 0 8px;
+  color:var(--ink);
+}
+.event-date-secondary{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-size:clamp(34px,5vw,50px);
+  line-height:1;
+  font-weight:500;
+  margin:0 0 30px;
+  color:var(--ink);
+}
+.event-venue{
+  font-family:"Cormorant Garamond", Georgia, serif;
+  color:var(--ink);
+  text-align:center;
+  margin:0 auto 26px;
+}
+.venue-name{
+  font-size:clamp(30px,4.2vw,42px);
+  line-height:1.05;
+  font-weight:500;
+}
+.venue-city{
+  font-size:clamp(22px,3.2vw,30px);
+  line-height:1.15;
+  margin-top:7px;
+}
+.direction-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-height:46px;
+  padding:0 24px;
+  border:1px solid var(--red-soft);
+  border-radius:999px;
+  color:var(--red-dark);
+  text-decoration:none;
+  font-family:"Cormorant Garamond", Georgia, serif;
+  font-size:20px;
+  font-weight:600;
+  background:transparent;
+  transition:transform .2s ease, background .2s ease, color .2s ease;
+}
+.direction-btn:hover{
+  transform:translateY(-2px);
+  background:var(--red);
+  color:#fff;
+}
+@media(max-width:640px){
+  .event-time-primary{font-size:60px}
+  .event-date-secondary{font-size:37px;margin-bottom:24px}
+  .venue-name{font-size:31px}
+  .venue-city{font-size:23px}
+}
