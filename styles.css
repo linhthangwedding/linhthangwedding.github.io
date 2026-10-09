@@ -154,3 +154,48 @@ html[lang="vi"] .rsvp .script-title{
   .p1{left:2%!important;top:20px!important}
   .p2{right:2%!important;left:auto!important;top:290px!important;margin-top:0}
 }
+
+
+/* Two-photo portrait Polaroid layout: preserve each image's intrinsic ratio */
+.polaroid-board.two-photos{
+  min-height:0;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:28px;
+  padding:18px 10px 28px;
+}
+.polaroid-board.two-photos .polaroid{
+  position:relative;
+  inset:auto;
+  width:min(44%,320px);
+  transform:none;
+  padding:10px 10px 32px;
+}
+.polaroid-board.two-photos .p1{transform:rotate(-3deg)}
+.polaroid-board.two-photos .p2{transform:rotate(3deg);margin-top:34px}
+.polaroid-board.two-photos .photo-slot{
+  aspect-ratio:auto;
+  height:auto;
+  display:block;
+  background:transparent;
+  overflow:visible;
+}
+.polaroid-board.two-photos .photo-slot:after{display:none}
+.polaroid-board.two-photos .photo-slot img{
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  display:block;
+}
+@media(max-width:640px){
+  .polaroid-board.two-photos{
+    gap:14px;
+    padding:12px 2px 22px;
+  }
+  .polaroid-board.two-photos .polaroid{
+    width:47%;
+    padding:7px 7px 25px;
+  }
+  .polaroid-board.two-photos .p2{margin-top:26px}
+}
