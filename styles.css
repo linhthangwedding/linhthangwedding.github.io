@@ -252,3 +252,13 @@ html[lang="vi"] .rsvp .script-title{
 .form-status{
   color:#8e5f59 !important;
 }
+
+
+/* Single public celebration */
+.event-grid.single-event{
+  grid-template-columns:minmax(0,520px);
+  justify-content:center;
+}
+.event-grid.single-event .event-card{
+  width:100%;
+}
