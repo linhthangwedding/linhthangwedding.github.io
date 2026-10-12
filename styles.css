@@ -325,3 +325,21 @@ html[lang="vi"] .rsvp .script-title{
   .venue-name{font-size:31px}
   .venue-city{font-size:23px}
 }
+
+
+/* Vietnamese-friendly elegant typography */
+html[lang="vi"] .script-line,
+html[lang="vi"] .script-title,
+html[lang="vi"] .rsvp .section-heading .script-title{
+  font-family:"Noto Serif","Times New Roman",serif;
+  font-style:italic;
+  font-weight:500;
+  letter-spacing:-.02em;
+}
+html[lang="vi"] .script-line{
+  font-size:clamp(30px,5vw,42px);
+  line-height:1.45;
+}
+html[lang="vi"] .section-heading .script-title{
+  line-height:1.2;
+}
