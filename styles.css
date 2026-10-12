@@ -25,7 +25,7 @@ button,a{-webkit-tap-highlight-color:transparent}
  repeating-linear-gradient(0deg,rgba(115,72,55,.018) 0 1px,transparent 1px 4px),
  var(--paper)}
 .hero{min-height:760px;padding:38px 24px 58px;display:flex;flex-direction:column;align-items:center;justify-content:center;isolation:isolate}
-.lang-switch{position:absolute;top:24px;right:24px;z-index:4;display:flex;align-items:center;gap:10px;color:rgba(255,248,238,.72);font-family:"Cormorant Garamond",serif;font-size:18px}
+.lang-switch{position:absolute;top:24px;right:24px;z-index:4;display:flex;align-items:center;gap:10px;color:rgba(255,248,238,.72);font-family:"Noto Serif", serif;font-size:18px}
 .lang-btn{border:0;background:none;color:inherit;padding:3px 5px;cursor:pointer}
 .lang-btn.active{color:#fff;font-weight:600;border-bottom:1px solid rgba(255,255,255,.7)}
 .flower{position:absolute;color:#eadbc6;opacity:.78;z-index:-1}
@@ -33,11 +33,11 @@ button,a{-webkit-tap-highlight-color:transparent}
 .flower .petals{fill:#f5ead7;stroke:#d9c9ae;stroke-width:.8}
 .hero-card{position:relative;width:min(100%,610px);min-height:520px;padding:85px 56px 58px;text-align:center;background:linear-gradient(165deg,#b92429,#98131b 55%,#7d0e16);clip-path:polygon(50% 0,100% 25%,100% 100%,0 100%,0 25%);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center}
 .eyebrow,.section-kicker{letter-spacing:.32em;font-size:12px;font-weight:600}
-.hero h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:clamp(64px,14vw,112px);line-height:.68;margin:22px 0 24px;display:grid;gap:6px}
+.hero h1{font-family:"Noto Serif", serif;font-weight:500;font-size:clamp(64px,14vw,112px);line-height:.68;margin:22px 0 24px;display:grid;gap:6px}
 .hero h1 b{font-weight:400;font-style:italic;font-size:.7em;color:#f3c9b9}
-.hero-dates{position:absolute;left:26px;top:45%;transform:translateY(-50%);font-family:"Cormorant Garamond",serif;font-size:56px;line-height:.72;color:#f7dfce;display:grid;text-align:left}
+.hero-dates{position:absolute;left:26px;top:45%;transform:translateY(-50%);font-family:"Noto Serif", serif;font-size:56px;line-height:.72;color:#f7dfce;display:grid;text-align:left}
 .hero-dates i{font-style:normal}
-.hero-line{font-family:"Cormorant Garamond",serif;letter-spacing:.22em;font-size:13px;max-width:340px;line-height:1.5;margin:0}
+.hero-line{font-family:"Noto Serif", serif;letter-spacing:.22em;font-size:13px;max-width:340px;line-height:1.5;margin:0}
 .double-happiness{font-family:serif;font-size:28px;margin-top:16px}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:26px}
 .btn{display:inline-flex;justify-content:center;align-items:center;min-height:48px;padding:0 26px;border-radius:999px;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:.25s ease;font-weight:600}
@@ -45,20 +45,20 @@ button,a{-webkit-tap-highlight-color:transparent}
 .btn-ivory{background:var(--paper);color:var(--red-dark)}
 .btn-outline-light{border-color:rgba(255,248,238,.62);color:var(--paper);background:rgba(255,255,255,.03)}
 .invite-strip{padding:48px 24px;text-align:center}
-.invite-strip .section-kicker{font-family:"Cormorant Garamond",serif;font-size:18px;letter-spacing:.2em}
-.script-line,.script-title{font-family:"Parisienne",cursive;font-size:34px;margin:4px 0}
+.invite-strip .section-kicker{font-family:"Noto Serif", serif;font-size:18px;letter-spacing:.2em}
+.script-line,.script-title{font-family:"Noto Serif", serif;font-size:34px;margin:4px 0}
 .ornament{display:flex;align-items:center;gap:14px;justify-content:center;margin:26px auto 0;max-width:420px;color:var(--red)}
 .ornament span{height:1px;background:currentColor;flex:1;opacity:.5}
 .events{padding:64px 20px 76px}
 .section-heading{text-align:center;margin-bottom:30px}
 .section-heading .script-title{font-size:48px;margin-bottom:-6px}
-.section-heading h2{font-family:"Cormorant Garamond",serif;font-size:18px;letter-spacing:.16em;font-weight:500;margin:0}
+.section-heading h2{font-family:"Noto Serif", serif;font-size:18px;letter-spacing:.16em;font-weight:500;margin:0}
 .light{color:var(--ivory)}
 .event-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:700px;margin:auto}
 .event-card{border-radius:30px 30px 18px 18px;padding:32px 24px;text-align:center;border:1px solid rgba(182,50,47,.34);box-shadow:var(--shadow)}
-.event-type{font-family:"Cormorant Garamond",serif;letter-spacing:.16em;font-weight:600}
-.event-date{font-family:"Cormorant Garamond",serif;font-size:46px;line-height:1;margin:28px 0 12px}
-.event-time{font-family:"Cormorant Garamond",serif;font-size:24px;margin-bottom:18px}
+.event-type{font-family:"Noto Serif", serif;letter-spacing:.16em;font-weight:600}
+.event-date{font-family:"Noto Serif", serif;font-size:46px;line-height:1;margin:28px 0 12px}
+.event-time{font-family:"Noto Serif", serif;font-size:24px;margin-bottom:18px}
 .event-time.muted{font-size:17px;color:var(--muted)}
 .event-meta{display:flex;gap:12px;align-items:flex-start;justify-content:center;text-align:left;min-height:62px;line-height:1.5}
 .pin{font-size:26px;color:var(--red)}
@@ -70,10 +70,10 @@ button,a{-webkit-tap-highlight-color:transparent}
 .polaroid-board{position:relative;max-width:700px;min-height:780px;margin:auto}
 .polaroid{position:absolute;margin:0;background:#fffdf9;padding:10px 10px 30px;width:43%;box-shadow:0 12px 30px rgba(83,50,39,.18);border:1px solid rgba(87,48,37,.08)}
 .photo-slot{aspect-ratio:4/3;background:linear-gradient(145deg,#ead8c4,#f9efe3);overflow:hidden;display:flex;align-items:center;justify-content:center}
-.photo-slot:after{content:"Linh ♡ Thang";font-family:"Parisienne",cursive;font-size:30px;color:#a77c73;position:absolute}
+.photo-slot:after{content:"Linh ♡ Thang";font-family:"Noto Serif", serif;font-size:30px;color:#a77c73;position:absolute}
 .photo-slot img{width:100%;height:100%;object-fit:cover;display:block;position:relative;z-index:1}
 .photo-slot img[src=""],.photo-slot img:not([src]){display:none}
-.polaroid figcaption{font-family:"Parisienne",cursive;font-size:24px;text-align:center;margin-top:9px;color:#74504a}
+.polaroid figcaption{font-family:"Noto Serif", serif;font-size:24px;text-align:center;margin-top:9px;color:#74504a}
 .p1{left:1%;top:20px;transform:rotate(-5deg)}
 .p2{left:30%;top:2px;transform:rotate(3deg)}
 .p3{right:0;top:42px;transform:rotate(7deg)}
@@ -139,7 +139,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .event-card .event-date,.event-card .event-time,.event-card .event-type,.event-card .event-meta{opacity:1!important;text-shadow:none!important}
 html[lang="vi"] .events .script-title,
 html[lang="vi"] .rsvp .script-title{
-  font-family:"Cormorant Garamond",serif!important;
+  font-family:"Noto Serif", serif!important;
   font-style:italic;
   font-weight:500;
   letter-spacing:.01em;
@@ -239,7 +239,7 @@ html[lang="vi"] .rsvp .script-title{
   color:#fff !important;
 }
 .rsvp .section-heading .script-title{
-  font-family:"Cormorant Garamond", Georgia, serif;
+  font-family:"Noto Serif", Georgia, serif;
   font-style:italic;
   font-weight:500;
   letter-spacing:.01em;
@@ -266,7 +266,7 @@ html[lang="vi"] .rsvp .script-title{
 
 /* Wedding event hierarchy: time first, date second, venue in matching serif */
 .event-time-primary{
-  font-family:"Cormorant Garamond", Georgia, serif;
+  font-family:"Noto Serif", Georgia, serif;
   font-size:clamp(58px,8vw,84px);
   line-height:.95;
   font-weight:500;
@@ -274,7 +274,7 @@ html[lang="vi"] .rsvp .script-title{
   color:var(--ink);
 }
 .event-date-secondary{
-  font-family:"Cormorant Garamond", Georgia, serif;
+  font-family:"Noto Serif", Georgia, serif;
   font-size:clamp(34px,5vw,50px);
   line-height:1;
   font-weight:500;
@@ -282,7 +282,7 @@ html[lang="vi"] .rsvp .script-title{
   color:var(--ink);
 }
 .event-venue{
-  font-family:"Cormorant Garamond", Georgia, serif;
+  font-family:"Noto Serif", Georgia, serif;
   color:var(--ink);
   text-align:center;
   margin:0 auto 26px;
@@ -308,7 +308,7 @@ html[lang="vi"] .rsvp .script-title{
   border-radius:999px;
   color:var(--red-dark);
   text-decoration:none;
-  font-family:"Cormorant Garamond", Georgia, serif;
+  font-family:"Noto Serif", Georgia, serif;
   font-size:20px;
   font-weight:600;
   background:transparent;
@@ -342,4 +342,35 @@ html[lang="vi"] .script-line{
 }
 html[lang="vi"] .section-heading .script-title{
   line-height:1.2;
+}
+
+
+/* Global typography rule: maximum two font families */
+body,
+button,
+input,
+select,
+textarea{
+  font-family:"Manrope",system-ui,sans-serif;
+}
+h1,h2,h3,
+.eyebrow,
+.section-kicker,
+.script-line,
+.script-title,
+.hero h1,
+.hero-dates,
+.hero-line,
+.event-type,
+.event-date,
+.event-time,
+.event-venue,
+.venue-name,
+.venue-city,
+.direction-btn,
+.polaroid figcaption,
+.lang-switch,
+.invite-strip .section-kicker,
+.section-heading h2{
+  font-family:"Noto Serif",Georgia,serif;
 }
