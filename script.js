@@ -1,70 +1,110 @@
 const RSVP_ENDPOINT = "";
 
-const translations = {
+const copy = {
   vi:{
     weddingOf:"THE WEDDING OF",
-    heroLine:"HAI GIA ĐÌNH · MỘT HÀNH TRÌNH · MỘT ĐỜI BÊN NHAU",
-    heroNoteLeft:"Two Families<br>One Journey", heroNoteRight:"Cùng nhau<br>đi qua<br>thật nhiều<br>mùa thương",
-    rsvp:"Xác nhận tham dự", saveDate:"Lưu ngày",
-    warmInvite:"TRÂN TRỌNG KÍNH MỜI", warmInviteSub:"Cùng chúng mình chia sẻ ngày đặc biệt này",
-    celebrations:"Lịch cưới", celebrationsSub:"WEDDING CELEBRATION",
-    groomEvent:"NHÀ TRAI · ĐÁM CƯỚI", restaurant:"Capella Parkview", hcm:"Thành phố Hồ Chí Minh", getDirection:"Get direction",
-    story:"Cùng nhau đi qua những hành trình, những thành phố, những mùa hoa, và giờ đây chúng mình sẵn sàng bắt đầu một chương mới.",
-    rsvpTitle:"Xác nhận tham dự", guestName:"Tên của bạn", guestNamePlaceholder:"Nhập tên của bạn",
-    attendingQ:"Bạn có thể tham dự cùng chúng mình không?", yes:"Có", no:"Không",
-    partySize:"Tổng số khách tham dự", companionNames:"Tên người đi cùng", optional:"Không bắt buộc",
-    wishes:"Lời chúc dành cho Linh & Thang", wishesPlaceholder:"Để lại vài lời cho chúng mình...",
-    submitRsvp:"Gửi RSVP", thanks:"Cảm ơn bạn đã là một phần trong câu chuyện của chúng mình.",
-    preview:"Bản RSVP đang ở chế độ preview. Khi nối Tally, câu trả lời sẽ được gửi và theo dõi tự động.",
-    sent:"Cảm ơn bạn. RSVP đã được ghi nhận."
+    heroTagline:"Hai gia đình · Một hành trình · Một đời bên nhau",
+    formalInvite:"TRÂN TRỌNG KÍNH MỜI",
+    inviteCopy:"Đến dự buổi tiệc chung vui cùng gia đình chúng tôi",
+    inviteEnglish:"We warmly invite you to celebrate with us",
+    wedding:"ĐÁM CƯỚI",
+    dateLabel:"Ngày",
+    timeLabel:"Thời gian",
+    locationLabel:"Địa điểm",
+    city:"Thành phố Hồ Chí Minh",
+    rsvpButton:"Xác nhận tham dự",
+    direction:"Chỉ đường ↗",
+    saveDate:"Lưu ngày vào lịch",
+    storyTitle:"CÂU CHUYỆN CỦA CHÚNG MÌNH",
+    storyCopy:"Cùng nhau đi qua những hành trình, những thành phố và những mùa hoa. Giờ đây, chúng mình sẵn sàng bắt đầu một chương mới.",
+    storySignoff:"Cùng nhau, luôn là nhà.",
+    rsvpTitle:"XÁC NHẬN THAM DỰ",
+    rsvpIntro:"Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.",
+    guestName:"Tên của bạn",
+    guestPlaceholder:"Nhập tên của bạn",
+    attendingQ:"Bạn có thể tham dự không?",
+    yes:"Có",no:"Không",
+    partySize:"Tổng số khách tham dự",
+    wishes:"Lời nhắn dành cho Linh & Thang",
+    wishesPlaceholder:"Để lại vài lời cho chúng mình...",
+    submit:"Gửi RSVP",
+    preview:"RSVP đang ở chế độ preview. Phản hồi đã được lưu tạm trên thiết bị này."
   },
   en:{
     weddingOf:"THE WEDDING OF",
-    heroLine:"TWO FAMILIES · ONE JOURNEY · A LIFETIME TOGETHER",
-    heroNoteLeft:"Two Families<br>One Journey", heroNoteRight:"Together<br>through<br>so many<br>seasons",
-    rsvp:"RSVP", saveDate:"Save the date",
-    warmInvite:"WE WARMLY INVITE YOU", warmInviteSub:"Come celebrate this special day with us",
-    celebrations:"Wedding Celebration", celebrationsSub:"OUR CELEBRATION",
-    groomEvent:"GROOM'S FAMILY · WEDDING", restaurant:"Capella Parkview", hcm:"Ho Chi Minh City", getDirection:"Get direction",
-    story:"Across journeys, cities and changing seasons, we found home in each other. Now we are ready to begin a new chapter together.",
-    rsvpTitle:"Will you join us?", guestName:"Your name", guestNamePlaceholder:"Enter your name",
-    attendingQ:"Will you be able to celebrate with us?", yes:"Yes", no:"No",
-    partySize:"Total number of guests", companionNames:"Names of accompanying guests", optional:"Optional",
-    wishes:"A message for Linh & Thang", wishesPlaceholder:"Leave us a little message...",
-    submitRsvp:"Send RSVP", thanks:"Thank you for being part of our story.",
-    preview:"RSVP is currently in preview mode. Once Tally is connected, responses will be sent and tracked automatically.",
-    sent:"Thank you. Your RSVP has been received."
+    heroTagline:"Two families · One journey · A lifetime together",
+    formalInvite:"WE WARMLY INVITE YOU",
+    inviteCopy:"To celebrate this special day together with our families",
+    inviteEnglish:"We warmly invite you to celebrate with us",
+    wedding:"WEDDING",
+    dateLabel:"Date",
+    timeLabel:"Time",
+    locationLabel:"Location",
+    city:"Ho Chi Minh City",
+    rsvpButton:"RSVP",
+    direction:"Get direction ↗",
+    saveDate:"Save the date",
+    storyTitle:"OUR STORY",
+    storyCopy:"Across journeys, cities and changing seasons, we found home in each other. Now we are ready to begin a new chapter together.",
+    storySignoff:"Together, always home.",
+    rsvpTitle:"RSVP",
+    rsvpIntro:"We would be delighted to celebrate this special day with you.",
+    guestName:"Your name",
+    guestPlaceholder:"Enter your name",
+    attendingQ:"Will you be able to attend?",
+    yes:"Yes",no:"No",
+    partySize:"Total number of guests",
+    wishes:"A message for Linh & Thang",
+    wishesPlaceholder:"Leave us a little message...",
+    submit:"Send RSVP",
+    preview:"RSVP is in preview mode. Your response has been saved locally on this device."
   }
 };
+
 let lang="vi";
-function applyLanguage(next){
-  lang=next; document.documentElement.lang=next;
+
+function setLang(next){
+  lang=next;
+  document.documentElement.lang=next;
   document.querySelectorAll("[data-i18n]").forEach(el=>{
-    const key=el.dataset.i18n, value=translations[next][key];
-    if(value!==undefined) el.innerHTML=value;
+    const v=copy[next][el.dataset.i18n];
+    if(v!==undefined) el.textContent=v;
   });
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el=>{
-    const key=el.dataset.i18nPlaceholder; if(translations[next][key]) el.placeholder=translations[next][key];
+    const v=copy[next][el.dataset.i18nPlaceholder];
+    if(v!==undefined) el.placeholder=v;
   });
   document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===next));
 }
-document.querySelectorAll(".lang-btn").forEach(btn=>btn.addEventListener("click",()=>applyLanguage(btn.dataset.lang)));
-const yes=document.getElementById("yesBranch"), no=document.getElementById("noBranch");
+document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+
+const yesBranch=document.getElementById("yesBranch");
+const noBranch=document.getElementById("noBranch");
 document.querySelectorAll('input[name="attending"]').forEach(r=>r.addEventListener("change",()=>{
-  yes.classList.toggle("hidden",r.value!=="yes"||!r.checked);
-  no.classList.toggle("hidden",r.value!=="no"||!r.checked);
+  yesBranch.classList.toggle("hidden",!(r.checked&&r.value==="yes"));
+  noBranch.classList.toggle("hidden",!(r.checked&&r.value==="no"));
 }));
-const params=new URLSearchParams(location.search);
-document.getElementById("guestId").value=params.get("guest")||"";
+
 document.getElementById("rsvpForm").addEventListener("submit",async e=>{
-  e.preventDefault(); const status=document.getElementById("formStatus");
+  e.preventDefault();
+  const status=document.getElementById("formStatus");
   const data=Object.fromEntries(new FormData(e.currentTarget).entries());
-  data.language=lang; data.submitted_at=new Date().toISOString();
-  if(!RSVP_ENDPOINT){localStorage.setItem("linh-thang-rsvp-preview",JSON.stringify(data));status.textContent=translations[lang].preview;return;}
+  data.language=lang;
+  data.submitted_at=new Date().toISOString();
+
+  if(!RSVP_ENDPOINT){
+    localStorage.setItem("linh-thang-rsvp-preview",JSON.stringify(data));
+    status.textContent=copy[lang].preview;
+    return;
+  }
+
   try{
     const res=await fetch(RSVP_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
     if(!res.ok) throw new Error();
-    status.textContent=translations[lang].sent;e.currentTarget.reset();yes.classList.add("hidden");no.classList.add("hidden");
-  }catch{status.textContent=lang==="vi"?"Chưa gửi được RSVP. Vui lòng thử lại.":"We couldn't send your RSVP. Please try again.";}
+    status.textContent=lang==="vi"?"Cảm ơn bạn. RSVP đã được ghi nhận.":"Thank you. Your RSVP has been received.";
+  }catch{
+    status.textContent=lang==="vi"?"Chưa gửi được RSVP. Vui lòng thử lại.":"We couldn't send your RSVP. Please try again.";
+  }
 });
-applyLanguage("vi");
+
+setLang("vi");
