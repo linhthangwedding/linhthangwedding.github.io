@@ -124,3 +124,139 @@ button,input,textarea{font:inherit}
   .polaroid-board.two-photos{gap:8px}.polaroid{width:48%;padding:7px 7px 24px}.p2{margin-top:22px}
   .rsvp{padding:64px 14px 76px}.rsvp-card{padding:24px 18px}
 }
+
+
+/* v14 — closer to the agreed burgundy invitation artwork */
+.page-shell{width:min(100%,900px)}
+.hero{
+  min-height:900px;
+  padding:42px 24px 118px;
+  overflow:hidden;
+}
+.hero:before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.018),rgba(255,255,255,.018)),
+    radial-gradient(circle at 52% 12%,rgba(255,255,255,.07),transparent 30%);
+  mix-blend-mode:screen;
+  pointer-events:none;
+}
+.hero-envelope{
+  width:min(100%,610px);
+  min-height:610px;
+  padding:118px 72px 68px 138px;
+  box-shadow:0 34px 70px rgba(53,4,8,.34);
+}
+.hero-envelope:after{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    linear-gradient(160deg,rgba(255,255,255,.035),transparent 30%),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 1px,transparent 1px 6px);
+  pointer-events:none;
+}
+.hero-date-stack{left:34px;font-size:68px;top:47%}
+.hero h1{font-size:clamp(78px,14vw,122px);line-height:.72}
+.hero-line{margin-top:30px;letter-spacing:.28em;max-width:340px}
+.tassel{position:absolute;right:42px;top:188px;width:34px;height:185px;z-index:5}
+.tassel .cord{position:absolute;left:15px;top:-70px;width:2px;height:95px;background:#d43835}
+.tassel .knot{position:absolute;left:7px;top:14px;width:19px;height:19px;border:2px solid #d43835;border-radius:5px;transform:rotate(45deg)}
+.tassel .fringe{position:absolute;left:6px;top:42px;width:22px;height:118px;background:linear-gradient(90deg,#be2526,#eb4a3c,#a91b21);clip-path:polygon(25% 0,75% 0,100% 100%,0 100%)}
+.flower-cluster{filter:drop-shadow(0 12px 18px rgba(40,0,4,.2))}
+.flower-left{left:4px;top:185px;transform:rotate(-10deg) scale(1.18)}
+.flower-right{right:-4px;top:52px;transform:scaleX(-1) rotate(-5deg) scale(1.18)}
+.bloom{width:104px;height:104px}
+.note-left{left:50px;top:84px}.note-right{right:48px;top:82px}
+.invite-panel{
+  margin:-86px 62px 0;
+  padding:34px 46px 36px;
+  border-radius:28px;
+  border-width:5px;
+  box-shadow:0 20px 50px rgba(61,4,7,.22);
+}
+.invite-panel:before{
+  content:"";
+  position:absolute;inset:7px;
+  border:1px solid rgba(171,58,54,.55);
+  border-radius:20px;
+  pointer-events:none;
+}
+.invite-title{font-size:22px}
+.invite-sub{font-size:24px}
+.petal{position:absolute;width:28px;height:18px;background:#f8ead8;border-radius:80% 10% 80% 10%;box-shadow:0 5px 10px rgba(90,40,20,.12)}
+.petal-left{left:42px;bottom:28px;transform:rotate(-24deg)}
+.sprig{position:absolute;width:78px;height:92px}
+.sprig-right{right:24px;bottom:-8px}
+.sprig-right:before,.sprig-right:after{content:"";position:absolute;background:#607244;border-radius:100% 0 100% 0}
+.sprig-right:before{width:20px;height:48px;left:28px;top:18px;transform:rotate(-25deg)}
+.sprig-right:after{width:18px;height:42px;left:47px;top:40px;transform:rotate(30deg)}
+.celebration{
+  padding:72px 24px 92px;
+  margin-top:-6px;
+}
+.celebration .section-heading{margin-bottom:28px}
+.event-wrap{max-width:620px}
+.event-card{
+  padding:46px 42px 42px;
+  border-radius:30px;
+  border-width:5px;
+}
+.event-time{font-size:84px}
+.event-date{font-size:44px}
+.venue-name{font-size:36px}
+.direction-btn{min-width:190px}
+.story{
+  padding:96px 30px 98px;
+}
+.story-head{
+  grid-template-columns:.7fr 1.3fr;
+  max-width:760px;
+  gap:28px;
+  align-items:center;
+}
+.story-head .section-script{font-size:58px}
+.polaroid-board.two-photos{
+  max-width:760px;
+  margin:0 auto;
+  gap:0;
+  padding-top:28px;
+}
+.polaroid{
+  width:min(48%,340px);
+  padding:12px 12px 34px;
+}
+.p1{transform:rotate(-6deg) translateX(18px)}
+.p2{transform:rotate(5deg) translateX(-14px);margin-top:34px}
+.story-flower{position:absolute;width:130px;height:210px;bottom:32px;opacity:.96;background:
+ radial-gradient(ellipse at 42% 28%,#fff4e5 0 17%,transparent 18%),
+ radial-gradient(ellipse at 58% 30%,#f8e4d0 0 18%,transparent 19%),
+ radial-gradient(ellipse at 50% 18%,#fff8eb 0 16%,transparent 17%);
+}
+.sf-left{left:-26px;transform:rotate(-15deg)}
+.sf-right{right:-28px;transform:scaleX(-1) rotate(-12deg)}
+.rsvp{padding:86px 26px 98px}
+.rsvp-card{max-width:650px;border-radius:28px;border-width:5px}
+.footer{padding:54px 24px 62px}
+@media(max-width:640px){
+  .page-shell{width:100%}
+  .hero{min-height:760px;padding-bottom:98px}
+  .hero-envelope{min-height:520px;padding:98px 40px 52px 92px}
+  .hero-date-stack{font-size:46px;left:18px}
+  .tassel{right:20px;top:170px;transform:scale(.8)}
+  .flower-left{left:-60px;top:190px;transform:rotate(-12deg) scale(.95)}
+  .flower-right{right:-58px;top:70px;transform:scaleX(-1) rotate(-7deg) scale(.95)}
+  .invite-panel{margin:-64px 14px 0;padding:28px 18px 30px}
+  .invite-title{font-size:18px;letter-spacing:.16em}
+  .invite-sub{font-size:21px}
+  .celebration{padding:66px 14px 78px}
+  .event-card{padding:38px 18px}
+  .event-time{font-size:64px}
+  .event-date{font-size:34px}
+  .story{padding:76px 12px 82px}
+  .story-head{grid-template-columns:1fr;text-align:center}
+  .polaroid-board.two-photos{gap:0}
+  .polaroid{width:50%;padding:7px 7px 26px}
+  .p1{transform:rotate(-5deg) translateX(8px)}
+  .p2{transform:rotate(4deg) translateX(-8px);margin-top:28px}
+}
