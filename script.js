@@ -2,11 +2,10 @@ const RSVP_ENDPOINT = "";
 
 const copy = {
   vi:{
-    weddingOf:"THE WEDDING OF",
+    weddingOf:"LỄ THÀNH HÔN CỦA",
     heroTagline:"Hai gia đình · Một hành trình · Một đời bên nhau",
     formalInvite:"TRÂN TRỌNG KÍNH MỜI",
-    inviteCopy:"Đến dự buổi tiệc chung vui cùng gia đình chúng tôi",
-    inviteEnglish:"We warmly invite you to celebrate with us",
+    inviteCopy:"Đến chung vui trong ngày cưới của chúng mình cùng hai bên gia đình",
     wedding:"ĐÁM CƯỚI",
     dateLabel:"Ngày",
     timeLabel:"Thời gian",
@@ -27,22 +26,28 @@ const copy = {
     partySize:"Tổng số khách tham dự",
     wishes:"Lời nhắn dành cho Linh & Thang",
     wishesPlaceholder:"Để lại vài lời cho chúng mình...",
-    submit:"Gửi RSVP",
-    preview:"RSVP đang ở chế độ preview. Phản hồi đã được lưu tạm trên thiết bị này."
+    submit:"Gửi xác nhận",
+    preview:"Đây là bản xem trước. Phản hồi mới chỉ được lưu trên thiết bị của bạn, chưa được gửi đến chúng mình.",
+    success:"Cảm ơn bạn! Chúng mình đã nhận được xác nhận của bạn.",
+    error:"Chưa gửi được xác nhận. Vui lòng thử lại.",
+    pageTitle:"Thiệp cưới Linh & Thang",
+    pageDescription:"Thiệp cưới của Linh và Thang",
+    brandAria:"Linh và Thang",
+    languageAria:"Chọn ngôn ngữ",
+    imageAlt:"Linh và Thang ở Paris"
   },
   en:{
     weddingOf:"THE WEDDING OF",
     heroTagline:"Two families · One journey · A lifetime together",
     formalInvite:"WE WARMLY INVITE YOU",
-    inviteCopy:"To celebrate this special day together with our families",
-    inviteEnglish:"We warmly invite you to celebrate with us",
+    inviteCopy:"Join us and our families to celebrate our wedding day",
     wedding:"WEDDING",
     dateLabel:"Date",
     timeLabel:"Time",
     locationLabel:"Location",
     city:"Ho Chi Minh City",
     rsvpButton:"RSVP",
-    direction:"Get direction ↗",
+    direction:"Get directions ↗",
     saveDate:"Save the date",
     storyTitle:"OUR STORY",
     storyCopy:"Across journeys, cities and changing seasons, we found home in each other. Now we are ready to begin a new chapter together.",
@@ -57,7 +62,14 @@ const copy = {
     wishes:"A message for Linh & Thang",
     wishesPlaceholder:"Leave us a little message...",
     submit:"Send RSVP",
-    preview:"RSVP is in preview mode. Your response has been saved locally on this device."
+    preview:"This is a preview. Your response is saved only on this device and has not been sent to us.",
+    success:"Thank you! We have received your response.",
+    error:"Your response could not be sent. Please try again.",
+    pageTitle:"Linh & Thang — Wedding Invitation",
+    pageDescription:"The wedding invitation of Linh and Thang",
+    brandAria:"Linh and Thang",
+    languageAria:"Choose a language",
+    imageAlt:"Linh and Thang in Paris"
   }
 };
 
@@ -74,6 +86,18 @@ function setLang(next){
     const v=copy[next][el.dataset.i18nPlaceholder];
     if(v!==undefined) el.placeholder=v;
   });
+  document.querySelectorAll("[data-i18n-aria-label]").forEach(el=>{
+    const v=copy[next][el.dataset.i18nAriaLabel];
+    if(v!==undefined) el.setAttribute("aria-label",v);
+  });
+  document.querySelectorAll("[data-i18n-alt]").forEach(el=>{
+    const v=copy[next][el.dataset.i18nAlt];
+    if(v!==undefined) el.alt=v;
+  });
+  document.title=copy[next].pageTitle;
+  document.querySelector('meta[name="description"]')?.setAttribute("content",copy[next].pageDescription);
+  const status=document.getElementById("formStatus");
+  if(status?.dataset.messageKey) status.textContent=copy[next][status.dataset.messageKey];
   document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===next));
 }
 document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
@@ -94,6 +118,7 @@ document.getElementById("rsvpForm").addEventListener("submit",async e=>{
 
   if(!RSVP_ENDPOINT){
     localStorage.setItem("linh-thang-rsvp-preview",JSON.stringify(data));
+    status.dataset.messageKey="preview";
     status.textContent=copy[lang].preview;
     return;
   }
@@ -101,9 +126,11 @@ document.getElementById("rsvpForm").addEventListener("submit",async e=>{
   try{
     const res=await fetch(RSVP_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
     if(!res.ok) throw new Error();
-    status.textContent=lang==="vi"?"Cảm ơn bạn. RSVP đã được ghi nhận.":"Thank you. Your RSVP has been received.";
+    status.dataset.messageKey="success";
+    status.textContent=copy[lang].success;
   }catch{
-    status.textContent=lang==="vi"?"Chưa gửi được RSVP. Vui lòng thử lại.":"We couldn't send your RSVP. Please try again.";
+    status.dataset.messageKey="error";
+    status.textContent=copy[lang].error;
   }
 });
 
