@@ -65,7 +65,7 @@ button,input,textarea{font:inherit}
   object-fit:cover;
   object-position:center 64%;
   display:block;
-  filter:saturate(.82) contrast(.94) brightness(1.05);
+  filter:none;
 }
 .photo-wash{
   position:absolute;inset:0;
