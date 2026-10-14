@@ -6,13 +6,14 @@ https://linhthangwedding.github.io
 ## Thông tin thiệp
 - Tiệc Thành hôn: **28/02/2027**, Capella Park View, TP.HCM.
 - Giờ mời khách: khoảng **11:00**.
-- Thiệp có thể cá nhân hóa bằng mã `?invite=MÃ_RIÊNG&to=TÊN_KHÁCH`.
-- Mã và tên khách được quản lý trong tab **RSVP Online** của **Master File_Linh & Thang** (Google Sheet riêng tư). Không đưa danh sách khách lên repo công khai.
+- Link thiệp ngắn dạng `?i=MÃ_16_KÝ_TỰ`. Không đưa tên khách vào URL.
+- Tên khách hiển thị được lấy từ cột **Tên khách mời (HIỂN THỊ TRÊN THIỆP)** ở phần bảng cuối tab **Guest List**, cập nhật tự động khi đổi tên trong cột này.
+- Link và tên hiển thị được quản lý trong tab **Guest List** của Master File. Tab kỹ thuật **RSVP Online** được giữ ẩn cho bộ nhận phản hồi, không cần thao tác thường ngày. Không đưa danh sách khách lên repo công khai.
 
 ## RSVP
 Website đã có form RSVP theo link riêng. Front-end **không tự báo thành công** trừ khi backend xác nhận ghi dữ liệu về Google Sheets.
 
-**Đã cấu hình URL nhận RSVP** trong `script.js` từ Google Apps Script do chủ tiệc cung cấp ngày 14/10/2026. **Chưa kiểm thử đầu cuối phản hồi khách thật**; cần xác nhận deployment cho phép truy cập công khai và chạy thử việc ghi phản hồi vào Google Sheets trước khi phát thiệp. Xem [apps-script/README.md](apps-script/README.md) để kiểm tra quyền truy cập và phương pháp thử.
+**Website đã đổi sang link ngắn** và cấu hình URL nhận RSVP. **BẮT BUỘC cập nhật mã Google Apps Script và redeploy phiên bản mới** để link ngắn tải tên từ Master File. Chưa xác minh RSVP đầu cuối. Xem [apps-script/README.md](apps-script/README.md) để làm đúng bước kích hoạt.
 
 Phản hồi sau khi được kết nối:
 - Được ghi về tab `RSVP Online` (trạng thái, số khách, lời nhắn, thời gian).
