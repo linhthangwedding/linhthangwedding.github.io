@@ -29,6 +29,9 @@ const copy = {
     submit:"Gửi xác nhận",
     preview:"Phần xác nhận tham dự đang được kết nối. Vui lòng chưa gửi phản hồi tại đây.",
     missingInvite:"Vui lòng mở đường dẫn thiệp riêng mà Linh & Thang gửi cho bạn để xác nhận tham dự.",
+    guestLoading:"Đang tải tên khách mời từ danh sách thiệp...",
+    guestUnavailable:"Chưa tải được tên khách mời. Vui lòng thử lại sau khi hệ thống được cập nhật.",
+    guestNotReady:"Thiệp của bạn đang chờ xác nhận sự kiện. Vui lòng liên hệ Linh & Thang.",
     pending:"Đang kiểm tra phản hồi của bạn...",
     success:"Cảm ơn bạn! Chúng mình đã nhận được xác nhận của bạn.",
     error:"Chưa gửi được xác nhận. Vui lòng thử lại.",
@@ -66,6 +69,9 @@ const copy = {
     submit:"Send RSVP",
     preview:"Online RSVP is being connected. Responses cannot be submitted yet.",
     missingInvite:"Please use the personalized invitation link sent by Linh & Thang to RSVP.",
+    guestLoading:"Loading your invitation name...",
+    guestUnavailable:"We could not load your invitation name yet. Please try again later.",
+    guestNotReady:"This invitation is pending event confirmation. Please contact Linh & Thang.",
     pending:"Checking your response...",
     success:"Thank you! We have received your response.",
     error:"Your response could not be sent. Please try again.",
@@ -114,39 +120,50 @@ document.querySelectorAll('input[name="attending"]').forEach(r=>r.addEventListen
 }));
 
 
-// A personal invitation contains an opaque invitation code and a display name.
-// The name is never trusted as the guest identity; the Apps Script matches the
-// invitation code to the private RSVP Online registry in the wedding master sheet.
+// Short personal URL: ?i=XXXXXXXXXXXXXXX (16 characters).
+// The name on the invitation is fetched from the private guest registry;
+// the optional legacy "&to=" is only a fallback for previously shared URLs.
 const inviteParams = new URLSearchParams(window.location.search);
-const inviteCode = (inviteParams.get("invite") || "").trim();
-const inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
+const inviteCode = (inviteParams.get("i") || inviteParams.get("invite") || "").trim();
+let inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
+let inviteReady = false;
 const inviteLabel = document.getElementById("inviteGuestName");
 const guestNameField = document.querySelector('#rsvpForm [name="guest_name"]');
+const submitButton = document.querySelector('#rsvpForm button[type="submit"]');
 document.getElementById("rsvpInvite").value = inviteCode;
-if (inviteCode && inviteDisplayName) {
+guestNameField.readOnly = !!inviteCode;
+if (inviteCode) submitButton.disabled = true;
+
+function applyGuestName(value){
+  inviteDisplayName = String(value || "").trim().slice(0,120);
+  if (!inviteDisplayName) return;
   inviteLabel.textContent = inviteDisplayName;
   inviteLabel.classList.remove("hidden");
   guestNameField.value = inviteDisplayName;
   guestNameField.readOnly = true;
 }
+if (inviteCode && inviteDisplayName) applyGuestName(inviteDisplayName);
 
 function showRSVPStatus(key) {
   const el = document.getElementById("formStatus");
-  el.dataset.messageKey = key;
-  el.textContent = copy[lang][key];
+  el.dataset.messageKey = key || "";
+  el.textContent = key ? copy[lang][key] : "";
 }
 
 // Apps Script ContentService has no regular CORS headers. A no-cors POST
 // writes the response; a read-only JSONP receipt check confirms it reached
 // the spreadsheet, so the site never displays success based on an opaque POST.
-function readRSVPReceipt(receipt) {
+function readRSVPData(action, params = {}) {
   return new Promise((resolve, reject) => {
+    if (!RSVP_ENDPOINT) return reject(new Error("RSVP endpoint missing"));
     const callback = "ltRsvp" + Math.random().toString(36).slice(2);
     const script = document.createElement("script");
     const endpoint = new URL(RSVP_ENDPOINT);
-    endpoint.searchParams.set("action", "status");
+    endpoint.searchParams.set("action", action);
     endpoint.searchParams.set("invite", inviteCode);
-    endpoint.searchParams.set("receipt", receipt);
+    for (const [key, value] of Object.entries(params)) {
+      endpoint.searchParams.set(key, value);
+    }
     endpoint.searchParams.set("callback", callback);
     endpoint.searchParams.set("nocache", String(Date.now()));
     let settled = false;
@@ -163,12 +180,45 @@ function readRSVPReceipt(receipt) {
       else resolve(result);
     };
     window[callback] = (result) => finish(null, result);
-    script.onerror = () => finish(new Error("RSVP status unavailable"));
-    const timeout = setTimeout(() => finish(new Error("RSVP status timed out")), 7000);
+    script.onerror = () => finish(new Error("RSVP lookup unavailable"));
+    const timeout = setTimeout(() => finish(new Error("RSVP lookup timed out")), 7000);
     script.src = endpoint.toString();
     document.head.appendChild(script);
   });
 }
+function readRSVPReceipt(receipt) {
+  return readRSVPData("status", {receipt});
+}
+
+async function resolveInviteName() {
+  if (!inviteCode) return;
+  if (!RSVP_ENDPOINT) {
+    showRSVPStatus("preview");
+    return;
+  }
+  if (!inviteDisplayName) showRSVPStatus("guestLoading");
+  try {
+    const guest = await readRSVPData("guest");
+    if (guest?.valid === true && guest?.name) {
+      applyGuestName(guest.name);
+      inviteReady = guest.canRsvp === true;
+      submitButton.disabled = !inviteReady;
+      showRSVPStatus(inviteReady ? null : "guestNotReady");
+      return;
+    }
+  } catch (_) {
+    // Legacy links with "&to=" continue to show the name if the API is not up to date.
+  }
+  if (inviteDisplayName && inviteParams.has("invite")) {
+    // Existing full-length URLs remain usable on older Web App versions.
+    inviteReady = true;
+    submitButton.disabled = false;
+    showRSVPStatus(null);
+  } else {
+    showRSVPStatus("guestUnavailable");
+  }
+}
+
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 document.getElementById("rsvpForm").addEventListener("submit", async event => {
@@ -176,7 +226,7 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
   const form = event.currentTarget;
   const button = form.querySelector('button[type="submit"]');
   const data = Object.fromEntries(new FormData(form).entries());
-  if (!inviteCode || !inviteDisplayName) {
+  if (!inviteCode || !inviteDisplayName || !inviteReady) {
     showRSVPStatus("missingInvite");
     return;
   }
@@ -225,3 +275,4 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
 });
 
 setLang("vi");
+resolveInviteName();
