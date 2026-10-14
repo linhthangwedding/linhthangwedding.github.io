@@ -1,4 +1,4 @@
-const RSVP_ENDPOINT = ""; // Dán URL Google Apps Script Web App sau khi triển khai (xem apps-script/README.md).
+const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbwDA6HVjo0JZUM0dCiPjVwNB2Whzjgsr4IiuTxulmd2LDijhpfQ3SR_c34VVJ6mXHNRxQ/exec"; // Google Apps Script deployed Web App.
 
 const copy = {
   vi:{
