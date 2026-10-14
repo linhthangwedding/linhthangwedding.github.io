@@ -1,4 +1,4 @@
-const RSVP_ENDPOINT = "";
+const RSVP_ENDPOINT = ""; // Dán URL Google Apps Script Web App sau khi triển khai (xem apps-script/README.md).
 
 const copy = {
   vi:{
@@ -27,7 +27,9 @@ const copy = {
     wishes:"Lời nhắn dành cho Linh & Thang",
     wishesPlaceholder:"Để lại vài lời cho chúng mình...",
     submit:"Gửi xác nhận",
-    preview:"Đây là bản xem trước. Phản hồi mới chỉ được lưu trên thiết bị của bạn, chưa được gửi đến chúng mình.",
+    preview:"Phần xác nhận tham dự đang được kết nối. Vui lòng chưa gửi phản hồi tại đây.",
+    missingInvite:"Vui lòng mở đường dẫn thiệp riêng mà Linh & Thang gửi cho bạn để xác nhận tham dự.",
+    pending:"Đang kiểm tra phản hồi của bạn...",
     success:"Cảm ơn bạn! Chúng mình đã nhận được xác nhận của bạn.",
     error:"Chưa gửi được xác nhận. Vui lòng thử lại.",
     pageTitle:"Thiệp cưới Linh & Thang",
@@ -62,7 +64,9 @@ const copy = {
     wishes:"A message for Linh & Thang",
     wishesPlaceholder:"Leave us a little message...",
     submit:"Send RSVP",
-    preview:"This is a preview. Your response is saved only on this device and has not been sent to us.",
+    preview:"Online RSVP is being connected. Responses cannot be submitted yet.",
+    missingInvite:"Please use the personalized invitation link sent by Linh & Thang to RSVP.",
+    pending:"Checking your response...",
     success:"Thank you! We have received your response.",
     error:"Your response could not be sent. Please try again.",
     pageTitle:"Linh & Thang — Wedding Invitation",
@@ -109,28 +113,114 @@ document.querySelectorAll('input[name="attending"]').forEach(r=>r.addEventListen
   noBranch.classList.toggle("hidden",!(r.checked&&r.value==="no"));
 }));
 
-document.getElementById("rsvpForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const status=document.getElementById("formStatus");
-  const data=Object.fromEntries(new FormData(e.currentTarget).entries());
-  data.language=lang;
-  data.submitted_at=new Date().toISOString();
 
-  if(!RSVP_ENDPOINT){
-    localStorage.setItem("linh-thang-rsvp-preview",JSON.stringify(data));
-    status.dataset.messageKey="preview";
-    status.textContent=copy[lang].preview;
+// A personal invitation contains an opaque invitation code and a display name.
+// The name is never trusted as the guest identity; the Apps Script matches the
+// invitation code to the private RSVP Online registry in the wedding master sheet.
+const inviteParams = new URLSearchParams(window.location.search);
+const inviteCode = (inviteParams.get("invite") || "").trim();
+const inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
+const inviteLabel = document.getElementById("inviteGuestName");
+const guestNameField = document.querySelector('#rsvpForm [name="guest_name"]');
+document.getElementById("rsvpInvite").value = inviteCode;
+if (inviteCode && inviteDisplayName) {
+  inviteLabel.textContent = inviteDisplayName;
+  inviteLabel.classList.remove("hidden");
+  guestNameField.value = inviteDisplayName;
+  guestNameField.readOnly = true;
+}
+
+function showRSVPStatus(key) {
+  const el = document.getElementById("formStatus");
+  el.dataset.messageKey = key;
+  el.textContent = copy[lang][key];
+}
+
+// Apps Script ContentService has no regular CORS headers. A no-cors POST
+// writes the response; a read-only JSONP receipt check confirms it reached
+// the spreadsheet, so the site never displays success based on an opaque POST.
+function readRSVPReceipt(receipt) {
+  return new Promise((resolve, reject) => {
+    const callback = "ltRsvp" + Math.random().toString(36).slice(2);
+    const script = document.createElement("script");
+    const endpoint = new URL(RSVP_ENDPOINT);
+    endpoint.searchParams.set("action", "status");
+    endpoint.searchParams.set("invite", inviteCode);
+    endpoint.searchParams.set("receipt", receipt);
+    endpoint.searchParams.set("callback", callback);
+    endpoint.searchParams.set("nocache", String(Date.now()));
+    let settled = false;
+    const cleanup = () => {
+      delete window[callback];
+      script.remove();
+      clearTimeout(timeout);
+    };
+    const finish = (err, result) => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      if (err) reject(err);
+      else resolve(result);
+    };
+    window[callback] = (result) => finish(null, result);
+    script.onerror = () => finish(new Error("RSVP status unavailable"));
+    const timeout = setTimeout(() => finish(new Error("RSVP status timed out")), 7000);
+    script.src = endpoint.toString();
+    document.head.appendChild(script);
+  });
+}
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+document.getElementById("rsvpForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const button = form.querySelector('button[type="submit"]');
+  const data = Object.fromEntries(new FormData(form).entries());
+  if (!inviteCode || !inviteDisplayName) {
+    showRSVPStatus("missingInvite");
     return;
   }
+  if (!RSVP_ENDPOINT) {
+    showRSVPStatus("preview");
+    return;
+  }
+  if (!["yes", "no"].includes(data.attending)) return;
 
-  try{
-    const res=await fetch(RSVP_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
-    if(!res.ok) throw new Error();
-    status.dataset.messageKey="success";
-    status.textContent=copy[lang].success;
-  }catch{
-    status.dataset.messageKey="error";
-    status.textContent=copy[lang].error;
+  const receipt = (window.crypto?.randomUUID?.() ||
+    (String(Date.now()) + Math.random().toString(36).slice(2)));
+  const body = new URLSearchParams({
+    invite: inviteCode,
+    attending: data.attending,
+    party_size: data.attending === "yes" ? String(data.party_size || 1) : "0",
+    wishes: data.wishes || "",
+    language: lang,
+    receipt: receipt
+  });
+
+  button.disabled = true;
+  showRSVPStatus("pending");
+  try {
+    // Opaque responses do not count as confirmation.
+    await fetch(RSVP_ENDPOINT, {
+      method: "POST", mode: "no-cors", body, cache: "no-store"
+    });
+    let stored = false;
+    for (let i = 0; i < 5; i++) {
+      await wait(i === 0 ? 1100 : 1900);
+      try {
+        const check = await readRSVPReceipt(receipt);
+        if (check?.saved === true) {
+          stored = true;
+          break;
+        }
+        if (check?.invalid === true) break;
+      } catch (_) { /* Retry transient receipt-check failures. */ }
+    }
+    showRSVPStatus(stored ? "success" : "error");
+  } catch (_) {
+    showRSVPStatus("error");
+  } finally {
+    button.disabled = false;
   }
 });
 
