@@ -290,3 +290,27 @@ footer{
   .story-copy{font-size:16px}
   .story-signoff{font-size:25px}
 }
+
+
+/* Personalized invitation: visible only for guest-specific links. */
+.invite-guest-name{
+  margin:16px auto 16px;
+  max-width:min(100%,680px);
+  padding:0 16px;
+  font-family:"Noto Serif",serif;
+  font-size:clamp(24px,3.8vw,35px);
+  line-height:1.4;
+  font-weight:600;
+  color:#55453e;
+  overflow-wrap:anywhere;
+}
+.invite-guest-name:not(.hidden) + .invite-copy{margin-top:10px}
+.rsvp-form input[readonly]{
+  background:#f4f0ea;
+  border-color:#d9d1c7;
+  color:#5b5149;
+}
+.rsvp-form button[type=submit]:disabled{opacity:.66;cursor:progress;transform:none}
+@media(max-width:760px){
+ .invite-guest-name{font-size:26px;margin:16px auto 18px;}
+}
