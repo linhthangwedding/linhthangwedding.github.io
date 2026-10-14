@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-eiffel-original-1024.jpg?v=27" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=27">
+  <link rel="stylesheet" href="styles.css?v=29">
 </head>
 <body>
 <main class="site-shell">
@@ -43,6 +43,7 @@
     <span class="botanical branch-right" aria-hidden="true"></span>
 
     <p class="invite-kicker" data-i18n="formalInvite">TRÂN TRỌNG KÍNH MỜI</p>
+    <p id="inviteGuestName" class="invite-guest-name hidden" aria-live="polite"></p>
     <p class="invite-copy" data-i18n="inviteCopy">Đến dự buổi tiệc chung vui cùng gia đình chúng tôi</p>
 
     <div class="ornament"><span></span><i>♥</i><span></span></div>
@@ -98,6 +99,7 @@
 
     <form id="rsvpForm" class="rsvp-form">
       <input type="hidden" name="event" value="hcm">
+      <input type="hidden" name="invite" id="rsvpInvite" value="">
       <label>
         <span data-i18n="guestName">Tên của bạn</span>
         <input name="guest_name" required autocomplete="name" data-i18n-placeholder="guestPlaceholder" placeholder="Nhập tên của bạn">
@@ -135,6 +137,6 @@
   </footer>
 </main>
 
-<script src="script.js?v=28"></script>
+<script src="script.js?v=29"></script>
 </body>
 </html>
