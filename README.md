@@ -12,7 +12,7 @@ https://linhthangwedding.github.io
 ## RSVP
 Website đã có form RSVP theo link riêng. Front-end **không tự báo thành công** trừ khi backend xác nhận ghi dữ liệu về Google Sheets.
 
-**Chưa kích hoạt gửi RSVP:** Hiện `RSVP_ENDPOINT` trong `script.js` vẫn là chuỗi rỗng. Cần triển khai Apps Script theo [apps-script/README.md](apps-script/README.md), sau đó điền URL `/exec` vào `script.js`.
+**Đã cấu hình URL nhận RSVP** trong `script.js` từ Google Apps Script do chủ tiệc cung cấp ngày 14/10/2026. **Chưa kiểm thử đầu cuối phản hồi khách thật**; cần xác nhận deployment cho phép truy cập công khai và chạy thử việc ghi phản hồi vào Google Sheets trước khi phát thiệp. Xem [apps-script/README.md](apps-script/README.md) để kiểm tra quyền truy cập và phương pháp thử.
 
 Phản hồi sau khi được kết nối:
 - Được ghi về tab `RSVP Online` (trạng thái, số khách, lời nhắn, thời gian).
