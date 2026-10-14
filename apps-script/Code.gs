@@ -13,14 +13,15 @@ function cleanText_(value, max) {
   return /^[=+@\-]/.test(s) ? "'" + s : s;
 }
 function findInvite_(book, invite) {
-  if (!/^[a-z0-9]{20,64}$/.test(invite)) return null;
+  if (!/^[a-z0-9]{16,64}$/.test(invite)) return null;
   var registry = book.getSheetByName(REGISTRY_TAB);
   if (!registry) throw new Error("Missing RSVP Online sheet");
   var last = registry.getLastRow();
   if (last < 2) return null;
   var rows = registry.getRange(2, 1, last - 1, 16).getDisplayValues();
   for (var i = 0; i < rows.length; i++) {
-    if (String(rows[i][0]).trim() === invite) {
+    if (String(rows[i][0]).trim() === invite ||
+        (invite.length === 16 && String(rows[i][0]).trim().slice(0,16) === invite)) {
       return {registry: registry, index: i + 2, row: rows[i]};
     }
   }
@@ -42,11 +43,29 @@ function doGet(e) {
     return ContentService.createTextOutput("/* Invalid callback */")
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
   }
-  if (q.action !== "status") return js_(callback, {saved:false, invalid:true});
+  if (q.action !== "status" && q.action !== "guest") return js_(callback, {saved:false, invalid:true});
   try {
     var book = SpreadsheetApp.getActiveSpreadsheet();
     var found = findInvite_(book, String(q.invite || ""));
     if (!found) return js_(callback, {saved:false, invalid:true});
+    // Label comes from the editable "Tên khách mời" in Guest List.
+    // The private registry holds the original token; short links use 16 chars.
+    if (q.action === "guest") {
+      var guestTab = book.getSheetByName(GUEST_TAB);
+      if (!guestTab || guestTab.getLastRow() < 150)
+        return js_(callback, {valid:false, invalid:true});
+      var data = guestTab.getRange(150,1,guestTab.getLastRow()-149,5)
+        .getDisplayValues();
+      for (var j=0;j<data.length;j++) {
+        if (String(data[j][4]).trim() === String(found.row[0]).trim()) {
+          var displayName = String(data[j][0] || "").trim().slice(0,120);
+          if (!displayName) break;
+          return js_(callback, {valid:true, name:displayName,
+            canRsvp:String(found.row[3]).trim() === WEDDING_EVENT});
+        }
+      }
+      return js_(callback, {valid:false, invalid:true});
+    }
     if (String(found.row[3]).trim() !== WEDDING_EVENT) {
       return js_(callback, {saved:false, invalid:true});
     }
@@ -63,7 +82,7 @@ function doPost(e) {
   var invite = String(p.invite || "").trim();
   var attending = String(p.attending || "").trim();
   var receipt = String(p.receipt || "").trim();
-  if (!/^[a-z0-9]{20,64}$/.test(invite) ||
+  if (!/^[a-z0-9]{16,64}$/.test(invite) ||
       !/^(yes|no)$/.test(attending) ||
       !/^[a-zA-Z0-9-]{8,100}$/.test(receipt)) {
     return json_({ok:false, error:"invalid_parameters"});
