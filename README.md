@@ -1,25 +1,27 @@
-# Thiệp cưới Linh & Thang
+# Thiệp cưới Linh & Thắng
 
-Website thiệp cưới song ngữ VN / EN trên GitHub Pages:
+Website thiệp cưới song ngữ VN / EN:
 https://linhthangwedding.github.io
 
-## Thông tin thiệp
-- Tiệc Thành hôn: **28/02/2027**, Capella Park View, TP.HCM.
-- Giờ mời khách: khoảng **11:00**.
-- Link thiệp ngắn dạng `?i=MÃ_16_KÝ_TỰ`. Không đưa tên khách vào URL.
-- Tên khách hiển thị được lấy từ cột **Tên khách mời (HIỂN THỊ TRÊN THIỆP)** ở phần bảng cuối tab **Guest List**, cập nhật tự động khi đổi tên trong cột này.
-- Link và tên hiển thị được quản lý trong tab **Guest List** của Master File. Tab kỹ thuật **RSVP Online** được giữ ẩn cho bộ nhận phản hồi, không cần thao tác thường ngày. Không đưa danh sách khách lên repo công khai.
+## Nội dung
+- Tiệc Thành hôn 28/02/2027 tại Capella Park View, TP.HCM, giờ mời khách khoảng 11:00.
+- Link thiệp cá nhân dạng **https://linhthangwedding.github.io/?i=MÃ_RIÊNG**.
+- Tên trên thiệp lấy TRỰC TIẾP từ cột **Name** thuộc đúng dòng khách trong tab **Guest List**.
 
-## RSVP
-Website đã có form RSVP theo link riêng. Front-end **không tự báo thành công** trừ khi backend xác nhận ghi dữ liệu về Google Sheets.
+## Danh sách khách và link
+Giữ nguyên **hai bảng khách hiện có trong Guest List**, không thêm bảng thứ ba:
+- Bảng hồng (bên trái): **B = Name**, **E = Confirm**, **G = Link**.
+- Bảng khách (bên phải): **K = Name**, **Q = RSVP**, **R = Link**.
+- Tab **RSVP Online** được ẩn để làm sổ mã/biên nhận kỹ thuật. KHÔNG xóa tab này.
 
-**Website đã đổi sang link ngắn** và cấu hình URL nhận RSVP. **BẮT BUỘC cập nhật mã Google Apps Script và redeploy phiên bản mới** để link ngắn tải tên từ Master File. Chưa xác minh RSVP đầu cuối. Xem [apps-script/README.md](apps-script/README.md) để làm đúng bước kích hoạt.
+Tên trên thiệp chính là giá trị trong cột Name B/K. Chỉnh cách xưng hô ở đây sẽ đổi tên hiển thị trên thiệp mà KHÔNG cần tạo link mới.
 
-Phản hồi sau khi được kết nối:
-- Được ghi về tab `RSVP Online` (trạng thái, số khách, lời nhắn, thời gian).
-- Đồng bộ vào `Guest List`: bảng bên trái cột E, bảng bên phải cột O.
-- Những khách chưa được gắn sự kiện `Đám cưới` cần phân loại trước khi gửi link.
+## Kích hoạt RSVP
+Website đã kết nối URL Google Apps Script Web App, nhưng sau lần chỉnh sửa bố cục Guest List, **chủ tiệc cần thay Code.gs bằng bản mới nhất và Redeploy New version**. Xem [apps-script/README.md](apps-script/README.md).
 
-## An toàn
-- Không commit tên khách, mã riêng, danh sách RSVP hay thông tin cá nhân vào repo.
-- Link mời có thể được chuyển tiếp cho người khác. Mã link là công cụ khớp RSVP, không phải phương pháp xác minh danh tính tuyệt đối.
+Khi gửi thành công, Apps Script cập nhật cột E hoặc Q ngay tại đúng dòng khách, và đồng thời lưu số người/lời nhắn/thời gian ở tab kỹ thuật ẩn.
+
+## Lưu ý
+- Chưa có xác nhận đã kiểm thử đầu-cuối sau cập nhật mới, đừng gửi link thật tới khách trước khi test.
+- Không đăng công khai Guest List, mã đầy đủ, RSVP hay thông tin cá nhân trên GitHub.
+- Người có link thiệp riêng có thể phản hồi thay, vì link là công cụ phân biệt khách chứ không phải hình thức xác minh danh tính mạnh.
