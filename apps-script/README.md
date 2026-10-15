@@ -1,34 +1,35 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
-Website và Master File đã được cập nhật để link nằm NGAY TRONG hai bảng khách hiện có của tab Guest List, không có bảng quản lý thiệp thứ ba.
+Đuôi link hiện dùng **tên không dấu**, ví dụ `?i=chi-thu-tam-kp`, thay cho mã 16 ký tự ngẫu nhiên. 151 link có đuôi duy nhất. Mã 30 ký tự cũ và 16 ký tự cũ vẫn được giữ trong tab ẩn để tương thích.
 
-## Bắt buộc: cập nhật deployment hiện có
-1. Trong Master File → **Extensions → Apps Script**.
-2. Mở file `Code.gs` đã tạo trước đây, thay **toàn bộ** bằng [Code.gs mới nhất](./Code.gs).
-3. **Save**.
-4. Chọn **Deploy → Manage deployments → Edit** (bút chì của Web App đang chạy).
-5. **Version: New version → Deploy**. Giữ nguyên Web App cũ để giữ URL `/exec` hiện có.
-6. Đảm bảo **Execute as: Me**, **Who has access: Anyone** để khách không cần đăng nhập Google.
+## Cập nhật deployment (bắt buộc sau lần thay đổi này)
+1. Trong Master File Google Sheets, chọn **Extensions → Apps Script**.
+2. Thay toàn bộ nội dung **Code.gs** hiện có bằng [Code.gs phiên bản mới nhất](./Code.gs) và bấm **Save**.
+3. **Deploy → Manage deployments → Edit** (bút chì của deployment Web App đang chạy).
+4. **Version → New version → Deploy**. Giữ deployment cũ để URL `/exec` không đổi.
+5. Kiểm tra **Execute as: Me** và **Who has access: Anyone**.
 
-Cần redeploy lần này vì trước đó Apps Script còn đọc bảng thiệp ở cuối Guest List, còn bảng đó đã được gỡ bỏ theo yêu cầu.
+Backend cũ không hỗ trợ đuôi link theo tên. Không gửi link mới khi chưa redeploy.
 
-## Cách dữ liệu được lưu
-| Bảng khách | Tên HIỂN THỊ trên thiệp | Link riêng | Phản hồi tự ghi |
+## Bố cục Guest List hiện tại
+
+| Bảng | Tên hiển thị | Đường dẫn thiệp | RSVP |
 |---|---|---|---|
-| Bảng hồng | Guest List cột B (Name) | cột G (Link) | cột E (Confirm) |
-| Bảng bên phải | Guest List cột K (Name) | cột R (Link) | cột Q (RSVP) |
+| Bảng hồng, bên trái | B | G | E |
+| Bảng bên phải | J | Q | P |
 
-- Có tổng 151 link cá nhân đã tạo, không thêm link cho các dòng tên đang trống và placeholder.
-- Tên trên thiệp luôn được đọc từ chính cột Name trong hai bảng. Đổi tên trong bảng sẽ đổi tên khi khách mở thiệp.
-- Mã 30 ký tự, số khách, lời nhắn, thời gian và mã biên nhận được lưu ở tab **RSVP Online** ẩn, KHÔNG xóa tab này.
-- Để khớp đúng người kể cả khi bạn sửa tên hoặc sắp xếp các dòng, backend dò theo mã trong cột G/R chứ không dựa vào tên khách hoặc số thứ tự dòng.
-- Cột Event để trống vẫn được chấp nhận nếu tên đã ở một trong hai bảng khách cưới; nếu Event chỉ định nghi lễ khác, backend không chấp nhận RSVP cho thiệp 28/02.
+Các cột có thể dịch chuyển khi sửa bảng. Code.gs tìm tên cột dựa vào hai tiêu đề `Tên khách mời`, `Link`, `Event` và `RSVP` ở hàng 1.
 
-## Thử trước khi gửi
-1. Mở một link từ cột G hoặc R; phải thấy tên chính xác ngay dưới dòng **Trân trọng kính mời**.
-2. Tự gửi một phản hồi thử bằng link của một người đã đồng ý test; sau đó kiểm tra cột E hoặc Q có phản hồi, và tab ẩn RSVP Online có số lượng và lời nhắn tương ứng.
-3. Nếu thử bằng dữ liệu khách thật, xóa hoặc trả về trạng thái chưa phản hồi sau khi kiểm thử.
-4. Không gửi link hàng loạt trước khi các bước này hoạt động.
+- Tên khách **trên thiệp** được tra cứu từ cột Tên khách mời trong đúng bảng gốc; sửa cách xưng hô ở đây thì thiệp đổi tương ứng, **không đổi đường link**.
+- Bộ nhận RSVP dùng đuôi link để tìm mã gốc trong tab kỹ thuật **RSVP Online** rồi dò lại đúng dòng khách có link đó.
+- Tab kỹ thuật ẩn có đuôi dễ đọc tại cột Q, mã gốc cột A, lời nhắn và biên nhận. Không xóa.
+- Trạng thái Có/Không (và số người nếu có) ghi vào cột RSVP ngay trên đúng dòng khách trong Guest List.
 
-## Quyền riêng tư
-Website là GitHub Pages tĩnh, không chứa danh sách khách. API tra cứu chỉ trả về tên của người có mã hợp lệ trong link. Link không phải cơ chế xác thực danh tính mạnh, vì có thể được chuyển tiếp. Không xuất bản Guest List lên GitHub.
+## Kiểm thử
+1. Sao chép một link ở cột G hoặc Q, mở bằng cửa sổ ẩn danh. Tên có dấu phải hiện dưới dòng `TRÂN TRỌNG KÍNH MỜI`.
+2. Gửi thử RSVP bằng một khách thử và kiểm tra đúng dòng có phản hồi trong cột E/P.
+3. Xác minh cột H–L của tab ẩn RSVP Online có dữ liệu phản hồi; sau khi kiểm thử, xóa dữ liệu thử.
+4. Chỉ bắt đầu gửi thiệp sau khi chức năng RSVP hoạt động đầu cuối.
+
+## Cảnh báo bảo mật
+Link gợi nhớ theo tên có thể bị người ngoài đoán. Người có hoặc đoán được đường dẫn có thể gửi RSVP thay khách. Cách này tiện chia sẻ nhưng **kém riêng tư hơn mã ngẫu nhiên**, không nên coi là xác minh danh tính. Không công khai toàn bộ link cá nhân.
