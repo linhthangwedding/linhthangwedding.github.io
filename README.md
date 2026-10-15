@@ -1,27 +1,27 @@
 # Thiệp cưới Linh & Thắng
 
-Website thiệp cưới song ngữ VN / EN:
-https://linhthangwedding.github.io
+Website thiệp cưới song ngữ Việt / Anh: https://linhthangwedding.github.io
 
-## Nội dung
-- Tiệc Thành hôn 28/02/2027 tại Capella Park View, TP.HCM, giờ mời khách khoảng 11:00.
-- Link thiệp cá nhân dạng **https://linhthangwedding.github.io/?i=MÃ_RIÊNG**.
-- Tên trên thiệp lấy TRỰC TIẾP từ cột **Name** thuộc đúng dòng khách trong tab **Guest List**.
+## Thiệp cá nhân hóa
+- Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
+- Link riêng hiện dạng dễ đọc, ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp`.
+- Tên xuất hiện trên thiệp lấy TRỰC TIẾP từ cột **Tên khách mời** thuộc đúng dòng khách ở **Guest List**, không phải từ đuôi link.
+- Đuôi link không dấu và được giữ ổn định khi sửa tên khách. Các tên trùng nhau có thêm phần phân biệt.
 
-## Danh sách khách và link
-Giữ nguyên **hai bảng khách hiện có trong Guest List**, không thêm bảng thứ ba:
-- Bảng hồng (bên trái): **B = Name**, **E = Confirm**, **G = Link**.
-- Bảng khách (bên phải): **K = Name**, **Q = RSVP**, **R = Link**.
-- Tab **RSVP Online** được ẩn để làm sổ mã/biên nhận kỹ thuật. KHÔNG xóa tab này.
+## Quản lý khách mời
+Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng thứ ba:
+- Bảng hồng bên trái: tên ở cột **B**, RSVP ở cột **E**, link ở cột **G**.
+- Bảng bên phải: tên ở cột **J**, RSVP ở cột **P**, link ở cột **Q**.
 
-Tên trên thiệp chính là giá trị trong cột Name B/K. Chỉnh cách xưng hô ở đây sẽ đổi tên hiển thị trên thiệp mà KHÔNG cần tạo link mới.
+Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Script phiên bản hiện tại tìm cột theo tiêu đề ở hàng 1, không theo số cột cố định.
 
-## Kích hoạt RSVP
-Website đã kết nối URL Google Apps Script Web App, nhưng sau lần chỉnh sửa bố cục Guest List, **chủ tiệc cần thay Code.gs bằng bản mới nhất và Redeploy New version**. Xem [apps-script/README.md](apps-script/README.md).
+Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi link thân thiện ở cột Q, số khách, lời nhắn, thời gian và mã biên nhận. Không xóa hoặc công khai tab này.
 
-Khi gửi thành công, Apps Script cập nhật cột E hoặc Q ngay tại đúng dòng khách, và đồng thời lưu số người/lời nhắn/thời gian ở tab kỹ thuật ẩn.
+## Kích hoạt và kiểm thử
+Nếu vừa thay đổi Code.gs hoặc link riêng, phải cập nhật Apps Script và chọn **Deploy → Manage deployments → Edit → New version → Deploy**. Xem [hướng dẫn](apps-script/README.md).
 
-## Lưu ý
-- Chưa có xác nhận đã kiểm thử đầu-cuối sau cập nhật mới, đừng gửi link thật tới khách trước khi test.
-- Không đăng công khai Guest List, mã đầy đủ, RSVP hay thông tin cá nhân trên GitHub.
-- Người có link thiệp riêng có thể phản hồi thay, vì link là công cụ phân biệt khách chứ không phải hình thức xác minh danh tính mạnh.
+Chưa xác nhận đã test RSVP đầu cuối từ browser đến Google Sheets sau bản cập nhật slug. Không gửi thiệp hàng loạt trước khi test.
+
+## Riêng tư
+- Không đưa Guest List, mã gốc, lời nhắn RSVP hoặc số điện thoại lên GitHub.
+- **Link theo tên dễ đoán hơn link có mã ngẫu nhiên.** Người đoán được link có thể xem tên và gửi phản hồi thay; link không phải xác thực danh tính mạnh. Nếu muốn bảo vệ RSVP tốt hơn, cần dùng mã ngẫu nhiên hoặc xác minh bổ sung.
