@@ -18,15 +18,16 @@ function cleanText_(value, max) {
   return /^[=+@\-]/.test(s) ? "'" + s : s;
 }
 function findInvite_(book, invite) {
-  if (!/^[a-z0-9]{16,64}$/.test(invite)) return null;
+  if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(invite)) return null;
   var registry = book.getSheetByName(REGISTRY_TAB);
   if (!registry) throw new Error("Missing private RSVP registry");
   var last = registry.getLastRow();
   if (last < 2) return null;
-  var rows = registry.getRange(2, 1, last - 1, 16).getDisplayValues();
+  var rows = registry.getRange(2, 1, last - 1, 17).getDisplayValues();
   for (var i = 0; i < rows.length; i++) {
     var original = String(rows[i][0] || "").trim();
-    if (original === invite || (invite.length === 16 && original.slice(0,16) === invite)) {
+    if (original === invite || String(rows[i][16] || "") === invite ||
+        (invite.length === 16 && original.slice(0,16) === invite)) {
       return {registry:registry, index:i+2, row:rows[i]};
     }
   }
@@ -42,26 +43,43 @@ function locateGuest_(book, record) {
   if (!sheet || sheet.getLastRow() < 2) return null;
   var side = String(record[14] || "").trim();
   if (side !== "LEFT" && side !== "RIGHT") return null;
-  var token = String(record[0] || "").slice(0,16);
-  if (!/^[a-z0-9]{16}$/.test(token)) return null;
-  var nameCol = side === "LEFT" ? 1 : 10; // B or K, 0-based
-  var eventCol = side === "LEFT" ? 2 : 11; // C or L
-  var linkCol = side === "LEFT" ? 6 : 17; // G or R
-  var responseCol = side === "LEFT" ? 5 : 17; // E or Q, 1-based
-  var lastRow = sheet.getLastRow();
-  var records = sheet.getRange(2,1,lastRow-1,18).getDisplayValues();
-  var suffix = "?i=" + token;
-  var match = null;
-  for (var i=0;i<records.length;i++) {
-    var row = records[i],link = String(row[linkCol] || "").trim();
-    if (link.endsWith(suffix) && String(row[nameCol] || "").trim()) {
-      // Fail closed if the same code ever occurs on two guest rows.
-      if (match) return null;
-      match = {
-        tab:sheet, rowNumber:i+2,
-        name:String(row[nameCol]).trim(),
-        event:String(row[eventCol] || "").trim(),
-        responseCol:responseCol
+  // Determine columns by the real headers, not fixed positions. This also
+  // supports changes to the table layout such as adding a column.
+  var width = sheet.getLastColumn();
+  var headers = sheet.getRange(1,1,1,width).getDisplayValues()[0];
+  var isGuestName = function(h){return h === "Tên khách mời" || h === "Name";};
+  var getIndices = function(pred){
+    var out=[]; for (var i=0;i<headers.length;i++) if(pred(headers[i])) out.push(i);
+    return out;
+  };
+  var guestNames=getIndices(isGuestName);
+  var links=getIndices(function(h){return h === "Link";});
+  var responses=getIndices(function(h){return h === "RSVP";});
+  var events=getIndices(function(h){return h === "Event";});
+  var which = side === "LEFT" ? 0 : 1;
+  if (guestNames.length < 2 || links.length < 2 || events.length < 2) return null;
+  var nameCol=guestNames[which],linkCol=links[which],eventCol=events[which];
+  var responseCol=-1;
+  for (var j=0;j<responses.length;j++) {
+    if (responses[j] > nameCol && responses[j] < linkCol) {responseCol=responses[j];break;}
+  }
+  if (responseCol < 0) return null;
+  var slug=String(record[16] || "").trim();
+  var fullId=String(record[0] || "").trim();
+  var oldShort=fullId.slice(0,16);
+  if (!/^[a-z0-9-]{2,76}$/.test(slug)) return null;
+  var rows=sheet.getRange(2,1,sheet.getLastRow()-1,width).getDisplayValues();
+  var match=null;
+  for (var i=0;i<rows.length;i++){
+    var row=rows[i];
+    var link=String(row[linkCol] || "").trim();
+    var suffix=link.split("?i=")[1] || "";
+    var isMatch=suffix === slug || suffix === oldShort;
+    if (isMatch && String(row[nameCol] || "").trim()) {
+      if (match) return null; // Collision protection.
+      match={
+        tab:sheet, rowNumber:i+2, name:String(row[nameCol]).trim(),
+        event:String(row[eventCol] || "").trim(), responseCol:responseCol+1
       };
     }
   }
@@ -117,7 +135,7 @@ function doPost(e) {
   var invite=String(p.invite||"").trim();
   var attending=String(p.attending||"").trim();
   var receipt=String(p.receipt||"").trim();
-  if (!/^[a-z0-9]{16,64}$/.test(invite) ||
+  if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(invite) ||
       !/^(yes|no)$/.test(attending) ||
       !/^[a-zA-Z0-9-]{8,100}$/.test(receipt))
     return json_({ok:false,error:"invalid_parameters"});
