@@ -170,3 +170,75 @@ function doPost(e) {
     lock.releaseLock();
   }
 }
+
+
+/**
+ * Sync invite links when a guest's displayed name changes.
+ * Only the editable "Tên khách mời" columns trigger this simple onEdit.
+ * Run syncAllGuestLinks manually ONCE after installing this version.
+ */
+function onEdit(e) {
+  if (!e || !e.range || e.range.getSheet().getName() !== GUEST_TAB) return;
+  var colStart = e.range.getColumn();
+  var colEnd = e.range.getLastColumn();
+  if (e.range.getLastRow() < 2) return;
+  if ((colStart <= 2 && colEnd >= 2) ||
+      (colStart <= 10 && colEnd >= 10)) {
+    syncAllGuestLinks();
+  }
+}
+function weddingSlug_(name, notes) {
+  var normal = String(name || "").trim().replace(/\s*\(optional\)/ig, "");
+  normal = normal.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/gi, "d").toLowerCase()
+    .replace(/[+&]/g, " va ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0,58).replace(/-+$/g, "");
+  if (/kpmg/i.test(String(notes || ""))) normal += "-kp";
+  return normal;
+}
+function syncAllGuestLinks() {
+  var book = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = book.getSheetByName(GUEST_TAB);
+  var registry = book.getSheetByName(REGISTRY_TAB);
+  if (!sheet || !registry) throw new Error("Missing wedding guest data");
+  var count = registry.getLastRow() - 1;
+  var records = registry.getRange(2, 1, count, 20).getDisplayValues();
+  var guestRecords = sheet.getRange(1, 1, sheet.getLastRow(), 18).getDisplayValues();
+  var candidates = [], counts = {};
+  for (var i = 0; i < records.length; i++) {
+    var rec = records[i], side = String(rec[14] || ""), srcRow = Number(rec[15]);
+    var source = guestRecords[srcRow - 1] || [];
+    if (!Number.isInteger(srcRow) || srcRow < 2 || !["LEFT","RIGHT"].includes(side))
+      throw new Error("Bad guest source mapping");
+    var name = source[side === "LEFT" ? 1 : 9];
+    var notes = source[side === "LEFT" ? 5 : 14];
+    var prefix = weddingSlug_(name, notes);
+    var suffix = String(rec[18] || "").trim();
+    var candidate = prefix + (prefix && suffix ? "-" + suffix : "");
+    if (candidate) counts[candidate] = (counts[candidate] || 0) + 1;
+    candidates.push({rec:rec,source:source,row:srcRow,side:side,candidate:candidate});
+  }
+
+  var used = {};
+  var changes = 0;
+  for (var j = 0; j < candidates.length; j++) {
+    var item = candidates[j], rec = item.rec, target = item.candidate;
+    if (target && counts[target] > 1) target += "-" + String(rec[0]).slice(0,4);
+    if (target && used[target]) target += "-" + String(rec[0]).slice(0,8);
+    if (target) used[target] = true;
+    var link = target ? "https://linhthangwedding.github.io/?i=" + target : "";
+    var targetColumn = item.side === "LEFT" ? 7 : 17;
+    if (String(rec[16] || "") !== target) {
+      registry.getRange(j + 2, 17).setValue(target);
+      changes++;
+    }
+    if (String(item.source[targetColumn - 1] || "") !== link) {
+      sheet.getRange(item.row, targetColumn).setValue(link);
+      changes++;
+    }
+  }
+  SpreadsheetApp.flush();
+  return "Đã đồng bộ: " + changes + " ô; " + records.length + " thiệp.";
+}
