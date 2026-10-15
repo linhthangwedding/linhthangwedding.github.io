@@ -33,3 +33,14 @@ Các cột có thể dịch chuyển khi sửa bảng. Code.gs tìm tên cột d
 
 ## Cảnh báo bảo mật
 Link gợi nhớ theo tên có thể bị người ngoài đoán. Người có hoặc đoán được đường dẫn có thể gửi RSVP thay khách. Cách này tiện chia sẻ nhưng **kém riêng tư hơn mã ngẫu nhiên**, không nên coi là xác minh danh tính. Không công khai toàn bộ link cá nhân.
+
+## Tự đổi link theo tên khách (cập nhật 15/10/2026)
+Khi sửa ô **Tên khách mời** tại B hoặc J trong Guest List, hàm `onEdit(e)` mới sẽ tạo lại đuôi link không dấu, giữ các hậu tố phân biệt và cập nhật đường dẫn ở cột G hoặc Q. Website đọc trực tiếp tên có dấu từ ô Tên khách mời.
+
+Để kích hoạt lần đầu:
+1. Mở Apps Script gắn với **Master File**, thay toàn bộ `Code.gs` bằng [bản mới nhất](./Code.gs) và **Save**.
+2. Trong danh sách function ở thanh công cụ, chọn `syncAllGuestLinks` rồi bấm **Run** một lần để đồng bộ mọi tên/link đã sửa trước đó. Nếu Google hỏi quyền, cấp quyền cho script thuộc tài khoản của bạn.
+3. Từ các lần sửa tên tiếp theo trên Google Sheets, `onEdit` chạy tự động, không cần bấm Run nữa. Vì phần Web App tra cứu RSVP không thay đổi, thường **không cần redeploy** riêng cho thay đổi này nếu bạn đã triển khai phiên bản hỗ trợ link theo tên như ở các bước trước.
+4. Thử đổi một tên chưa gửi thiệp, kiểm tra link ở đúng cột và tên hiển thị khi mở link, rồi đổi lại nếu chỉ thử nghiệm.
+
+**Quan trọng:** Tên đổi sẽ làm **đuôi link đổi**. Đường dẫn đã gửi trước đó theo tên cũ có thể không còn hoạt động; sau khi đổi tên, gửi lại link mới. Không đổi mã tùy ý trong cột Link; hãy chỉnh cột Tên khách mời.
