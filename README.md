@@ -6,7 +6,8 @@ Website thiệp cưới song ngữ Việt / Anh: https://linhthangwedding.github
 - Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
 - Link riêng hiện dạng dễ đọc, ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp`.
 - Tên xuất hiện trên thiệp lấy TRỰC TIẾP từ cột **Tên khách mời** thuộc đúng dòng khách ở **Guest List**, không phải từ đuôi link.
-- Đuôi link không dấu và được giữ ổn định khi sửa tên khách. Các tên trùng nhau có thêm phần phân biệt.
+- Đuôi link **tự thay đổi khi sửa tên** trong Guest List, không cần chỉnh tay. Công thức chuyển tiếng Việt có dấu thành chữ thường không dấu; nếu trùng, hệ thống thêm phần phân biệt để giữ đúng khách.
+- Theo lựa chọn của gia đình, **chỉ link hiện tại được chấp nhận**, link theo tên cũ không còn dùng được sau khi đổi.
 
 ## Quản lý khách mời
 Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng thứ ba:
@@ -18,7 +19,7 @@ Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Scrip
 Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi link thân thiện ở cột Q, số khách, lời nhắn, thời gian và mã biên nhận. Không xóa hoặc công khai tab này.
 
 ## Kích hoạt và kiểm thử
-Nếu vừa thay đổi Code.gs hoặc link riêng, phải cập nhật Apps Script và chọn **Deploy → Manage deployments → Edit → New version → Deploy**. Xem [hướng dẫn](apps-script/README.md).
+Việc đổi tên/link đã tự cập nhật bằng công thức Google Sheets. Để bảo đảm RSVP chỉ nhận **link mới nhất**, phải cập nhật Apps Script và chọn **Deploy → Manage deployments → Edit → New version → Deploy**. Xem [hướng dẫn](apps-script/README.md).
 
 Chưa xác nhận đã test RSVP đầu cuối từ browser đến Google Sheets sau bản cập nhật slug. Không gửi thiệp hàng loạt trước khi test.
 
