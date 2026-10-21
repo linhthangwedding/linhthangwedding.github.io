@@ -7,7 +7,7 @@ Website thiệp cưới song ngữ Việt / Anh: https://linhthangwedding.github
 - Link riêng hiện dạng dễ đọc, ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp`.
 - Tên xuất hiện trên thiệp lấy TRỰC TIẾP từ cột **Tên khách mời** thuộc đúng dòng khách ở **Guest List**, không phải từ đuôi link.
 - Đuôi link **tự thay đổi khi sửa tên** trong Guest List, không cần chỉnh tay. Công thức chuyển tiếng Việt có dấu thành chữ thường không dấu; nếu trùng, hệ thống thêm phần phân biệt để giữ đúng khách.
-- Theo lựa chọn của gia đình, **chỉ link hiện tại được chấp nhận**, link theo tên cũ không còn dùng được sau khi đổi.
+- Theo lựa chọn cập nhật, **cả link hiện tại và những link cũ đã được ghi nhận đều hoạt động**. Link cũ luôn tải tên mới nhất và ghi RSVP về cùng khách.
 
 ## Quản lý khách mời
 Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng thứ ba:
@@ -16,10 +16,10 @@ Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng t
 
 Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Script phiên bản hiện tại tìm cột theo tiêu đề ở hàng 1, không theo số cột cố định.
 
-Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi link thân thiện ở cột Q, số khách, lời nhắn, thời gian và mã biên nhận. Không xóa hoặc công khai tab này.
+Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi hiện tại ở cột Q, snapshot ở cột U, số khách, lời nhắn, thời gian và mã biên nhận. Tab **RSVP Link History** cũng được giữ ẩn để lưu các đuôi trước đó. Không xóa hoặc công khai hai tab này.
 
 ## Kích hoạt và kiểm thử
-Việc đổi tên/link đã tự cập nhật bằng công thức Google Sheets. Để bảo đảm RSVP chỉ nhận **link mới nhất**, phải cập nhật Apps Script và chọn **Deploy → Manage deployments → Edit → New version → Deploy**. Xem [hướng dẫn](apps-script/README.md).
+Việc đổi tên/link đã tự cập nhật bằng công thức Google Sheets. Mã Apps Script bổ sung `onEdit` lưu đuôi link trước khi đổi tên vào **RSVP Link History** (tab ẩn) và ánh xạ các link đó về mã khách gốc. **Cần cập nhật Apps Script và chọn Deploy → Manage deployments → Edit → New version → Deploy** để bật chức năng lưu link cũ. Xem [hướng dẫn](apps-script/README.md).
 
 Chưa xác nhận đã test RSVP đầu cuối từ browser đến Google Sheets sau bản cập nhật slug. Không gửi thiệp hàng loạt trước khi test.
 
