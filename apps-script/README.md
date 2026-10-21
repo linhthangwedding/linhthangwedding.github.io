@@ -1,6 +1,6 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
-Đuôi link hiện dùng **tên không dấu**, ví dụ `?i=chi-thu-tam-kp`, thay cho mã 16 ký tự ngẫu nhiên. 151 link có đuôi duy nhất. Mã 30 ký tự cũ vẫn lưu ở tab ẩn để định danh nội bộ, nhưng **Web App chỉ chấp nhận đuôi link hiện tại ở cột Q**. Link cũ không còn hợp lệ.
+Đuôi link hiện dùng **tên không dấu**, ví dụ `?i=chi-thu-tam-kp`, thay cho mã 16 ký tự ngẫu nhiên. 151 link có đuôi duy nhất. Mã 30 ký tự cũ vẫn là định danh nội bộ; từ bản cập nhật này, Web App sẽ nhận cả slug hiện tại và các slug cũ được lưu trong **RSVP Link History**.
 
 ## Cập nhật deployment (bắt buộc sau lần thay đổi này)
 1. Trong Master File Google Sheets, chọn **Extensions → Apps Script**.
@@ -9,7 +9,7 @@
 4. **Version → New version → Deploy**. Giữ deployment cũ để URL `/exec` không đổi.
 5. Kiểm tra **Execute as: Me** và **Who has access: Anyone**.
 
-**Cần redeploy để loại bỏ xử lý link cũ**. Hệ thống chỉ nhận đuôi link hiện tại sau khi cập nhật phiên bản backend. Không gửi thiệp cho khách khi chưa kiểm thử.
+**Cần redeploy để bật xử lý link cũ**. Sau khi kích hoạt, cả link cũ và link mới cùng ánh xạ về một khách. Không gửi thiệp cho khách khi chưa kiểm thử.
 
 ## Bố cục Guest List hiện tại
 
@@ -20,8 +20,8 @@
 
 Các cột có thể dịch chuyển khi sửa bảng. Code.gs tìm tên cột dựa vào hai tiêu đề `Tên khách mời`, `Link`, `Event` và `RSVP` ở hàng 1.
 
-- Tên khách **trên thiệp** được tra cứu từ cột Tên khách mời trong đúng bảng gốc; sửa cách xưng hô ở đây thì **cả tên trên thiệp và đuôi đường link tự đổi**, không cần bấm Run.
-- Bộ nhận RSVP dùng đuôi link để tìm mã gốc trong tab kỹ thuật **RSVP Online** rồi dò lại đúng dòng khách có link đó.
+- Tên khách **trên thiệp** được tra cứu từ cột Tên khách mời trong đúng bảng gốc; sửa cách xưng hô ở đây thì **cả tên trên thiệp và đuôi đường link tự đổi**, nhưng URL cũ được lưu và vẫn dùng được.
+- Bộ nhận RSVP tra slug hiện tại hoặc lịch sử để tìm mã khách ổn định trong tab kỹ thuật **RSVP Online** rồi dò lại đúng dòng có link hiện tại.
 - Tab kỹ thuật ẩn có đuôi dễ đọc tại cột Q, mã gốc cột A, lời nhắn và biên nhận. Không xóa.
 - Trạng thái Có/Không (và số người nếu có) ghi vào cột RSVP ngay trên đúng dòng khách trong Guest List.
 
@@ -34,19 +34,21 @@ Các cột có thể dịch chuyển khi sửa bảng. Code.gs tìm tên cột d
 ## Cảnh báo bảo mật
 Link gợi nhớ theo tên có thể bị người ngoài đoán. Người có hoặc đoán được đường dẫn có thể gửi RSVP thay khách. Cách này tiện chia sẻ nhưng **kém riêng tư hơn mã ngẫu nhiên**, không nên coi là xác minh danh tính. Không công khai toàn bộ link cá nhân.
 
-## Tự động đổi tên và link (không cần chạy Apps Script)
+## Giữ cả link cũ và mới khi đổi tên
 
-**Đã thiết lập công thức cho 151 khách đang có link:**
-- Guest List cột **B** (bảng hồng) / **J** (bảng bên phải) là nơi sửa tên.
-- Link ở cột **G** / **Q** là công thức đọc đuôi link mới nhất, tự đổi ngay khi tên thay đổi.
-- Tab RSVP Online (ẩn) dùng cột **R** để chuyển tên có dấu thành slug; cột **S** giữ hậu tố phân biệt; cột **T** ghép các phần; cột **Q** xử lý trùng tên bằng mã ngắn nếu cần.
-- Website tra cứu tên có dấu bằng đuôi link hiện tại và ghi RSVP về đúng người. Đổi tên không đổi mã nội bộ của khách.
-- **Không có trigger onEdit, không cần chạy hàm syncAllGuestLinks hay cấp thêm quyền kích hoạt tự động.** Đó là hướng cũ đã thay thế bằng công thức.
-- Nếu xóa tên, link tự ẩn. Khi nhập lại tên, link tự xuất hiện với đuôi mới.
-- Link cũ theo tên trước đó không được Web App phiên bản mới chấp nhận.
+**Google Sheets đã được chuẩn bị:** Guest List cột **B/J** lưu tên hiển thị có dấu; cột **G/Q** tự tạo link theo tên mới. Tab kỹ thuật `RSVP Online` lưu mã nội bộ ở A, slug hiện tại ở Q, snapshot slug gần nhất ở U. Tab ẩn `RSVP Link History` ghi **slug cũ + mã nội bộ**, không lộ danh sách khách trên GitHub.
 
-**Chỉ một bước thủ công cần làm:** thay `Code.gs` bằng bản mới nhất và redeploy **New version** vì logic từ chối link cũ phải được cập nhật trong Web App. Không cần thay URL `/exec`.
+**Apps Script mới có hai lớp đồng bộ:**
+- Hàm `onEdit(e)` tự chạy khi sửa tên trực tiếp trong hai bảng Guest List. Hàm lưu slug cũ vào tab lịch sử rồi cập nhật snapshot slug mới.
+- Lúc một link cũ hoặc mới truy cập Web App, backend đối chiếu lại snapshot để xử lý cả trường hợp công thức vừa thay đổi hoặc chỉnh sửa từ công cụ khác.
+- Chỉ cần cập nhật `Code.gs` và redeploy Web App một lần để bật. **Không cần tự chạy** `syncAllGuestLinks`, vì hàm cũ đã được thay thế.
 
-Sau khi redeploy, hãy kiểm thử bằng cách sửa một tên chưa gửi thiệp, kiểm tra link thay đổi, mở link thấy tên mới, và thử phản hồi bằng khách thử. Hoàn nguyên tên nếu dùng để thử. Tuyệt đối không sửa trực tiếp cột Link hoặc các công thức trong tab ẩn.
+**Tương thích:** Link ngắn theo tên trước đó (nếu đã được lưu trong lịch sử), link dài ngẫu nhiên 30 ký tự, mã 16 ký tự cũ và link tên hiện tại đều trả về cùng người. Tên hiển thị luôn được đọc từ Guest List tại thời điểm mở thiệp. RSVP được ghi về cùng ô E/P của khách bất kể dùng phiên bản nào.
 
-**Lưu ý:** Hệ thống đảm bảo khi sửa trực tiếp ô tên. Nếu sau này sắp xếp/di chuyển các dòng hay chèn cột mới vào hai bảng, nên rà lại công thức và liên kết dữ liệu trước khi gửi link vì registry hiện tham chiếu vị trí các dòng nguồn.
+**An toàn khi trùng tên:** Công thức slug tự thêm 4 ký tự của mã ổn định khi trùng với link của khách khác, kể cả link đã lưu lịch sử. Backend từ chối nếu hai khách thật sự dùng cùng một alias, để không ghi nhầm RSVP.
+
+**Đã chuẩn bị 151 snapshot đầu tiên**, và một vài link trước khi kích hoạt lịch sử đã được phục hồi từ các phiên bản Master File có thể kiểm tra. Không thể cam kết phục hồi các URL cũ đã mất mà không còn trong hồ sơ.
+
+**Quan trọng:** Cần vào Apps Script đã deploy, thay toàn bộ [Code.gs mới nhất](./Code.gs), **Save → Deploy → Manage deployments → Edit → New version → Deploy**. Không cần đổi URL `/exec`. Sau đó thử đổi tên một khách chưa gửi thiệp, kiểm tra link cũ và mới cùng hiển thị tên mới; thử RSVP bằng một khách thử và hoàn nguyên dữ liệu sau khi kiểm tra.
+
+**Quyền riêng tư:** Đuôi link theo tên dễ bị đoán hơn token ngẫu nhiên. Cả link cũ và mới cùng hoạt động thì những URL đã chia sẻ trước đây vẫn truy cập được; không nên dùng link làm bằng chứng xác thực danh tính.
