@@ -6,7 +6,9 @@
  *   Other guest table:     Name J, Event K, RSVP P, Link Q
  *
  * Slugs and links automatically recalculate in Google Sheets formulas.
- * Editing Name directly updates the link, without an onEdit trigger.
+ * The onEdit trigger snapshots former slugs into hidden RSVP Link History.
+ * The same reconciliation also runs on RSVP API requests for resilience.
+ * Old and new links always resolve via the same stable invitation ID.
  *
  * The hidden "RSVP Online" tab is only a private token/response registry.
  * Never publish the guest list or its long token values in the GitHub repo.
@@ -20,23 +22,96 @@ function cleanText_(value, max) {
   var s = String(value == null ? "" : value).trim().slice(0, max || 1000);
   return /^[=+@\-]/.test(s) ? "'" + s : s;
 }
+/**
+ * Preserve historical names before overwriting the last-seen slug (col U).
+ * Columns: Q=current slug, U=snapshot; hidden RSVP Link History A=old slug,
+ * B=stable invitation ID. Called by onEdit and before read/write requests.
+ */
+function syncAliasSnapshots_(book) {
+  var registry = book.getSheetByName(REGISTRY_TAB);
+  var history = book.getSheetByName("RSVP Link History");
+  if (!registry || !history) throw new Error("Missing invitation history");
+  var count = registry.getLastRow() - 1;
+  if (count < 1) return;
+  var rows = registry.getRange(2, 1, count, 21).getDisplayValues();
+  var last = history.getLastRow();
+  var known = last > 1 ? history.getRange(2, 1, last - 1, 2).getDisplayValues() : [];
+  var used = {};
+  known.forEach(function(row){used[String(row[0]) + "\u0001" + String(row[1])] = true;});
+  var newHistory = [], snapshots = [], changed = false;
+  rows.forEach(function(rec){
+    var id = String(rec[0] || "").trim();
+    var current = String(rec[16] || "").trim();
+    var previous = String(rec[20] || "").trim();
+    if (current !== previous) {
+      changed = true;
+      if (id && previous && !used[previous + "\u0001" + id]) {
+        newHistory.push([previous, id, new Date(), "Tự lưu khi đổi tên khách"]);
+        used[previous + "\u0001" + id] = true;
+      }
+    }
+    snapshots.push([current]);
+  });
+  if (!changed) return;
+  if (newHistory.length) {
+    var first = history.getLastRow() + 1;
+    var capacity = history.getMaxRows();
+    if (first + newHistory.length - 1 > capacity)
+      history.insertRowsAfter(capacity, first + newHistory.length - 1 - capacity);
+    history.getRange(first, 1, newHistory.length, 4).setValues(newHistory);
+  }
+  registry.getRange(2, 21, count, 1).setValues(snapshots);
+  SpreadsheetApp.flush();
+}
+function syncAliasesWithLock_(book) {
+  var lock = LockService.getDocumentLock() || LockService.getScriptLock();
+  if (!lock.tryLock(5000)) return;
+  try { syncAliasSnapshots_(book); }
+  finally { lock.releaseLock(); }
+}
+/** Google Sheets bound script: runs automatically after changes to Name B/J. */
+function onEdit(e) {
+  if (!e || !e.range || e.range.getSheet().getName() !== GUEST_TAB) return;
+  var first = e.range.getColumn(), last = e.range.getLastColumn();
+  if (e.range.getLastRow() < 2 || !((first <= 2 && last >= 2) ||
+                                      (first <= 10 && last >= 10))) return;
+  SpreadsheetApp.flush();
+  syncAliasesWithLock_(e.source || SpreadsheetApp.getActiveSpreadsheet());
+}
+/**
+ * Resolve a CURRENT slug, a historic slug or a legacy random invitation ID.
+ * Always return a STABLE registry record, never identify guests by their names.
+ * Ambiguity across two invitations fails closed.
+ */
 function findInvite_(book, invite) {
-  // ONLY the current friendly slug is accepted; old slugs are invalid.
   if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(invite)) return null;
   var registry = book.getSheetByName(REGISTRY_TAB);
-  if (!registry) throw new Error("Missing private RSVP registry");
-  var last = registry.getLastRow();
-  if (last < 2) return null;
-  var rows = registry.getRange(2, 1, last - 1, 17).getDisplayValues();
-  var found = null;
-  for (var i=0; i<rows.length; i++) {
-    if (String(rows[i][16] || "").trim() === invite) {
-      if (found) return null; // Never accept ambiguous slugs.
-      found = {registry:registry,index:i+2,row:rows[i]};
-    }
+  var history = book.getSheetByName("RSVP Link History");
+  if (!registry || !history) return null;
+  var count = registry.getLastRow() - 1;
+  if (count < 1) return null;
+  var records = registry.getRange(2, 1, count, 21).getDisplayValues();
+  var matches = {};
+  var byId = {};
+  records.forEach(function(rec,i){
+    var id = String(rec[0] || "").trim();
+    if (!id) return;
+    byId[id] = {registry:registry,index:i+2,row:rec};
+    if (String(rec[16] || "").trim() === invite ||
+        id === invite || (invite.length === 16 && id.slice(0,16) === invite))
+      matches[id] = true;
+  });
+  if (history.getLastRow() > 1) {
+    var aliases = history.getRange(2,1,history.getLastRow()-1,2).getDisplayValues();
+    aliases.forEach(function(row){
+      if (String(row[0] || "").trim() === invite && byId[String(row[1] || "").trim()])
+        matches[String(row[1]).trim()] = true;
+    });
   }
-  return found;
+  var keys = Object.keys(matches);
+  return keys.length === 1 ? byId[keys[0]] : null;
 }
+
 /**
  * Find the current guest using the CURRENT Link slug, not its name or row number.
  * Formula changes propagate automatically when the guest name changes.
@@ -110,6 +185,7 @@ function doGet(e) {
     return js_(callback,{saved:false,invalid:true});
   try {
     var book=SpreadsheetApp.getActiveSpreadsheet();
+    syncAliasesWithLock_(book);
     var found=findInvite_(book,String(q.invite||"").trim());
     if (!found) return js_(callback,{valid:false,invalid:true});
     var guest=locateGuest_(book,found.row);
@@ -145,6 +221,7 @@ function doPost(e) {
   if (!lock.tryLock(15000)) return json_({ok:false,error:"busy"});
   try {
     var book=SpreadsheetApp.getActiveSpreadsheet();
+    syncAliasSnapshots_(book); // post already owns the document lock
     var found=findInvite_(book,invite);
     if (!found) return json_({ok:false,error:"unknown_invitation"});
     var guest=locateGuest_(book,found.row);
