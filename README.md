@@ -1,6 +1,8 @@
 # Thiệp cưới Linh & Thắng
 
-Website thiệp cưới song ngữ Việt / Anh: https://linhthangwedding.github.io
+Website thiệp cưới: https://linhthangwedding.github.io
+
+**English-only preview (v37):** Mọi nội dung hiển thị đã được rà lại theo hướng casual, ấm áp; ẩn switch VN/EN trong `index.html` và đặt `setLang("en")` trong `script.js`. Nội dung tiếng Việt **vẫn được giữ** ở `copy.vi` để bật lại sau. Khách mời vẫn giữ tên tiếng Việt theo Guest List. Không thay đổi backend/RSVP, hình ảnh, địa điểm hoặc lịch tiệc.
 
 ## Thiệp cá nhân hóa
 - Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
