@@ -235,18 +235,27 @@ function locateGuest_(book, record) {
   if (!/^[a-z0-9-]{2,76}$/.test(slug)) return null;
   // Use the exact current link in its ONE source column. The original
   // full-sheet scan read every cell even though only one guest was needed.
+  // Current links may contain &to=<encoded display name> for instant paint.
+  // It is only a display hint, NOT an invitation ID or RSVP authorization.
+  // Keep matching legacy slug-only links and LIVE aliases by immutable ID.
   var expectedLink="https://linhthangwedding.github.io/?i="+slug;
   var hits=sheet.getRange(2,linkCol+1,sheet.getLastRow()-1,1)
-    .createTextFinder(expectedLink).matchEntireCell(true).findAll();
-  if (hits.length !== 1) return null; // Missing or duplicated links fail closed.
-  var rowNumber=hits[0].getRow();
-  var row=sheet.getRange(rowNumber,1,1,width).getDisplayValues()[0];
-  if (String(row[linkCol]||"").trim() !== expectedLink ||
-      !String(row[nameCol]||"").trim()) return null;
-  return {
-    tab:sheet, rowNumber:rowNumber, name:String(row[nameCol]).trim(),
-    event:String(row[eventCol] || "").trim(), responseCol:responseCol+1
-  };
+    .createTextFinder(expectedLink).matchCase(true).findAll();
+  var match=null;
+  for(var k=0;k<hits.length;k++){
+    var rowNumber=hits[k].getRow();
+    var row=sheet.getRange(rowNumber,1,1,width).getDisplayValues()[0];
+    var link=String(row[linkCol]||"").trim();
+    var parsed=link.match(/^https:\/\/linhthangwedding\.github\.io\/\?i=([a-z0-9-]{2,76})(?:&to=[^#\s]*)?$/);
+    if(!parsed || parsed[1] !== slug || !String(row[nameCol]||"").trim())
+      continue;
+    if(match) return null; // Never resolve a duplicated guest link.
+    match={
+      tab:sheet,rowNumber:rowNumber,name:String(row[nameCol]).trim(),
+      event:String(row[eventCol]||"").trim(),responseCol:responseCol+1
+    };
+  }
+  return match;
 }
 function canRsvp_(eventName) {
   // A blank Event cell in the wedding Guest List means not yet categorized,
