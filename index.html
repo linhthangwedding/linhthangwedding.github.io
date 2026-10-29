@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://script.google.com">
   <link rel="dns-prefetch" href="//script.googleusercontent.com">
   <link rel="preload" as="image" href="assets/hero-eiffel-original-1024.jpg?v=27" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=42">
+  <link rel="stylesheet" href="styles.css?v=43">
   <!-- Begin the private guest lookup as soon as the HTML head is parsed.
        The response is held for script.js; no names are embedded in public files. -->
   <script>
@@ -171,7 +171,12 @@ Linh &amp; Thang ♡</p>
   <section class="rsvp-section" id="rsvp">
     <div class="rsvp-head">
       <p class="section-kicker" data-i18n="rsvpTitle">CAN YOU MAKE IT?</p>
-      <p data-i18n="rsvpIntro">We really hope you can join us! Let us know below so we can plan for you.</p>
+      <p id="rsvpIntro" data-i18n="rsvpIntro">We really hope you can join us! Let us know below so we can plan for you.</p>
+      <p class="rsvp-deadline" data-i18n="rsvpDeadline">Please RSVP by February 14, 2027 (Vietnam time).</p>
+    </div>
+
+    <div id="rsvpClosedPanel" class="rsvp-closed-panel hidden" role="status" aria-live="polite">
+      <p id="rsvpClosedMessage"></p>
     </div>
 
     <form id="rsvpForm" class="rsvp-form">
@@ -214,6 +219,6 @@ Linh &amp; Thang ♡</p>
   </footer>
 </main>
 
-<script src="script.js?v=46"></script>
+<script src="script.js?v=47"></script>
 </body>
 </html>
