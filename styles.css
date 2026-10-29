@@ -314,3 +314,6 @@ footer{
 @media(max-width:760px){
  .invite-guest-name{font-size:26px;margin:16px auto 18px;}
 }
+
+/* Show failures near the invitation instead of leaving the greeting blank. */
+.invite-guest-notice{margin:10px auto 14px;max-width:520px;font-size:13px;line-height:1.7;color:#7c645b;text-align:center}
