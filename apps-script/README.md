@@ -79,3 +79,12 @@ Lỗi này có thể xảy ra khi Web App vẫn chạy một bản Code.gs cũ h
 4. Mở thử URL chẩn đoán (chỉ trả tên của khách mẫu đã có trong sheet): `https://script.google.com/macros/s/AKfycbwDA6HVjo0JZUM0dCiPjVwNB2Whzjgsr4IiuTxulmd2LDijhpfQ3SR_c34VVJ6mXHNRxQ/exec?action=guest&invite=chi-thu-tam-kp&callback=checkWedding`. Kết quả đúng có dạng `checkWedding({"valid":true,"name":"Chị Thu Tâm","canRsvp":true});`.
 5. Mở lại link thiệp của khách. Nếu hàm test đã OK nhưng URL chẩn đoán vẫn lỗi, kiểm tra **Executions** ở Apps Script và quyền Web App. **Không chạy `activateWeddingInvitations` trong giai đoạn PREP**.
 
+
+## Tăng tốc tải tên khách (v42)
+
+- `Code.gs`: trong **PREP**, khi website đọc tên thì không lấy document lock/đồng bộ alias; dùng `TextFinder` với khớp chính xác trên cột Q của registry và cột Link trên Guest List, vẫn kiểm tra trùng link để không hiển thị nhầm khách.
+- Trong **LIVE**, bộ đọc vẫn giữ cơ chế đồng bộ lịch sử alias kể từ launch và bảo đảm các link cũ/mới ánh xạ về cùng mã khách.
+- `script.js`: tên khách đã xác minh được lưu **trong sessionStorage của tab hiện tại** tối đa 15 phút. Khi mở lại thiệp cùng link trong tab, tên hiện sớm, nhưng nút RSVP chỉ bật sau khi backend xác minh lần nữa. Link không hợp lệ sẽ xóa cache.
+- `index.html`: thêm `preconnect` tới Google Apps Script và đổi cache version `script.js?v=42`.
+- **Bắt buộc triển khai lại backend để nhận tối ưu PREP:** vào Master File → Extensions → Apps Script; thay `Code.gs` bằng bản mới từ GitHub, **Save**; chọn hàm `verifyWeddingBackend` → Run kiểm tra; sau đó **Deploy → Manage deployments → Edit → New version → Deploy**. Không tạo deployment mới, không chạy `activateWeddingInvitations`.
+- Cold start của Google Apps Script vẫn có thể chậm trong lần truy cập đầu. Không publish dữ liệu Guest List lên GitHub và không thêm tên khách vào URL để tối ưu tốc độ.
