@@ -62,7 +62,7 @@ const copy = {
     saveDate:"Add to calendar",
     storyTitle:"A LITTLE ABOUT US",
     storyCopy:"From everyday moments to adventures far from home, we've shared a lot of laughs, a few surprises, and so many happy memories. Now we're ready for the next chapter, together.",
-    storySignoff:"With love, Linh & Thang ♡",
+    storySignoff:"With love,\nLinh & Thang ♡",
     rsvpTitle:"CAN YOU MAKE IT?",
     rsvpIntro:"We really hope you can join us! Let us know below so we can plan for you.",
     guestSummaryLabel:"Replying for",
