@@ -17,6 +17,13 @@
 const REGISTRY_TAB = "RSVP Online";
 const GUEST_TAB = "Guest List";
 const WEDDING_EVENT = "Đám cưới";
+const MASTER_SPREADSHEET_ID = "1WCea4Ju0-sWCj_ZSxH5n82MpcYN0cSGIA9s01gSGO2o";
+
+// Explicitly open the wedding master sheet. A deployed Web App may have no
+// active spreadsheet context, even when the script works from the editor.
+function getWeddingBook_() {
+  return SpreadsheetApp.openById(MASTER_SPREADSHEET_ID);
+}
 
 function cleanText_(value, max) {
   var s = String(value == null ? "" : value).trim().slice(0, max || 1000);
@@ -184,7 +191,7 @@ function doGet(e) {
   if (q.action !== "guest" && q.action !== "status")
     return js_(callback,{saved:false,invalid:true});
   try {
-    var book=SpreadsheetApp.getActiveSpreadsheet();
+    var book=getWeddingBook_();
     syncAliasesWithLock_(book);
     var found=findInvite_(book,String(q.invite||"").trim());
     if (!found) return js_(callback,{valid:false,invalid:true});
@@ -204,7 +211,10 @@ function doGet(e) {
       saved:!!receipt && receipt===String(found.row[11]||"").trim()
     });
   } catch(err) {
-    return js_(callback,{saved:false});
+    // Expose a non-sensitive error state rather than silently returning an
+    // RSVP receipt-shaped response when a guest name lookup has failed.
+    console.error("Wedding RSVP read error",err);
+    return js_(callback,{valid:false,saved:false,error:"backend_unavailable"});
   }
 }
 function doPost(e) {
@@ -220,7 +230,7 @@ function doPost(e) {
   var lock=LockService.getDocumentLock()||LockService.getScriptLock();
   if (!lock.tryLock(15000)) return json_({ok:false,error:"busy"});
   try {
-    var book=SpreadsheetApp.getActiveSpreadsheet();
+    var book=getWeddingBook_();
     syncAliasSnapshots_(book); // post already owns the document lock
     var found=findInvite_(book,invite);
     if (!found) return json_({ok:false,error:"unknown_invitation"});
