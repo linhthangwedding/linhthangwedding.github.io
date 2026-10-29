@@ -6,7 +6,7 @@ Website thiệp cưới: https://linhthangwedding.github.io
 
 ## Ảnh polaroid ở phần A little about us (demo)
 
-Ba ảnh cũ đã có trong repo được dùng để demo trong `index.html`: `assets/garden.webp`, `assets/louvre.jpeg`, `assets/paris.jpeg`. Chỉ có 3 khung trắng nghiêng nhẹ, **không caption**. Desktop hiển thị một hàng, mobile vuốt ngang; bố cục giữ nguyên khi thay đường dẫn ảnh sau này. Ảnh garden hiện là bản thumbnail nên có thể hơi mờ, cần thay ảnh gốc khi chốt.
+Ba ảnh cũ đã có trong repo được dùng để demo trong `index.html`: `assets/garden.webp`, `assets/louvre.jpeg`, `assets/paris.jpeg`. Chỉ có 3 khung trắng nghiêng nhẹ, **không caption**. Desktop hiển thị một hàng, mobile hiển thị 2 khung trên và 1 khung căn giữa bên dưới, không tràn ngang; bố cục giữ nguyên khi thay đường dẫn ảnh sau này. Cả ba ảnh đều được crop gọn trong khung cố định 4:5 để không làm trang kéo dài hoặc lệch; ảnh garden hiện là bản thumbnail nên có thể hơi mờ, cần thay ảnh gốc khi chốt.
 
 ## Thiệp cá nhân hóa
 - Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
