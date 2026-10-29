@@ -6,9 +6,9 @@
  *   Other guest table:     Name J, Event K, RSVP P, Link Q
  *
  * Slugs and links automatically recalculate in Google Sheets formulas.
- * The onEdit trigger snapshots former slugs into hidden RSVP Link History.
- * The same reconciliation also runs on RSVP API requests for resilience.
- * Old and new links always resolve via the same stable invitation ID.
+ * PREP mode: only the newest guest link works; old test slugs are ignored.
+ * LIVE mode: old and new slugs (created after launch) point to one guest ID.
+ * At launch, run activateWeddingInvitations() once. No redeploy is needed.
  *
  * The hidden "RSVP Online" tab is only a private token/response registry.
  * Never publish the guest list or its long token values in the GitHub repo.
@@ -30,46 +30,94 @@ function cleanText_(value, max) {
   return /^[=+@\-]/.test(s) ? "'" + s : s;
 }
 /**
- * Preserve historical names before overwriting the last-seen slug (col U).
- * Columns: Q=current slug, U=snapshot; hidden RSVP Link History A=old slug,
- * B=stable invitation ID. Called by onEdit and before read/write requests.
+ * The active mode lives in hidden RSVP Online V2; launch time in W2.
+ * Current slug Q, last-seen snapshot U, alias history in RSVP Link History.
  */
+/**
+ * PREP: do not archive trial links; only sync the current slug snapshot.
+ * LIVE: keep every former slug after the launch timestamp for the same ID.
+ */
+function getInvitationPhase_(book) {
+  var registry = book.getSheetByName(REGISTRY_TAB);
+  if (!registry) throw new Error("Missing RSVP Online");
+  var mode = String(registry.getRange(2,22).getDisplayValue() || "").trim();
+  var started = registry.getRange(2,23).getValue();
+  var ms = started instanceof Date && !isNaN(started.getTime()) ?
+    started.getTime() : null;
+  return {live:mode === "LIVE" && ms !== null, startedMs:ms};
+}
 function syncAliasSnapshots_(book) {
   var registry = book.getSheetByName(REGISTRY_TAB);
   var history = book.getSheetByName("RSVP Link History");
-  if (!registry || !history) throw new Error("Missing invitation history");
+  if (!registry || !history) throw new Error("Missing invitation registry/history");
   var count = registry.getLastRow() - 1;
   if (count < 1) return;
-  var rows = registry.getRange(2, 1, count, 21).getDisplayValues();
-  var last = history.getLastRow();
-  var known = last > 1 ? history.getRange(2, 1, last - 1, 2).getDisplayValues() : [];
-  var used = {};
-  known.forEach(function(row){used[String(row[0]) + "\u0001" + String(row[1])] = true;});
-  var newHistory = [], snapshots = [], changed = false;
-  rows.forEach(function(rec){
+  var phase = getInvitationPhase_(book);
+  var rows = registry.getRange(2,1,count,21).getDisplayValues();
+  var changed = false, changedItems = [], snapshots = [];
+  rows.forEach(function(rec) {
     var id = String(rec[0] || "").trim();
     var current = String(rec[16] || "").trim();
     var previous = String(rec[20] || "").trim();
     if (current !== previous) {
       changed = true;
-      if (id && previous && !used[previous + "\u0001" + id]) {
-        newHistory.push([previous, id, new Date(), "Tự lưu khi đổi tên khách"]);
-        used[previous + "\u0001" + id] = true;
-      }
+      if (phase.live && id && previous) changedItems.push([previous,id]);
     }
     snapshots.push([current]);
   });
   if (!changed) return;
-  if (newHistory.length) {
-    var first = history.getLastRow() + 1;
-    var capacity = history.getMaxRows();
-    if (first + newHistory.length - 1 > capacity)
-      history.insertRowsAfter(capacity, first + newHistory.length - 1 - capacity);
-    history.getRange(first, 1, newHistory.length, 4).setValues(newHistory);
+  if (phase.live && changedItems.length) {
+    var last = history.getLastRow();
+    var known = last > 1 ? history.getRange(2,1,last-1,3).getValues() : [];
+    var used = {};
+    known.forEach(function(row) {
+      var timestamp = row[2] instanceof Date ? row[2].getTime() : NaN;
+      if (timestamp >= phase.startedMs)
+        used[String(row[0]) + "\u0001" + String(row[1])] = true;
+    });
+    var additions = [], now = new Date();
+    changedItems.forEach(function(pair) {
+      var key = pair[0]+"\u0001"+pair[1];
+      if (!used[key]) {
+        additions.push([pair[0],pair[1],now,"Tự lưu sau khi phát thiệp"]);
+        used[key] = true;
+      }
+    });
+    if (additions.length) {
+      var first = history.getLastRow()+1;
+      var capacity = history.getMaxRows();
+      if (first + additions.length - 1 > capacity)
+        history.insertRowsAfter(capacity,first+additions.length-1-capacity);
+      history.getRange(first,1,additions.length,4).setValues(additions);
+    }
   }
-  registry.getRange(2, 21, count, 1).setValues(snapshots);
+  registry.getRange(2,21,count,1).setValues(snapshots);
   SpreadsheetApp.flush();
 }
+/**
+ * Run this ONCE when the invitations are ready to send officially.
+ * It takes a PREP baseline before recording the official launch time.
+ * No redeploy is required at launch, only a single manual Run.
+ */
+function activateWeddingInvitations() {
+  var lock=LockService.getDocumentLock() || LockService.getScriptLock();
+  if (!lock.tryLock(15000)) throw new Error("Cannot obtain sheet lock");
+  try {
+    var book=getWeddingBook_();
+    var registry=book.getSheetByName(REGISTRY_TAB);
+    var current=getInvitationPhase_(book);
+    if (current.live) return "Đã bật LIVE trước đó, không thay đổi thời điểm phát thiệp.";
+    registry.getRange(2,22).setValue("PREP");
+    syncAliasSnapshots_(book);
+    registry.getRange(2,23).setValue(new Date());
+    registry.getRange(2,22).setValue("LIVE");
+    SpreadsheetApp.flush();
+    return "Đã bật LIVE: bắt đầu giữ link cũ kể từ bây giờ.";
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 function syncAliasesWithLock_(book) {
   var lock = LockService.getDocumentLock() || LockService.getScriptLock();
   if (!lock.tryLock(5000)) return;
@@ -90,33 +138,42 @@ function onEdit(e) {
  * Always return a STABLE registry record, never identify guests by their names.
  * Ambiguity across two invitations fails closed.
  */
+/**
+ * PREP: current slug only. Old pre-launch test URLs do not work.
+ * LIVE: current slug + any previous slug archived after activation.
+ * Always match against the same immutable invitation ID.
+ */
 function findInvite_(book, invite) {
   if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(invite)) return null;
   var registry = book.getSheetByName(REGISTRY_TAB);
-  var history = book.getSheetByName("RSVP Link History");
-  if (!registry || !history) return null;
-  var count = registry.getLastRow() - 1;
+  if (!registry) return null;
+  var count = registry.getLastRow()-1;
   if (count < 1) return null;
-  var records = registry.getRange(2, 1, count, 21).getDisplayValues();
-  var matches = {};
-  var byId = {};
-  records.forEach(function(rec,i){
-    var id = String(rec[0] || "").trim();
+  var rows=registry.getRange(2,1,count,21).getDisplayValues();
+  var candidates={},byId={};
+  rows.forEach(function(rec,i) {
+    var id=String(rec[0]||"").trim();
     if (!id) return;
-    byId[id] = {registry:registry,index:i+2,row:rec};
-    if (String(rec[16] || "").trim() === invite ||
-        id === invite || (invite.length === 16 && id.slice(0,16) === invite))
-      matches[id] = true;
+    byId[id]={registry:registry,index:i+2,row:rec};
+    if (String(rec[16]||"").trim()===invite) candidates[id]=true;
   });
-  if (history.getLastRow() > 1) {
-    var aliases = history.getRange(2,1,history.getLastRow()-1,2).getDisplayValues();
-    aliases.forEach(function(row){
-      if (String(row[0] || "").trim() === invite && byId[String(row[1] || "").trim()])
-        matches[String(row[1]).trim()] = true;
-    });
+  var phase=getInvitationPhase_(book);
+  if (phase.live) {
+    var history=book.getSheetByName("RSVP Link History");
+    if (!history) return null;
+    var last=history.getLastRow();
+    if (last>1) {
+      var aliases=history.getRange(2,1,last-1,3).getValues();
+      aliases.forEach(function(row) {
+        var timestamp=row[2] instanceof Date ? row[2].getTime() : NaN;
+        var id=String(row[1]||"").trim();
+        if (timestamp>=phase.startedMs && String(row[0]||"").trim()===invite && byId[id])
+          candidates[id]=true;
+      });
+    }
   }
-  var keys = Object.keys(matches);
-  return keys.length === 1 ? byId[keys[0]] : null;
+  var ids=Object.keys(candidates);
+  return ids.length===1?byId[ids[0]]:null;
 }
 
 /**
