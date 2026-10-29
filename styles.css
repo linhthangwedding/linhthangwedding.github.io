@@ -321,3 +321,7 @@ footer{
 /* Clearly confirm the total attendance count on the RSVP form. */
 .party-help{display:block;margin-top:7px;font-size:12px;line-height:1.6;color:#7b726b;font-weight:400}
 .party-summary{display:block;margin-top:10px;font-size:13px;font-weight:600;color:#5c6658}
+
+/* The guest is identified by their invitation URL; no editable name input. */
+.rsvp-invitee{margin:0;padding:16px 20px;border:1px solid #ded6cd;border-radius:12px;background:#f4f0ea;text-align:center;font-size:14px;color:#625a52;line-height:1.7}
+.rsvp-invitee strong{display:block;font-family:"Noto Serif",serif;font-size:22px;font-weight:600;color:#55453e;overflow-wrap:anywhere}
