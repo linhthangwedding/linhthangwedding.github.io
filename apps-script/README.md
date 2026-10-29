@@ -52,3 +52,17 @@ Link gợi nhớ theo tên có thể bị người ngoài đoán. Người có h
 **Quan trọng:** Cần vào Apps Script đã deploy, thay toàn bộ [Code.gs mới nhất](./Code.gs), **Save → Deploy → Manage deployments → Edit → New version → Deploy**. Không cần đổi URL `/exec`. Sau đó thử đổi tên một khách chưa gửi thiệp, kiểm tra link cũ và mới cùng hiển thị tên mới; thử RSVP bằng một khách thử và hoàn nguyên dữ liệu sau khi kiểm tra.
 
 **Quyền riêng tư:** Đuôi link theo tên dễ bị đoán hơn token ngẫu nhiên. Cả link cũ và mới cùng hoạt động thì những URL đã chia sẻ trước đây vẫn truy cập được; không nên dùng link làm bằng chứng xác thực danh tính.
+
+## Sửa lỗi tên khách không hiển thị (29/10/2026)
+
+Nếu cả link cũ và link mới đều mở trang thiệp nhưng bên dưới **TRÂN TRỌNG KÍNH MỜI** bị trống:
+
+1. Website **v32** đã có thông báo đang tải/tra cứu lỗi ngay tại phần kính mời, tăng thời gian chờ Apps Script và tự thử lại một lần.
+2. Backend **Code.gs** dùng `SpreadsheetApp.openById(MASTER_SPREADSHEET_ID)` thay cho `getActiveSpreadsheet()`. Khi chạy qua Web App, dự án có thể không có spreadsheet đang active; `openById` luôn mở đúng Master File khi được cấp quyền.
+3. **Phải triển khai Code.gs mới**: Mở Extensions → Apps Script trong Master File, thay bằng Code.gs mới nhất, Save → Deploy → Manage deployments → Edit → New version → Deploy. Nếu Google hỏi cấp quyền Sheets, cần chấp thuận cho tài khoản chủ Web App.
+4. Nếu vẫn không thấy tên sau khi tải lại, vào **Apps Script → Executions** để xem thông báo lỗi từ `doGet`. Gửi kết quả đó để xác định lỗi triển khai / quyền truy cập. Không gửi bất kỳ mã bí mật hay token cá nhân nào.
+5. Đường dẫn kiểm tra API chỉ đọc (không ghi RSVP):
+   `https://script.google.com/macros/s/AKfycbwDA6HVjo0JZUM0dCiPjVwNB2Whzjgsr4IiuTxulmd2LDijhpfQ3SR_c34VVJ6mXHNRxQ/exec?action=guest&invite=chi-phuong-iu&callback=verifyInvite`
+   Nếu thành công, trình duyệt sẽ hiện đoạn mã có `valid:true` và tên `Chị Phương iu`.
+
+**Chưa kiểm chứng được endpoint chạy thực tế bằng công cụ từ phiên chat.** Mã `doGet` đã được kiểm tra với dữ liệu của Master File trong môi trường mô phỏng; không coi đó là bằng chứng người dùng đã truy cập thành công từ browser.
