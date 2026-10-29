@@ -48,54 +48,55 @@ const copy = {
     imageAlt:"Linh và Thang ở Paris"
   },
   en:{
-    weddingOf:"THE WEDDING OF",
-    heroTagline:"Two families · One journey · A lifetime together",
-    formalInvite:"WE WARMLY INVITE YOU",
-    inviteCopy:"Join us and our families to celebrate our wedding day",
-    wedding:"WEDDING",
+    weddingOf:"WE'RE GETTING MARRIED",
+    heroTagline:"A new chapter, with our favorite people.",
+    formalInvite:"WE'D LOVE TO CELEBRATE WITH YOU",
+    inviteCopy:"Come celebrate our wedding day with us and our families. It wouldn't be the same without you.",
+    wedding:"OUR WEDDING DAY",
     dateLabel:"Date",
     timeLabel:"Time",
-    locationLabel:"Location",
-    city:"Ho Chi Minh City",
-    rsvpButton:"RSVP",
+    locationLabel:"Where",
+    city:"Ho Chi Minh City, Vietnam",
+    rsvpButton:"Let us know",
     direction:"Get directions ↗",
-    saveDate:"Save the date",
-    storyTitle:"OUR STORY",
-    storyCopy:"Across journeys, cities and changing seasons, we found home in each other. Now we are ready to begin a new chapter together.",
-    storySignoff:"Together, always home.",
-    rsvpTitle:"RSVP",
-    rsvpIntro:"We would be delighted to celebrate this special day with you.",
-    guestSummaryLabel:"RSVP for",
-    attendingQ:"Will you be able to attend?",
-    yes:"Yes",no:"No",
-    partySize:"Number of guests attending (including you)",
+    saveDate:"Add to calendar",
+    storyTitle:"A LITTLE ABOUT US",
+    storyCopy:"From everyday moments to adventures far from home, we've shared a lot of laughs, a few surprises, and so many happy memories. Now we're ready for the next chapter, together.",
+    storySignoff:"With love, Linh & Thang ♡",
+    rsvpTitle:"CAN YOU MAKE IT?",
+    rsvpIntro:"We really hope you can join us! Let us know below so we can plan for you.",
+    guestSummaryLabel:"Replying for",
+    attendingQ:"Will you be joining us?",
+    yes:"Yes, I'll be there!",
+    no:"Sorry, I can't",
+    partySize:"How many are coming (including you)?",
     partySizeHelp:"Please include yourself in the total.",
-    partySummary:"You are confirming {count} guest(s) attending.",
-    partySizeInvalid:"Please enter between 1 and 10 guests.",
-    successYes:"Thank you! We've recorded {count} guest(s) attending.",
-    successNo:"Thank you! We've recorded that you cannot attend.",
-    declineMessage:"💗 Thank you, {name}, for being such a lovely part of our younger years. We're truly sorry that we won't get to celebrate our wedding day together. The memories we've shared will always mean so much to us. If you'd like to leave us a few warm wishes, we'd be delighted to read and treasure them as a gift on our special day. 💌",
-    wishes:"Wedding wishes for Linh & Thang",
-    wishesPlaceholder:"Send us a few warm wishes...",
-    submit:"Send RSVP",
-    preview:"Online RSVP is being connected. Responses cannot be submitted yet.",
-    missingInvite:"Please use the personalized invitation link sent by Linh & Thang to RSVP.",
-    guestLoading:"Loading your invitation name...",
-    guestInvalid:"This invitation link was not found. Please check the link you received.",
-    guestUnavailable:"We could not load your invitation name yet. Please try again later.",
-    guestNotReady:"This invitation is pending event confirmation. Please contact Linh & Thang.",
-    pending:"Checking your response...",
-    success:"Thank you! We have received your response.",
-    error:"Your response could not be sent. Please try again.",
-    pageTitle:"Linh & Thang — Wedding Invitation",
-    pageDescription:"The wedding invitation of Linh and Thang",
+    partySummary:"That's {count} in your group, including you.",
+    partySizeInvalid:"Please enter a number from 1 to 10.",
+    successYes:"Yay, see you there! We've noted {count} attending. ♡",
+    successNo:"Thanks for letting us know. We'll miss you! ♡",
+    declineMessage:"💗 {name}, thank you for being part of our journey and for all the lovely memories we've made along the way. We'll miss having you with us on our wedding day, but we're so glad our paths crossed. If you'd like to leave us a little wish, we'd love to read it. 💌",
+    wishes:"A little note or wish for Linh & Thang",
+    wishesPlaceholder:"Leave us a little wish, if you'd like...",
+    submit:"Send my RSVP",
+    preview:"RSVP isn't ready just yet. Please try again a little later.",
+    missingInvite:"Please open your personal invitation link to send your RSVP.",
+    guestLoading:"Just a sec, we're finding your invitation...",
+    guestInvalid:"We couldn't find this invitation. Please double-check the link you received.",
+    guestUnavailable:"We couldn't load your invitation right now. Please refresh and try again.",
+    guestNotReady:"RSVP isn't open for this invitation yet. Please check with Linh & Thang.",
+    pending:"Sending your RSVP...",
+    success:"Thanks! We've received your RSVP.",
+    error:"Something went wrong. Your RSVP may not have been saved. Please try again.",
+    pageTitle:"Linh & Thang | We're getting married!",
+    pageDescription:"Come celebrate the wedding of Linh and Thang on February 28, 2027, in Ho Chi Minh City.",
     brandAria:"Linh and Thang",
     languageAria:"Choose a language",
-    imageAlt:"Linh and Thang in Paris"
+    imageAlt:"Linh and Thang in Paris",
   }
 };
 
-let lang="vi";
+let lang="en";
 
 function setLang(next){
   lang=next;
@@ -345,6 +346,6 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
   }
 });
 
-setLang("vi");
+setLang("en");
 if (!inviteCode) showRSVPStatus("missingInvite");
 resolveInviteName();
