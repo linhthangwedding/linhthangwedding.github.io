@@ -34,35 +34,25 @@ Các cột có thể dịch chuyển khi sửa bảng. Code.gs tìm tên cột d
 ## Cảnh báo bảo mật
 Link gợi nhớ theo tên có thể bị người ngoài đoán. Người có hoặc đoán được đường dẫn có thể gửi RSVP thay khách. Cách này tiện chia sẻ nhưng **kém riêng tư hơn mã ngẫu nhiên**, không nên coi là xác minh danh tính. Không công khai toàn bộ link cá nhân.
 
-## Giữ cả link cũ và mới khi đổi tên
+## Chế độ PREP/LIVE: chỉ lưu link cũ từ lúc phát thiệp chính thức
 
-**Google Sheets đã được chuẩn bị:** Guest List cột **B/J** lưu tên hiển thị có dấu; cột **G/Q** tự tạo link theo tên mới. Tab kỹ thuật `RSVP Online` lưu mã nội bộ ở A, slug hiện tại ở Q, snapshot slug gần nhất ở U. Tab ẩn `RSVP Link History` ghi **slug cũ + mã nội bộ**, không lộ danh sách khách trên GitHub.
+**Mặc định đã đặt PREP** trong tab ẩn `RSVP Online`, ô `V2`. Ngày phát thiệp `W2` đang để trống.
 
-**Apps Script mới có hai lớp đồng bộ:**
-- Hàm `onEdit(e)` tự chạy khi sửa tên trực tiếp trong hai bảng Guest List. Hàm lưu slug cũ vào tab lịch sử rồi cập nhật snapshot slug mới.
-- Lúc một link cũ hoặc mới truy cập Web App, backend đối chiếu lại snapshot để xử lý cả trường hợp công thức vừa thay đổi hoặc chỉnh sửa từ công cụ khác.
-- Chỉ cần cập nhật `Code.gs` và redeploy Web App một lần để bật. **Không cần tự chạy** `syncAllGuestLinks`, vì hàm cũ đã được thay thế.
+| Chế độ | Link sau khi sửa tên | Link cũ | RSVP |
+|---|---|---|---|
+| PREP | Tự đổi theo tên hiện tại | Không nhận link thử cũ | Khớp đúng mã khách |
+| LIVE | Tự đổi theo tên hiện tại | Các link được tạo **sau thời điểm launch** vẫn hoạt động | Khớp về cùng một khách |
 
-**Tương thích:** Link ngắn theo tên trước đó (nếu đã được lưu trong lịch sử), link dài ngẫu nhiên 30 ký tự, mã 16 ký tự cũ và link tên hiện tại đều trả về cùng người. Tên hiển thị luôn được đọc từ Guest List tại thời điểm mở thiệp. RSVP được ghi về cùng ô E/P của khách bất kể dùng phiên bản nào.
+**Để triển khai chế độ này ngay bây giờ:**
+1. Copy [Code.gs mới nhất](./Code.gs) vào Apps Script đã kết nối với Master File, **Save**.
+2. **Deploy → Manage deployments → Edit → New version → Deploy**. Không cần thay Web App URL.
+3. Để nguyên `V2 = PREP`. Không chạy hàm launch lúc này.
 
-**An toàn khi trùng tên:** Công thức slug tự thêm 4 ký tự của mã ổn định khi trùng với link của khách khác, kể cả link đã lưu lịch sử. Backend từ chối nếu hai khách thật sự dùng cùng một alias, để không ghi nhầm RSVP.
+**Khi bắt đầu gửi thiệp chính thức:**
+1. Mở Master File → **Extensions → Apps Script**.
+2. Ở dropdown chọn hàm **`activateWeddingInvitations`**, bấm **Run** một lần.
+3. Hàm sẽ chụp baseline link hiện tại, tự ghi thời điểm launch ở `W2`, đổi `V2` thành `LIVE`. Các link được thay đổi từ sau đó tự lưu lịch sử. Không phải deploy lại.
+4. Test cả hai URL cũ/mới sau một lần đổi tên thử, xác nhận hiển thị tên mới và RSVP khớp đúng khách.
 
-**Đã chuẩn bị 151 snapshot đầu tiên**, và một vài link trước khi kích hoạt lịch sử đã được phục hồi từ các phiên bản Master File có thể kiểm tra. Không thể cam kết phục hồi các URL cũ đã mất mà không còn trong hồ sơ.
+**Lưu ý:** Dữ liệu lịch sử link cũ từ PREP vẫn có thể nằm trong tab `RSVP Link History`, nhưng bộ nhận chỉ tra alias có thời gian **từ launch trở đi**. Không cần xóa dữ liệu cũ. Link ngẫu nhiên cũ trước launch cũng không được dùng. Khi test trước launch, chỉ link mới nhất hợp lệ.
 
-**Quan trọng:** Cần vào Apps Script đã deploy, thay toàn bộ [Code.gs mới nhất](./Code.gs), **Save → Deploy → Manage deployments → Edit → New version → Deploy**. Không cần đổi URL `/exec`. Sau đó thử đổi tên một khách chưa gửi thiệp, kiểm tra link cũ và mới cùng hiển thị tên mới; thử RSVP bằng một khách thử và hoàn nguyên dữ liệu sau khi kiểm tra.
-
-**Quyền riêng tư:** Đuôi link theo tên dễ bị đoán hơn token ngẫu nhiên. Cả link cũ và mới cùng hoạt động thì những URL đã chia sẻ trước đây vẫn truy cập được; không nên dùng link làm bằng chứng xác thực danh tính.
-
-## Sửa lỗi tên khách không hiển thị (29/10/2026)
-
-Nếu cả link cũ và link mới đều mở trang thiệp nhưng bên dưới **TRÂN TRỌNG KÍNH MỜI** bị trống:
-
-1. Website **v32** đã có thông báo đang tải/tra cứu lỗi ngay tại phần kính mời, tăng thời gian chờ Apps Script và tự thử lại một lần.
-2. Backend **Code.gs** dùng `SpreadsheetApp.openById(MASTER_SPREADSHEET_ID)` thay cho `getActiveSpreadsheet()`. Khi chạy qua Web App, dự án có thể không có spreadsheet đang active; `openById` luôn mở đúng Master File khi được cấp quyền.
-3. **Phải triển khai Code.gs mới**: Mở Extensions → Apps Script trong Master File, thay bằng Code.gs mới nhất, Save → Deploy → Manage deployments → Edit → New version → Deploy. Nếu Google hỏi cấp quyền Sheets, cần chấp thuận cho tài khoản chủ Web App.
-4. Nếu vẫn không thấy tên sau khi tải lại, vào **Apps Script → Executions** để xem thông báo lỗi từ `doGet`. Gửi kết quả đó để xác định lỗi triển khai / quyền truy cập. Không gửi bất kỳ mã bí mật hay token cá nhân nào.
-5. Đường dẫn kiểm tra API chỉ đọc (không ghi RSVP):
-   `https://script.google.com/macros/s/AKfycbwDA6HVjo0JZUM0dCiPjVwNB2Whzjgsr4IiuTxulmd2LDijhpfQ3SR_c34VVJ6mXHNRxQ/exec?action=guest&invite=chi-phuong-iu&callback=verifyInvite`
-   Nếu thành công, trình duyệt sẽ hiện đoạn mã có `valid:true` và tên `Chị Phương iu`.
-
-**Chưa kiểm chứng được endpoint chạy thực tế bằng công cụ từ phiên chat.** Mã `doGet` đã được kiểm tra với dữ liệu của Master File trong môi trường mô phỏng; không coi đó là bằng chứng người dùng đã truy cập thành công từ browser.
