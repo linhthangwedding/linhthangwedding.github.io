@@ -19,8 +19,7 @@ const copy = {
     storySignoff:"Cùng nhau, luôn là nhà.",
     rsvpTitle:"XÁC NHẬN THAM DỰ",
     rsvpIntro:"Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.",
-    guestName:"Tên của bạn",
-    guestPlaceholder:"Nhập tên của bạn",
+    guestSummaryLabel:"Phản hồi dành cho",
     attendingQ:"Bạn có thể tham dự không?",
     yes:"Có",no:"Không",
     partySize:"Số người tham dự (bao gồm bạn)",
@@ -65,8 +64,7 @@ const copy = {
     storySignoff:"Together, always home.",
     rsvpTitle:"RSVP",
     rsvpIntro:"We would be delighted to celebrate this special day with you.",
-    guestName:"Your name",
-    guestPlaceholder:"Enter your name",
+    guestSummaryLabel:"RSVP for",
     attendingQ:"Will you be able to attend?",
     yes:"Yes",no:"No",
     partySize:"Number of guests attending (including you)",
@@ -161,19 +159,20 @@ let inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
 let inviteReady = false;
 const inviteLabel = document.getElementById("inviteGuestName");
 const inviteNotice = document.getElementById("inviteGuestNotice");
-const guestNameField = document.querySelector('#rsvpForm [name="guest_name"]');
+const rsvpGuestSummary = document.getElementById("rsvpGuestSummary");
+const rsvpGuestName = document.getElementById("rsvpGuestName");
 const submitButton = document.querySelector('#rsvpForm button[type="submit"]');
 document.getElementById("rsvpInvite").value = inviteCode;
-guestNameField.readOnly = !!inviteCode;
-if (inviteCode) submitButton.disabled = true;
+// All RSVP submissions require a verified personalized link.
+submitButton.disabled = true;
 
 function applyGuestName(value){
   inviteDisplayName = String(value || "").trim().slice(0,120);
   if (!inviteDisplayName) return;
   inviteLabel.textContent = inviteDisplayName;
   inviteLabel.classList.remove("hidden");
-  guestNameField.value = inviteDisplayName;
-  guestNameField.readOnly = true;
+  rsvpGuestName.textContent = inviteDisplayName;
+  rsvpGuestSummary.classList.remove("hidden");
 }
 if (inviteCode && inviteDisplayName) applyGuestName(inviteDisplayName);
 
@@ -338,4 +337,5 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
 });
 
 setLang("vi");
+if (!inviteCode) showRSVPStatus("missingInvite");
 resolveInviteName();
