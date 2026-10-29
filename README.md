@@ -7,7 +7,9 @@ Website thiệp cưới song ngữ Việt / Anh: https://linhthangwedding.github
 - Link riêng hiện dạng dễ đọc, ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp`.
 - Tên xuất hiện trên thiệp lấy TRỰC TIẾP từ cột **Tên khách mời** thuộc đúng dòng khách ở **Guest List**, không phải từ đuôi link.
 - Đuôi link **tự thay đổi khi sửa tên** trong Guest List, không cần chỉnh tay. Công thức chuyển tiếng Việt có dấu thành chữ thường không dấu; nếu trùng, hệ thống thêm phần phân biệt để giữ đúng khách.
-- Theo lựa chọn cập nhật, **cả link hiện tại và những link cũ đã được ghi nhận đều hoạt động**. Link cũ luôn tải tên mới nhất và ghi RSVP về cùng khách.
+- **Khi PREP:** chỉ link mới nhất hoạt động. **Sau khi LIVE:** link đã phát kể từ launch được giữ lại khi đổi tên; cả link cũ và mới đều trả về cùng khách.
+
+Hiện có **162 khách mời có link riêng**, bao gồm 15 khách mới bổ sung sau khi Guest List được chèn thêm dòng. Bốn bản ghi kỹ thuật cũ không còn gắn với khách hợp lệ được giữ riêng để tránh tái sử dụng nhầm mã.
 
 ## Quản lý khách mời
 Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng thứ ba:
@@ -16,7 +18,7 @@ Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng t
 
 Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Script phiên bản hiện tại tìm cột theo tiêu đề ở hàng 1, không theo số cột cố định.
 
-Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi hiện tại ở cột Q, snapshot ở cột U, số khách, lời nhắn, thời gian và mã biên nhận. Tab **RSVP Link History** cũng được giữ ẩn để lưu các đuôi trước đó. Không xóa hoặc công khai hai tab này.
+Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi hiện tại ở cột Q, snapshot ở cột U, trạng thái PREP/LIVE ở V2, thời điểm launch ở W2, số khách, lời nhắn, thời gian và mã biên nhận. Tab **RSVP Link History** cũng được giữ ẩn để lưu các đuôi trước đó. Không xóa hoặc công khai hai tab này.
 
 ## Chế độ chuẩn bị và phát thiệp (29/10/2026)
 
@@ -29,7 +31,7 @@ Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đ
 **Kích hoạt khi launch:** Sau khi cập nhật, deploy [Code.gs](apps-script/Code.gs) phiên bản mới, chỉ cần vào Apps Script chọn hàm `activateWeddingInvitations` rồi bấm **Run** **một lần** vào ngày bắt đầu gửi thiệp. Hàm tự ghi ngày launch ở ô `W2` và chuyển `V2` thành `LIVE`. **Không cần deploy lại khi launch.** Không chạy hàm khi còn trong giai đoạn chuẩn bị.
 
 ## Kích hoạt và kiểm thử
-Việc đổi tên/link đã tự cập nhật bằng công thức Google Sheets. Mã Apps Script bổ sung `onEdit` lưu đuôi link trước khi đổi tên vào **RSVP Link History** (tab ẩn) và ánh xạ các link đó về mã khách gốc. **Cần cập nhật Apps Script và chọn Deploy → Manage deployments → Edit → New version → Deploy** để bật chức năng lưu link cũ. Xem [hướng dẫn](apps-script/README.md).
+Việc đổi tên/link đã tự cập nhật bằng công thức Google Sheets. Mã Apps Script lưu lịch sử link **chỉ khi ở chế độ LIVE**, không lưu link thử từ PREP. **Cần Deploy → Manage deployments → Edit → New version → Deploy** một lần để kích hoạt logic hai chế độ. Xem [hướng dẫn](apps-script/README.md).
 
 Chưa xác nhận đã test RSVP đầu cuối từ browser đến Google Sheets sau bản cập nhật slug. Không gửi thiệp hàng loạt trước khi test.
 
