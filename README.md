@@ -12,11 +12,11 @@ Ba ảnh cũ đã có trong repo được dùng để demo trong `index.html`: `
 
 Bản `script.js?v=42` hiển thị tên khách từ sessionStorage trong cùng tab cho lần mở lại sau khi đã xác minh; backend vẫn phải xác minh lại trước khi gửi RSVP. `Code.gs` tăng tốc tra cứu bằng TextFinder, bỏ thao tác lock/sync trên lần đọc khi PREP, và giữ link history khi LIVE. Phải redeploy `Code.gs` Web App đang có để áp dụng cải tiến backend. Tên khách/ID vẫn không được công khai trong repo.
 
-## Tên khách hiển thị từ link ngay khi tải (v43)
+## Link thiệp chính thức gọn (29/10/2026)
 
-`Guest List!H/S` hiện đính kèm `&to=` chứa tên khách URL-encoded vào sau `?i=` để render tức thì. Mã `i` mới là định danh RSVP; tên trong URL chỉ để hiển thị trước khi backend kiểm tra. `script.js?v=43` và inline script của `index.html` đã cập nhật; `Code.gs` phải được deploy **bản mới nhất** vì link trong Sheet đã thay đổi. Không đưa danh sách khách vào GitHub.
+Các công thức `Guest List!H/S` tạo link chỉ có `?i=<slug>`, không còn `&to=`, `utm_source=` hoặc `#story`. Đã kiểm tra 162/162 link có công thức. Tên khách được tra từ Master Google Sheet sau khi website tải; lần mở lại cùng tab có thể hiện sớm nhờ sessionStorage của `script.js?v=43`. Không công khai danh sách khách trong mã nguồn. Backend `Code.gs` vẫn tương thích cả link cũ có `&to=` và link mới chỉ có mã `i`.
 
-Chỉ bật LIVE một lần vào trước khi gửi batch đầu tiên, khi người dùng yêu cầu; các batch sau vẫn dùng chung trạng thái LIVE và lịch sử link. Có hai khách cuối Guest List chưa có link từ trước, giữ nguyên chờ chốt tên.
+Chỉ bật LIVE khi người dùng báo sẵn sàng gửi batch đầu tiên. LIVE là trạng thái chung, không bật lại cho từng batch. Hai khách đang chờ chốt tên chưa được cấp link trong Guest List.
 
 ## Thiệp cá nhân hóa
 - Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
