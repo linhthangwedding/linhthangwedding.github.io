@@ -68,3 +68,14 @@ Các công thức B/X trong tab kỹ thuật được cập nhật để theo t�
 - Không thêm bảng thứ ba; trong Guest List, ngay sau RSVP ở cột **F/Q** là cột **Số người tham dự G/R**, link dịch sang **H/S**.
 - Số người ở Guest List đọc trực tiếp tab ẩn RSVP Online (cột I) theo **đuôi link hiện tại**, không bị lẫn khi thay đổi tên. Giá trị 0 là Không tham dự; ô trống là Chưa phản hồi.
 - Vì các cột của bảng bên phải đã dịch chuyển, **Code.gs cũng đã đổi onEdit sang nhận dạng vị trí cột Tên khách mời theo tiêu đề**, cần Save và **Deploy → Manage deployments → Edit → New version → Deploy** để bật đúng quy trình lưu link sau launch. Website tự xuất bản khi GitHub Pages cập nhật, không cần deploy riêng.
+
+## Khi website báo "We couldn't load your invitation" (29/10/2026)
+
+Lỗi này có thể xảy ra khi Web App vẫn chạy một bản Code.gs cũ hoặc chưa được cấp quyền đọc Master Sheet. Cập nhật GitHub **không tự deploy Apps Script**.
+
+1. Mở Master File → **Extensions → Apps Script**, thay toàn bộ `Code.gs` bằng [bản hiện hành](./Code.gs), **Save**.
+2. Chọn hàm **`verifyWeddingBackend`** trong dropdown → **Run**. Cấp quyền Google nếu được hỏi. **Execution log** phải báo `Wedding guest lookup OK | <tên khách> | Mode: PREP`. Hàm này chỉ đọc dữ liệu, không sửa Sheet hay gửi RSVP.
+3. Chọn **Deploy → Manage deployments →** biểu tượng bút chì tại Web App hiện có → **Version: New version**. Kiểm tra **Execute as: Me** và **Who has access: Anyone**, sau đó bấm **Deploy**. **Đừng tạo New deployment**, để URL `/exec` trong website không đổi.
+4. Mở thử URL chẩn đoán (chỉ trả tên của khách mẫu đã có trong sheet): `https://script.google.com/macros/s/AKfycbwDA6HVjo0JZUM0dCiPjVwNB2Whzjgsr4IiuTxulmd2LDijhpfQ3SR_c34VVJ6mXHNRxQ/exec?action=guest&invite=chi-thu-tam-kp&callback=checkWedding`. Kết quả đúng có dạng `checkWedding({"valid":true,"name":"Chị Thu Tâm","canRsvp":true});`.
+5. Mở lại link thiệp của khách. Nếu hàm test đã OK nhưng URL chẩn đoán vẫn lỗi, kiểm tra **Executions** ở Apps Script và quyền Web App. **Không chạy `activateWeddingInvitations` trong giai đoạn PREP**.
+
