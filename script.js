@@ -75,7 +75,7 @@ const copy = {
     partySizeInvalid:"Please enter a number from 1 to 10.",
     successYes:"Yay, see you there! We've noted {count} attending. ♡",
     successNo:"Thanks for letting us know. We'll miss you! ♡",
-    declineMessage:"💗 {name}, thank you for being part of our journey and for all the lovely memories we've made along the way. We'll miss having you with us on our wedding day, but we're so glad our paths crossed. If you'd like to leave us a little wish, we'd love to read it. 💌",
+    declineMessage:"{name}, thank you for being part of our journey and for all the lovely memories we've made along the way 🫶\n\nWe'll miss having you with us on our wedding day, but we're so glad our paths crossed.\n\nIf you'd like to leave us a little wish, we'd love to read it 😘",
     wishes:"A little note or wish for Linh & Thang",
     wishesPlaceholder:"Leave us a little wish, if you'd like...",
     submit:"Send my RSVP",
