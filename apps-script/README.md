@@ -13,22 +13,22 @@
 
 ## Bố cục Guest List hiện tại
 
-| Bảng | Tên hiển thị | Đường dẫn thiệp | RSVP |
-|---|---|---|---|
-| Bảng hồng, bên trái | B | G | E |
-| Bảng bên phải | J | Q | P |
+| Bảng | Tên hiển thị | RSVP | Số người tham dự | Link |
+|---|---|---|---|---|
+| Bảng hồng, bên trái | B | F | G | H |
+| Bảng bên phải | K | Q | R | S |
 
 Các cột có thể dịch chuyển khi sửa bảng. Code.gs tìm tên cột dựa vào hai tiêu đề `Tên khách mời`, `Link`, `Event` và `RSVP` ở hàng 1.
 
 - Tên khách **trên thiệp** được tra cứu từ cột Tên khách mời trong đúng bảng gốc; sửa cách xưng hô ở đây thì **cả tên trên thiệp và đuôi đường link tự đổi**, nhưng URL cũ được lưu và vẫn dùng được.
 - Bộ nhận RSVP tra slug hiện tại hoặc lịch sử để tìm mã khách ổn định trong tab kỹ thuật **RSVP Online** rồi dò lại đúng dòng có link hiện tại.
 - Tab kỹ thuật ẩn có đuôi dễ đọc tại cột Q, mã gốc cột A, lời nhắn và biên nhận. Không xóa.
-- Trạng thái Có/Không (và số người nếu có) ghi vào cột RSVP ngay trên đúng dòng khách trong Guest List.
+- Trạng thái Có/Không ghi về cột RSVP ngay trên đúng dòng khách trong Guest List. **Số người tham dự** tự lấy từ tab ẩn: Có = số người đã xác nhận (1–10), Không = 0, chưa phản hồi = ô trống.
 
 ## Kiểm thử
-1. Sao chép một link ở cột G hoặc Q, mở bằng cửa sổ ẩn danh. Tên có dấu phải hiện dưới dòng `TRÂN TRỌNG KÍNH MỜI`.
-2. Gửi thử RSVP bằng một khách thử và kiểm tra đúng dòng có phản hồi trong cột E/P.
-3. Xác minh cột H–L của tab ẩn RSVP Online có dữ liệu phản hồi; sau khi kiểm thử, xóa dữ liệu thử.
+1. Sao chép một link ở cột H hoặc S, mở bằng cửa sổ ẩn danh. Tên có dấu phải hiện dưới dòng `TRÂN TRỌNG KÍNH MỜI`.
+2. Gửi thử RSVP bằng một khách thử, nhập số người (ví dụ 2), kiểm tra trạng thái ở cột F/Q và **số người ở G/R** đúng như đã nhập.
+3. Xác minh cột H–L của tab ẩn RSVP Online có phản hồi, tổng số người, lời nhắn và biên nhận; sau kiểm thử, hoàn nguyên dữ liệu thử.
 4. Chỉ bắt đầu gửi thiệp sau khi chức năng RSVP hoạt động đầu cuối.
 
 ## Cảnh báo bảo mật
@@ -60,3 +60,11 @@ Link gợi nhớ theo tên có thể bị người ngoài đoán. Người có h
 ## Ghi chú khi chèn dòng khách mới
 
 Các công thức B/X trong tab kỹ thuật được cập nhật để theo tên/ghi chú của đúng người sau khi chèn dòng. Nếu thêm **khách mới hoàn toàn** vào Guest List, cần tạo cho khách một mã thiệp nội bộ mới và link mới, không sao chép link của khách phía trên. 15 khách mới đã được bổ sung ở lần rà soát 29/10/2026; 162 người hiện có link riêng. Các bản ghi ứng với khách đã xóa được giữ ẩn, không cấp lại mã cho khách khác.
+
+## Xác nhận số người tham dự (29/10/2026)
+
+- Trên website v33, chọn **Có** sẽ hiển thị trường **Số người tham dự (bao gồm bạn)**, cần nhập số nguyên 1–10. Khi chọn **Không**, form không yêu cầu nhập số và bộ nhận ghi 0.
+- Sau khi Google Sheets xác nhận lưu thành công qua mã biên nhận, website sẽ hiển thị thông báo kèm số người đã ghi nhận.
+- Không thêm bảng thứ ba; trong Guest List, ngay sau RSVP ở cột **F/Q** là cột **Số người tham dự G/R**, link dịch sang **H/S**.
+- Số người ở Guest List đọc trực tiếp tab ẩn RSVP Online (cột I) theo **đuôi link hiện tại**, không bị lẫn khi thay đổi tên. Giá trị 0 là Không tham dự; ô trống là Chưa phản hồi.
+- Vì các cột của bảng bên phải đã dịch chuyển, **Code.gs cũng đã đổi onEdit sang nhận dạng vị trí cột Tên khách mời theo tiêu đề**, cần Save và **Deploy → Manage deployments → Edit → New version → Deploy** để bật đúng quy trình lưu link sau launch. Website tự xuất bản khi GitHub Pages cập nhật, không cần deploy riêng.
