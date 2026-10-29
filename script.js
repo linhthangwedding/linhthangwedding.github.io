@@ -19,6 +19,13 @@ const copy = {
     storySignoff:"Thương mến,\nLinh & Thắng ♡",
     rsvpTitle:"XÁC NHẬN THAM DỰ",
     rsvpIntro:"Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.",
+    rsvpDeadline:"Hạn xác nhận tham dự: Chủ nhật, 14/02/2027 (giờ Việt Nam).",
+    rsvpReceivedIntro:"Chúng mình đã nhận được lời xác nhận của bạn.",
+    rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
+    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn). Phần xác nhận đã được đóng.",
+    rsvpClosedNo:"Cảm ơn {name} đã phản hồi! Chúng mình đã ghi nhận bạn không thể tham dự. Phần xác nhận đã được đóng.",
+    rsvpClosedDeadline:"Hạn xác nhận đã kết thúc vào ngày 14/02/2027. Nếu cần thay đổi kế hoạch, vui lòng liên hệ trực tiếp Linh & Thang.",
+    rsvpClosedNotReady:"Thiệp này hiện chưa mở nhận phản hồi. Vui lòng liên hệ Linh & Thang.",
     guestSummaryLabel:"Phản hồi dành cho",
     attendingQ:"Bạn có thể tham dự không?",
     yes:"Có",no:"Không",
@@ -41,6 +48,7 @@ const copy = {
     pending:"Đang kiểm tra phản hồi của bạn...",
     success:"Cảm ơn bạn! Chúng mình đã nhận được xác nhận của bạn.",
     error:"Chưa gửi được xác nhận. Vui lòng thử lại.",
+    uncertain:"Chưa thể xác nhận phản hồi đã được lưu hay chưa. Vui lòng tải lại trang để kiểm tra, không gửi nhiều lần.",
     pageTitle:"Thiệp cưới Linh & Thang",
     pageDescription:"Thiệp cưới của Linh và Thang",
     brandAria:"Linh và Thang",
@@ -65,6 +73,13 @@ const copy = {
     storySignoff:"With love,\nLinh & Thang ♡",
     rsvpTitle:"CAN YOU MAKE IT?",
     rsvpIntro:"We really hope you can join us! Let us know below so we can plan for you.",
+    rsvpDeadline:"Please RSVP by Sunday, February 14, 2027 (Vietnam time).",
+    rsvpReceivedIntro:"We've received your reply. Thank you for letting us know!",
+    rsvpDeadlinePassedIntro:"RSVP is now closed.",
+    rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you. Your RSVP is now closed.",
+    rsvpClosedNo:"Thanks for replying, {name}! We've noted that you can't make it. Your RSVP is now closed.",
+    rsvpClosedDeadline:"RSVP closed on February 14, 2027. Please contact Linh & Thang directly if your plans change.",
+    rsvpClosedNotReady:"RSVP isn't open for this invitation. Please contact Linh & Thang.",
     guestSummaryLabel:"Replying for",
     attendingQ:"Will you be joining us?",
     yes:"Yes, I'll be there!",
@@ -88,6 +103,7 @@ const copy = {
     pending:"Sending your RSVP...",
     success:"Thanks! We've received your RSVP.",
     error:"Something went wrong. Your RSVP may not have been saved. Please try again.",
+    uncertain:"We couldn't confirm whether your response was saved. Please refresh the page to check before trying again.",
     pageTitle:"Linh & Thang | We're getting married!",
     pageDescription:"Come celebrate the wedding of Linh and Thang on February 28, 2027, in Ho Chi Minh City.",
     brandAria:"Linh and Thang",
@@ -127,6 +143,7 @@ function setLang(next){
   }
   refreshPartyConfirmation();
   refreshDeclineMessage();
+  refreshRsvpPanel();
   const inviteNotice=document.getElementById("inviteGuestNotice");
   if(inviteNotice?.dataset.messageKey) inviteNotice.textContent=copy[next][inviteNotice.dataset.messageKey];
   document.querySelectorAll(".lang-btn").forEach(b=>{
@@ -235,6 +252,37 @@ const inviteNotice = document.getElementById("inviteGuestNotice");
 const rsvpGuestSummary = document.getElementById("rsvpGuestSummary");
 const rsvpGuestName = document.getElementById("rsvpGuestName");
 const submitButton = document.querySelector('#rsvpForm button[type="submit"]');
+const rsvpForm = document.getElementById("rsvpForm");
+const rsvpClosedPanel = document.getElementById("rsvpClosedPanel");
+const rsvpClosedMessage = document.getElementById("rsvpClosedMessage");
+const rsvpIntro = document.getElementById("rsvpIntro");
+// The exact cutoff is Feb 14, 2027 at 23:59:59.999, Vietnam (UTC+7).
+const RSVP_DEADLINE_UTC = Date.parse("2027-02-14T23:59:59.999+07:00");
+const rsvpDeadlinePassed = () => Date.now() > RSVP_DEADLINE_UTC;
+let rsvpView = {kind:"open",attending:null,partySize:0};
+let submissionUncertain = false;
+function refreshRsvpPanel() {
+  const closed = rsvpView.kind !== "open";
+  rsvpForm.classList.toggle("hidden", closed);
+  rsvpClosedPanel.classList.toggle("hidden", !closed);
+  rsvpIntro.textContent = copy[lang][
+    rsvpView.kind === "responded" ? "rsvpReceivedIntro" :
+    rsvpView.kind === "deadline" ? "rsvpDeadlinePassedIntro" : "rsvpIntro"
+  ];
+  if (!closed) return;
+  const key = rsvpView.kind === "responded"
+    ? (rsvpView.attending === "yes" ? "rsvpClosedYes" : "rsvpClosedNo")
+    : (rsvpView.kind === "deadline" ? "rsvpClosedDeadline" : "rsvpClosedNotReady");
+  rsvpClosedMessage.textContent = copy[lang][key]
+    .replace("{name}", inviteDisplayName || (lang === "vi" ? "bạn" : "friend"))
+    .replace("{count}", String(rsvpView.partySize));
+}
+function closeRsvp(kind, attending, count) {
+  rsvpView = {kind, attending:attending || null, partySize:Number(count)||0};
+  inviteReady = false;
+  submitButton.disabled = true;
+  refreshRsvpPanel();
+}
 document.getElementById("rsvpInvite").value = inviteCode;
 // All RSVP submissions require a verified personalized link.
 submitButton.disabled = true;
@@ -332,9 +380,19 @@ async function resolveInviteName() {
       if (guest && guest.valid === true && typeof guest.name === "string" && guest.name.trim()) {
         applyGuestName(guest.name);
         cacheVerifiedInviteName(inviteDisplayName);
-        inviteReady = guest.canRsvp === true;
+        inviteReady = guest.canRsvp === true && !rsvpDeadlinePassed();
+        if (guest.responded === true) {
+          closeRsvp("responded", guest.attending, guest.partySize);
+        } else if (guest.deadlinePassed === true || rsvpDeadlinePassed()) {
+          closeRsvp("deadline");
+        } else if (!inviteReady) {
+          closeRsvp("notready");
+        } else {
+          rsvpView = {kind:"open",attending:null,partySize:0};
+          refreshRsvpPanel();
+        }
         submitButton.disabled = !inviteReady;
-        showInviteNotice(inviteReady ? null : "guestNotReady");
+        showInviteNotice(null);
         showRSVPStatus(null);
         return;
       }
@@ -369,12 +427,16 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
   const form = event.currentTarget;
   const button = form.querySelector('button[type="submit"]');
   const data = Object.fromEntries(new FormData(form).entries());
-  if (!inviteCode || !inviteDisplayName || !inviteReady) {
+  if (!inviteCode || !inviteDisplayName || !inviteReady || rsvpView.kind !== "open" || submissionUncertain) {
     showRSVPStatus("missingInvite");
     return;
   }
   if (!RSVP_ENDPOINT) {
     showRSVPStatus("preview");
+    return;
+  }
+  if (rsvpDeadlinePassed()) {
+    closeRsvp("deadline");
     return;
   }
   if (!["yes", "no"].includes(data.attending)) return;
@@ -404,24 +466,41 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
     await fetch(RSVP_ENDPOINT, {
       method: "POST", mode: "no-cors", body, cache: "no-store"
     });
+    // The POST request has completed. Check its receipt immediately; no
+    // mandatory 1.1-second delay before the first check. Retry if needed.
     let stored = false;
-    for (let i = 0; i < 5; i++) {
-      await wait(i === 0 ? 1100 : 1900);
+    let previousReply = null;
+    for (const delay of [0,300,550,850,1250,1800]) {
+      if (delay) await wait(delay);
       try {
         const check = await readRSVPReceipt(receipt);
         if (check?.saved === true) {
           stored = true;
           break;
         }
+        if (check?.responded === true) {
+          previousReply = check;
+          break;
+        }
         if (check?.invalid === true) break;
       } catch (_) { /* Retry transient receipt-check failures. */ }
     }
-    if(stored) showRSVPConfirmation(data.attending,people);
-    else showRSVPStatus("error");
+    if (stored) {
+      showRSVPConfirmation(data.attending, people);
+      closeRsvp("responded", data.attending, people);
+    } else if (previousReply) {
+      closeRsvp("responded", previousReply.attending, previousReply.partySize);
+    } else {
+      // A no-cors POST can succeed despite a failed receipt lookup. Avoid
+      // offering a second submission until the page checks the server again.
+      submissionUncertain = true;
+      showRSVPStatus("uncertain");
+    }
   } catch (_) {
-    showRSVPStatus("error");
+    submissionUncertain = true;
+    showRSVPStatus("uncertain");
   } finally {
-    button.disabled = false;
+    button.disabled = !inviteReady || submissionUncertain || rsvpView.kind !== "open";
   }
 });
 
