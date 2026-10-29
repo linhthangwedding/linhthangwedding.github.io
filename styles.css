@@ -344,3 +344,69 @@ footer{
 
 /* During the English-only invitation review, keep the VN/EN switch hidden. */
 .lang-switch[hidden]{display:none!important}
+
+/* Our Story: three simple caption-free polaroids, ready for the final photos. */
+.polaroid-gallery{
+  width:100%;
+  max-width:820px;
+  margin:40px auto 36px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  align-items:center;
+  justify-items:center;
+  gap:clamp(12px,2.7vw,28px);
+}
+.polaroid{
+  --tilt:0deg;
+  width:100%;
+  max-width:235px;
+  margin:0;
+  padding:10px 10px 30px;
+  background:#fffdfa;
+  border:1px solid rgba(170,159,148,.24);
+  box-shadow:0 10px 24px rgba(56,48,42,.16),0 3px 7px rgba(56,48,42,.08);
+  transform:rotate(var(--tilt));
+  transition:transform .25s ease,box-shadow .25s ease;
+}
+.polaroid--one{--tilt:-5deg}
+.polaroid--two{--tilt:3deg}
+.polaroid--three{--tilt:-3deg}
+.polaroid img{
+  display:block;
+  width:100%;
+  aspect-ratio:4/5;
+  object-fit:cover;
+  object-position:center;
+  background:#e8e2dc;
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+  .polaroid:hover{
+    transform:rotate(0deg) translateY(-7px);
+    box-shadow:0 16px 32px rgba(56,48,42,.19);
+  }
+}
+@media(max-width:760px){
+  .polaroid-gallery{
+    width:calc(100% + 44px);
+    max-width:none;
+    margin:34px -22px 32px;
+    padding:12px 28px 20px;
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    gap:16px;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scroll-snap-type:x mandatory;
+    scroll-padding-inline:28px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .polaroid-gallery::-webkit-scrollbar{display:none}
+  .polaroid{
+    flex:0 0 min(63vw,230px);
+    scroll-snap-align:center;
+    padding:9px 9px 26px;
+  }
+}
+@media(prefers-reduced-motion:reduce){.polaroid{transition:none}}
