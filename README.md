@@ -13,10 +13,10 @@ Hiện có **162 khách mời có link riêng**, bao gồm 15 khách mới bổ 
 
 ## Quản lý khách mời
 Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng thứ ba:
-- Bảng hồng bên trái: tên ở cột **B**, RSVP ở cột **E**, link ở cột **G**.
-- Bảng bên phải: tên ở cột **J**, RSVP ở cột **P**, link ở cột **Q**.
+- Bảng hồng bên trái: tên ở cột **B**, RSVP ở cột **F**, **Số người tham dự ở G**, link ở cột **H**.
+- Bảng bên phải: tên ở cột **K**, RSVP ở cột **Q**, **Số người tham dự ở R**, link ở cột **S**.
 
-Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Script phiên bản hiện tại tìm cột theo tiêu đề ở hàng 1, không theo số cột cố định.
+Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Script phiên bản hiện tại tìm cột theo tiêu đề ở hàng 1, không theo số cột cố định, kể cả khi kiểm tra tên vừa chỉnh sửa. Cột Số người tham dự là công thức: phản hồi Có hiển thị 1–10, Không hiển thị 0, chưa có phản hồi để trống.
 
 Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi hiện tại ở cột Q, snapshot ở cột U, trạng thái PREP/LIVE ở V2, thời điểm launch ở W2, số khách, lời nhắn, thời gian và mã biên nhận. Tab **RSVP Link History** cũng được giữ ẩn để lưu các đuôi trước đó. Không xóa hoặc công khai hai tab này.
 
@@ -33,7 +33,7 @@ Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đ
 ## Kích hoạt và kiểm thử
 Việc đổi tên/link đã tự cập nhật bằng công thức Google Sheets. Mã Apps Script lưu lịch sử link **chỉ khi ở chế độ LIVE**, không lưu link thử từ PREP. **Cần Deploy → Manage deployments → Edit → New version → Deploy** một lần để kích hoạt logic hai chế độ. Xem [hướng dẫn](apps-script/README.md).
 
-Chưa xác nhận đã test RSVP đầu cuối từ browser đến Google Sheets sau bản cập nhật slug. Không gửi thiệp hàng loạt trước khi test.
+Trên website v33, số người tham dự là ô nhập bắt buộc khi chọn Có, tính cả người được mời; sau khi xác minh lưu thành công, website thông báo lại con số đã ghi nhận. Chưa xác nhận đã test RSVP đầu cuối từ browser đến Google Sheets sau bản cập nhật; không gửi thiệp hàng loạt trước khi test.
 
 ## Riêng tư
 - Không đưa Guest List, mã gốc, lời nhắn RSVP hoặc số điện thoại lên GitHub.
