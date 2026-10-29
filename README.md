@@ -12,6 +12,12 @@ Ba ảnh cũ đã có trong repo được dùng để demo trong `index.html`: `
 
 Bản `script.js?v=42` hiển thị tên khách từ sessionStorage trong cùng tab cho lần mở lại sau khi đã xác minh; backend vẫn phải xác minh lại trước khi gửi RSVP. `Code.gs` tăng tốc tra cứu bằng TextFinder, bỏ thao tác lock/sync trên lần đọc khi PREP, và giữ link history khi LIVE. Phải redeploy `Code.gs` Web App đang có để áp dụng cải tiến backend. Tên khách/ID vẫn không được công khai trong repo.
 
+## Tên khách hiển thị từ link ngay khi tải (v43)
+
+`Guest List!H/S` hiện đính kèm `&to=` chứa tên khách URL-encoded vào sau `?i=` để render tức thì. Mã `i` mới là định danh RSVP; tên trong URL chỉ để hiển thị trước khi backend kiểm tra. `script.js?v=43` và inline script của `index.html` đã cập nhật; `Code.gs` phải được deploy **bản mới nhất** vì link trong Sheet đã thay đổi. Không đưa danh sách khách vào GitHub.
+
+Chỉ bật LIVE một lần vào trước khi gửi batch đầu tiên, khi người dùng yêu cầu; các batch sau vẫn dùng chung trạng thái LIVE và lịch sử link. Có hai khách cuối Guest List chưa có link từ trước, giữ nguyên chờ chốt tên.
+
 ## Thiệp cá nhân hóa
 - Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
 - Link riêng hiện dạng dễ đọc, ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp`.
