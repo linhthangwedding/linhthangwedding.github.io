@@ -170,6 +170,30 @@ partySizeField.addEventListener("input",refreshPartyConfirmation);
 const inviteParams = new URLSearchParams(window.location.search);
 const inviteCode = (inviteParams.get("i") || inviteParams.get("invite") || "").trim();
 let inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
+// Keep legacy personalized links working, but remove display hints and
+// referral tracking from the address bar after their values are read.
+// The immutable invitation slug remains intact for backend verification.
+if (inviteCode) {
+  const cleanUrl = new URL(window.location.href);
+  let changed = false;
+  for (const key of [...cleanUrl.searchParams.keys()]) {
+    if (key === "to" || key.startsWith("utm_")) {
+      cleanUrl.searchParams.delete(key);
+      changed = true;
+    }
+  }
+  if (cleanUrl.hash === "#story") {
+    cleanUrl.hash = "";
+    changed = true;
+  }
+  if (changed) {
+    window.history.replaceState(
+      window.history.state,
+      "",
+      cleanUrl.pathname + cleanUrl.search + cleanUrl.hash
+    );
+  }
+}
 let inviteReady = false;
 // A short-lived, per-tab cache makes a return visit display the verified name
 // immediately. The backend is ALWAYS checked again before enabling RSVP.
