@@ -23,7 +23,12 @@ const copy = {
     guestPlaceholder:"Nhập tên của bạn",
     attendingQ:"Bạn có thể tham dự không?",
     yes:"Có",no:"Không",
-    partySize:"Tổng số khách tham dự",
+    partySize:"Số người tham dự (bao gồm bạn)",
+    partySizeHelp:"Vui lòng tính cả bạn trong tổng số người.",
+    partySummary:"Bạn sẽ xác nhận: {count} người tham dự.",
+    partySizeInvalid:"Vui lòng nhập số người từ 1 đến 10.",
+    successYes:"Cảm ơn bạn! Chúng mình đã ghi nhận {count} người tham dự.",
+    successNo:"Cảm ơn bạn! Chúng mình đã ghi nhận bạn không thể tham dự.",
     wishes:"Lời nhắn dành cho Linh & Thang",
     wishesPlaceholder:"Để lại vài lời cho chúng mình...",
     submit:"Gửi xác nhận",
@@ -64,7 +69,12 @@ const copy = {
     guestPlaceholder:"Enter your name",
     attendingQ:"Will you be able to attend?",
     yes:"Yes",no:"No",
-    partySize:"Total number of guests",
+    partySize:"Number of guests attending (including you)",
+    partySizeHelp:"Please include yourself in the total.",
+    partySummary:"You are confirming {count} guest(s) attending.",
+    partySizeInvalid:"Please enter between 1 and 10 guests.",
+    successYes:"Thank you! We've recorded {count} guest(s) attending.",
+    successNo:"Thank you! We've recorded that you cannot attend.",
     wishes:"A message for Linh & Thang",
     wishesPlaceholder:"Leave us a little message...",
     submit:"Send RSVP",
@@ -109,7 +119,11 @@ function setLang(next){
   document.title=copy[next].pageTitle;
   document.querySelector('meta[name="description"]')?.setAttribute("content",copy[next].pageDescription);
   const status=document.getElementById("formStatus");
-  if(status?.dataset.messageKey) status.textContent=copy[next][status.dataset.messageKey];
+  if(status?.dataset.messageKey){
+    const template=copy[next][status.dataset.messageKey] || "";
+    status.textContent=template.replace("{count}",status.dataset.confirmedCount || "");
+  }
+  refreshPartyConfirmation();
   const inviteNotice=document.getElementById("inviteGuestNotice");
   if(inviteNotice?.dataset.messageKey) inviteNotice.textContent=copy[next][inviteNotice.dataset.messageKey];
   document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===next));
@@ -118,10 +132,24 @@ document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=
 
 const yesBranch=document.getElementById("yesBranch");
 const noBranch=document.getElementById("noBranch");
+const partySizeField= document.querySelector('#yesBranch [name="party_size"]');
+function refreshPartyConfirmation() {
+  const value=Number(partySizeField.value);
+  const el=document.getElementById("partyConfirmation");
+  el.textContent=(Number.isInteger(value) && value>=1 && value<=10
+    ?copy[lang].partySummary.replace("{count}",String(value))
+    :copy[lang].partySizeInvalid);
+}
 document.querySelectorAll('input[name="attending"]').forEach(r=>r.addEventListener("change",()=>{
-  yesBranch.classList.toggle("hidden",!(r.checked&&r.value==="yes"));
-  noBranch.classList.toggle("hidden",!(r.checked&&r.value==="no"));
+  const yes=document.querySelector('input[name="attending"][value="yes"]').checked;
+  const no=document.querySelector('input[name="attending"][value="no"]').checked;
+  yesBranch.classList.toggle("hidden",!yes);
+  noBranch.classList.toggle("hidden",!no);
+  partySizeField.disabled=!yes;
+  partySizeField.required=yes;
+  refreshPartyConfirmation();
 }));
+partySizeField.addEventListener("input",refreshPartyConfirmation);
 
 
 // Personal URL: ?i=chi-thu-tam-kp. Historical slugs remain valid.
@@ -157,7 +185,15 @@ function showInviteNotice(key) {
 function showRSVPStatus(key) {
   const el = document.getElementById("formStatus");
   el.dataset.messageKey = key || "";
+  delete el.dataset.confirmedCount;
   el.textContent = key ? copy[lang][key] : "";
+}
+function showRSVPConfirmation(attending,count) {
+  const el=document.getElementById("formStatus");
+  const key=attending==="yes"?"successYes":"successNo";
+  el.dataset.messageKey=key;
+  el.dataset.confirmedCount=String(count);
+  el.textContent=copy[lang][key].replace("{count}",String(count));
 }
 
 // Apps Script ContentService has no regular CORS headers. A no-cors POST
@@ -254,13 +290,20 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
     return;
   }
   if (!["yes", "no"].includes(data.attending)) return;
+  const people=data.attending==="yes" ? Number(data.party_size) : 0;
+  if (data.attending==="yes" &&
+      (!Number.isInteger(people)||people<1||people>10)) {
+    showRSVPStatus("partySizeInvalid");
+    partySizeField.focus();
+    return;
+  }
 
   const receipt = (window.crypto?.randomUUID?.() ||
     (String(Date.now()) + Math.random().toString(36).slice(2)));
   const body = new URLSearchParams({
     invite: inviteCode,
     attending: data.attending,
-    party_size: data.attending === "yes" ? String(data.party_size || 1) : "0",
+    party_size: String(people),
     wishes: data.wishes || "",
     language: lang,
     receipt: receipt
@@ -285,7 +328,8 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
         if (check?.invalid === true) break;
       } catch (_) { /* Retry transient receipt-check failures. */ }
     }
-    showRSVPStatus(stored ? "success" : "error");
+    if(stored) showRSVPConfirmation(data.attending,people);
+    else showRSVPStatus("error");
   } catch (_) {
     showRSVPStatus("error");
   } finally {
