@@ -2,8 +2,9 @@
  * Linh & Thang RSVP receiver, bound to the wedding Master Google Sheet.
  *
  * Public invitation links live INSIDE the existing Guest List tables:
- *   Bride-side pink table: Name B, Event C, RSVP E, Link G
- *   Other guest table:     Name J, Event K, RSVP P, Link Q
+ *   Bride-side pink table: Name B, RSVP F, count G, Link H
+ *   Other guest table:     Name K, RSVP Q, count R, Link S
+ *   RSVP count is calculated in Guest List from private registry columns H/I.
  *
  * Slugs and links automatically recalculate in Google Sheets formulas.
  * PREP mode: only the newest guest link works; old test slugs are ignored.
@@ -124,14 +125,24 @@ function syncAliasesWithLock_(book) {
   try { syncAliasSnapshots_(book); }
   finally { lock.releaseLock(); }
 }
-/** Google Sheets bound script: runs automatically after changes to Name B/J. */
+/**
+ * Bound-sheet name edits. Detect columns by "Tên khách mời" headers rather
+ * than hard-coding B/J (the right-hand table may shift when columns are added).
+ */
 function onEdit(e) {
   if (!e || !e.range || e.range.getSheet().getName() !== GUEST_TAB) return;
-  var first = e.range.getColumn(), last = e.range.getLastColumn();
-  if (e.range.getLastRow() < 2 || !((first <= 2 && last >= 2) ||
-                                      (first <= 10 && last >= 10))) return;
+  if (e.range.getLastRow() < 2) return;
+  var sheet=e.range.getSheet();
+  var headers=sheet.getRange(1,1,1,sheet.getLastColumn()).getDisplayValues()[0];
+  var first=e.range.getColumn(), last=e.range.getLastColumn();
+  var editedNameColumn=false;
+  for (var i=0;i<headers.length;i++) {
+    if ((headers[i]==="Tên khách mời" || headers[i]==="Name") &&
+        i+1>=first && i+1<=last) editedNameColumn=true;
+  }
+  if (!editedNameColumn) return;
   SpreadsheetApp.flush();
-  syncAliasesWithLock_(e.source || SpreadsheetApp.getActiveSpreadsheet());
+  syncAliasesWithLock_(e.source || getWeddingBook_());
 }
 /**
  * Resolve a CURRENT slug, a historic slug or a legacy random invitation ID.
