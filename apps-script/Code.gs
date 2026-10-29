@@ -160,6 +160,21 @@ function findInvite_(book, invite) {
   if (!registry) return null;
   var count = registry.getLastRow()-1;
   if (count < 1) return null;
+  var phase=getInvitationPhase_(book);
+  // PREP is read-only: search only the slug column, not every full record.
+  // Detect collisions with findAll(); never match an ambiguous invitation.
+  if (!phase.live) {
+    var hits=registry.getRange(2,17,count,1)
+      .createTextFinder(invite).matchEntireCell(true).findAll();
+    if (hits.length !== 1) return null;
+    var index=hits[0].getRow();
+    var rec=registry.getRange(index,1,1,21).getDisplayValues()[0];
+    if (!String(rec[0]||"").trim() ||
+        String(rec[16]||"").trim() !== invite) return null;
+    return {registry:registry,index:index,row:rec};
+  }
+
+  // LIVE still checks post-launch aliases against stable internal guest IDs.
   var rows=registry.getRange(2,1,count,21).getDisplayValues();
   var candidates={},byId={};
   rows.forEach(function(rec,i) {
@@ -168,7 +183,6 @@ function findInvite_(book, invite) {
     byId[id]={registry:registry,index:i+2,row:rec};
     if (String(rec[16]||"").trim()===invite) candidates[id]=true;
   });
-  var phase=getInvitationPhase_(book);
   if (phase.live) {
     var history=book.getSheetByName("RSVP Link History");
     if (!history) return null;
@@ -219,22 +233,20 @@ function locateGuest_(book, record) {
   if (responseCol < 0) return null;
   var slug=String(record[16] || "").trim();
   if (!/^[a-z0-9-]{2,76}$/.test(slug)) return null;
-  var rows=sheet.getRange(2,1,sheet.getLastRow()-1,width).getDisplayValues();
-  var match=null;
-  for (var i=0;i<rows.length;i++){
-    var row=rows[i];
-    var link=String(row[linkCol] || "").trim();
-    var suffix=link.split("?i=")[1] || "";
-    var isMatch=suffix === slug;
-    if (isMatch && String(row[nameCol] || "").trim()) {
-      if (match) return null; // Collision protection.
-      match={
-        tab:sheet, rowNumber:i+2, name:String(row[nameCol]).trim(),
-        event:String(row[eventCol] || "").trim(), responseCol:responseCol+1
-      };
-    }
-  }
-  return match;
+  // Use the exact current link in its ONE source column. The original
+  // full-sheet scan read every cell even though only one guest was needed.
+  var expectedLink="https://linhthangwedding.github.io/?i="+slug;
+  var hits=sheet.getRange(2,linkCol+1,sheet.getLastRow()-1,1)
+    .createTextFinder(expectedLink).matchEntireCell(true).findAll();
+  if (hits.length !== 1) return null; // Missing or duplicated links fail closed.
+  var rowNumber=hits[0].getRow();
+  var row=sheet.getRange(rowNumber,1,1,width).getDisplayValues()[0];
+  if (String(row[linkCol]||"").trim() !== expectedLink ||
+      !String(row[nameCol]||"").trim()) return null;
+  return {
+    tab:sheet, rowNumber:rowNumber, name:String(row[nameCol]).trim(),
+    event:String(row[eventCol] || "").trim(), responseCol:responseCol+1
+  };
 }
 function canRsvp_(eventName) {
   // A blank Event cell in the wedding Guest List means not yet categorized,
@@ -280,7 +292,9 @@ function doGet(e) {
     return js_(callback,{saved:false,invalid:true});
   try {
     var book=getWeddingBook_();
-    syncAliasesWithLock_(book);
+    // No history writes or document lock on a PREP guest-name lookup.
+    // LIVE keeps history synchronization, so old sent links remain valid.
+    if (getInvitationPhase_(book).live) syncAliasesWithLock_(book);
     var found=findInvite_(book,String(q.invite||"").trim());
     if (!found) return js_(callback,{valid:false,invalid:true});
     var guest=locateGuest_(book,found.row);
