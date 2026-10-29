@@ -161,6 +161,30 @@ const inviteParams = new URLSearchParams(window.location.search);
 const inviteCode = (inviteParams.get("i") || inviteParams.get("invite") || "").trim();
 let inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
 let inviteReady = false;
+// A short-lived, per-tab cache makes a return visit display the verified name
+// immediately. The backend is ALWAYS checked again before enabling RSVP.
+const inviteCacheKey=inviteCode ? "ltw:verifiedGuest:"+inviteCode : "";
+function readCachedInviteName() {
+  if (!inviteCacheKey) return "";
+  try {
+    const c=JSON.parse(sessionStorage.getItem(inviteCacheKey) || "null");
+    return c && typeof c.name==="string" && c.expires>Date.now()
+      ? c.name.trim().slice(0,120) : "";
+  } catch (_) { return ""; }
+}
+function cacheVerifiedInviteName(name) {
+  if (!inviteCacheKey) return;
+  try {
+    sessionStorage.setItem(inviteCacheKey,JSON.stringify({
+      name:name, expires:Date.now()+15*60*1000
+    }));
+  } catch (_) { /* The invitation still works if storage is unavailable. */ }
+}
+function clearCachedInviteName() {
+  if (!inviteCacheKey) return;
+  try { sessionStorage.removeItem(inviteCacheKey); } catch (_) {}
+}
+const cachedInviteName=readCachedInviteName();
 const inviteLabel = document.getElementById("inviteGuestName");
 const declineMessage = document.getElementById("declineMessage");
 function refreshDeclineMessage() {
@@ -184,7 +208,9 @@ function applyGuestName(value){
   rsvpGuestSummary.classList.remove("hidden");
   refreshDeclineMessage();
 }
-if (inviteCode && inviteDisplayName) applyGuestName(inviteDisplayName);
+if (inviteCode && (inviteDisplayName || cachedInviteName)) {
+  applyGuestName(inviteDisplayName || cachedInviteName);
+}
 
 function showInviteNotice(key) {
   inviteNotice.dataset.messageKey = key || "";
@@ -247,7 +273,8 @@ function readRSVPReceipt(receipt) {
 
 async function resolveInviteName() {
   if (!inviteCode) return;
-  showInviteNotice("guestLoading");
+  // Don't show a loading message when a previously verified name is visible.
+  showInviteNotice(inviteDisplayName ? null : "guestLoading");
   if (!RSVP_ENDPOINT) {
     showInviteNotice("guestUnavailable");
     return;
@@ -260,6 +287,7 @@ async function resolveInviteName() {
       const guest = await readRSVPData("guest");
       if (guest && guest.valid === true && typeof guest.name === "string" && guest.name.trim()) {
         applyGuestName(guest.name);
+        cacheVerifiedInviteName(inviteDisplayName);
         inviteReady = guest.canRsvp === true;
         submitButton.disabled = !inviteReady;
         showInviteNotice(inviteReady ? null : "guestNotReady");
@@ -267,6 +295,15 @@ async function resolveInviteName() {
         return;
       }
       if (guest && guest.invalid === true) {
+        clearCachedInviteName();
+        // Remove any optimistic cached name for a now-invalid invitation.
+        if (cachedInviteName && !inviteParams.get("to")) {
+          inviteDisplayName="";
+          inviteLabel.textContent="";
+          inviteLabel.classList.add("hidden");
+          rsvpGuestName.textContent="";
+          rsvpGuestSummary.classList.add("hidden");
+        }
         failedKey = "guestInvalid";
         break;
       }
