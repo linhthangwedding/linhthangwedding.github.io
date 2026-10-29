@@ -16,7 +16,7 @@ const copy = {
     saveDate:"Lưu ngày vào lịch",
     storyTitle:"CÂU CHUYỆN CỦA CHÚNG MÌNH",
     storyCopy:"Cùng nhau đi qua những hành trình, những thành phố và những mùa hoa. Giờ đây, chúng mình sẵn sàng bắt đầu một chương mới.",
-    storySignoff:"Cùng nhau, luôn là nhà.",
+    storySignoff:"Thương mến,\nLinh & Thắng ♡",
     rsvpTitle:"XÁC NHẬN THAM DỰ",
     rsvpIntro:"Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.",
     guestSummaryLabel:"Phản hồi dành cho",
@@ -96,7 +96,8 @@ const copy = {
   }
 };
 
-let lang="en";
+const requestedLang = new URLSearchParams(window.location.search).get("lang");
+let lang = requestedLang === "vi" ? "vi" : "en";
 
 function setLang(next){
   lang=next;
@@ -128,9 +129,18 @@ function setLang(next){
   refreshDeclineMessage();
   const inviteNotice=document.getElementById("inviteGuestNotice");
   if(inviteNotice?.dataset.messageKey) inviteNotice.textContent=copy[next][inviteNotice.dataset.messageKey];
-  document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===next));
+  document.querySelectorAll(".lang-btn").forEach(b=>{
+    const active=b.dataset.lang===next;
+    b.classList.toggle("active",active);
+    b.setAttribute("aria-pressed",String(active));
+  });
 }
-document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>{
+  setLang(b.dataset.lang);
+  const url=new URL(window.location.href);
+  url.searchParams.set("lang",b.dataset.lang);
+  window.history.replaceState(null,"",url.toString());
+}));
 
 const yesBranch=document.getElementById("yesBranch");
 const noBranch=document.getElementById("noBranch");
@@ -381,6 +391,6 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
   }
 });
 
-setLang("en");
+setLang(lang);
 if (!inviteCode) showRSVPStatus("missingInvite");
 resolveInviteName();
