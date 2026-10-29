@@ -51,9 +51,14 @@ export default {
     if (!env.GUEST_NAMES) return json({ valid: false }, 503, origin);
 
     try {
-      // Names live only in the bound, private Workers KV namespace.
-      // No list endpoint and no public write operation exist.
-      const name = await env.GUEST_NAMES.get("guest:" + slug, { cacheTtl: 60 });
+      // Each private import changes the active snapshot. Old PREP link keys
+      // are never read after the new snapshot is activated.
+      const active = await env.GUEST_NAMES.get("__active_snapshot", { cacheTtl: 30 });
+      if (!active || !/^[a-zA-Z0-9_-]{1,60}$/.test(active)) {
+        return json({ valid: false }, 503, origin);
+      }
+      // No public list endpoint or write operation; one guest per request.
+      const name = await env.GUEST_NAMES.get("guest:" + active + ":" + slug, { cacheTtl: 30 });
       if (typeof name !== "string" || !name.trim()) {
         return json({ valid: false }, 404, origin);
       }
