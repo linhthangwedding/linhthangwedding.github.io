@@ -5,9 +5,10 @@
  * Creates a private JSON snapshot in the owner's Google Drive for
  * Cloudflare Workers KV bulk import. NEVER publish the JSON on GitHub.
  *
- * PREP: generating a new snapshot invalidates all earlier PREP slugs
- * in the Cloudflare lookup after "__active_snapshot" is updated.
- * It DOES NOT activate LIVE or change any RSVP data.
+ * PREP: only current slugs are included; old trial slugs become inactive.
+ * LIVE: post-launch historical slugs are also included, mapped to the same
+ * current guest name. Earlier PREP-only aliases are not reactivated.
+ * This function NEVER activates LIVE or changes any RSVP data.
  */
 function exportGuestNamesForCloudflare() {
   var book = SpreadsheetApp.openById("1WCea4Ju0-sWCj_ZSxH5n82MpcYN0cSGIA9s01gSGO2o");
@@ -17,9 +18,17 @@ function exportGuestNamesForCloudflare() {
   if (last < 2) throw new Error("Guest List is empty");
   var rows = sheet.getRange(2, 1, last - 1, 19).getDisplayValues();
 
-  var snapshot = "prep_" + Utilities.formatDate(
+  var registry = book.getSheetByName("RSVP Online");
+  if (!registry) throw new Error("RSVP Online registry not found");
+  var mode = String(registry.getRange("V2").getDisplayValue() || "").trim();
+  var launchDate = registry.getRange("W2").getValue();
+  var live = mode === "LIVE";
+  if (live && (!(launchDate instanceof Date) || isNaN(launchDate.getTime()))) {
+    throw new Error("LIVE launch date is missing");
+  }
+  var snapshot = (live ? "live_" : "prep_") + Utilities.formatDate(
     new Date(), "UTC", "yyyyMMdd_HHmmss"
-  );
+  ) + "_" + Utilities.getUuid().slice(0, 8);
   var pairs = [], seen = {};
   var linkPattern = /^https:\/\/linhthangwedding\.github\.io\/\?i=([a-z0-9][a-z0-9-]{1,75})$/;
 
@@ -33,9 +42,16 @@ function exportGuestNamesForCloudflare() {
     if (!name || name.length > 120) {
       throw new Error("Missing or invalid guest name in row " + sheetRow);
     }
-    var slug = match[1];
-    if (seen[slug]) throw new Error("Duplicate current invitation slug");
-    seen[slug] = true;
+    addSlug(match[1], name);
+  }
+
+  function addSlug(slug, name) {
+    if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) return;
+    if (seen[slug]) {
+      if (seen[slug] !== name) throw new Error("Ambiguous invitation slug");
+      return;
+    }
+    seen[slug] = name;
     pairs.push({ key: "guest:" + snapshot + ":" + slug, value: name });
   }
 
@@ -45,8 +61,34 @@ function exportGuestNamesForCloudflare() {
   });
   if (!pairs.length) throw new Error("No linked wedding guests to export");
 
-  // The active pointer MUST appear last in the import. Names are uploaded
-  // first; once the pointer changes, previous PREP links are no longer read.
+  if (live) {
+    // Preserve ONLY aliases created at or after the official launch.
+    var history = book.getSheetByName("RSVP Link History");
+    if (!history) throw new Error("RSVP Link History not found");
+    var registryLast = registry.getLastRow();
+    var currentById = {};
+    if (registryLast > 1) {
+      var currentRows = registry.getRange(2, 1, registryLast - 1, 17).getDisplayValues();
+      currentRows.forEach(function(row) {
+        var id = String(row[0] || "").trim();
+        var name = String(row[1] || "").trim();
+        if (id && name) currentById[id] = name;
+      });
+    }
+    if (history.getLastRow() > 1) {
+      var historyRows = history.getRange(2, 1, history.getLastRow() - 1, 3).getValues();
+      historyRows.forEach(function(row) {
+        var alias = String(row[0] || "").trim();
+        var id = String(row[1] || "").trim();
+        var storedAt = row[2];
+        if (storedAt instanceof Date && storedAt.getTime() >= launchDate.getTime() &&
+            currentById[id]) addSlug(alias, currentById[id]);
+      });
+    }
+  }
+
+  // The active pointer is imported with the new keys; older snapshot
+  // slugs are not looked up by the Worker once this pointer changes.
   pairs.push({ key: "__active_snapshot", value: snapshot });
 
   var fileName = "PRIVATE-wedding-guest-kv-" + snapshot + ".json";
