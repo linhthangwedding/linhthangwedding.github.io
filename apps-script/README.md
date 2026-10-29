@@ -1,6 +1,6 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
-Đuôi link hiện dùng **tên không dấu**, ví dụ `?i=chi-thu-tam-kp`, thay cho mã 16 ký tự ngẫu nhiên. 151 link có đuôi duy nhất. Mã 30 ký tự cũ vẫn là định danh nội bộ; từ bản cập nhật này, Web App sẽ nhận cả slug hiện tại và các slug cũ được lưu trong **RSVP Link History**.
+Đuôi link hiện dùng **tên không dấu**, ví dụ `?i=chi-thu-tam-kp`, thay cho mã 16 ký tự ngẫu nhiên. 162 link khách hiện có đuôi duy nhất (15 link mới được tạo sau khi Guest List bổ sung khách). Mã 30 ký tự vẫn là định danh nội bộ. Khi **PREP**, Web App chỉ nhận slug hiện tại; khi **LIVE**, các slug cũ ghi nhận từ thời điểm launch mới được chấp nhận.
 
 ## Cập nhật deployment (bắt buộc sau lần thay đổi này)
 1. Trong Master File Google Sheets, chọn **Extensions → Apps Script**.
@@ -9,7 +9,7 @@
 4. **Version → New version → Deploy**. Giữ deployment cũ để URL `/exec` không đổi.
 5. Kiểm tra **Execute as: Me** và **Who has access: Anyone**.
 
-**Cần redeploy để bật xử lý link cũ**. Sau khi kích hoạt, cả link cũ và link mới cùng ánh xạ về một khách. Không gửi thiệp cho khách khi chưa kiểm thử.
+**Cần redeploy để bật hai chế độ.** Ở PREP chỉ link hiện tại hợp lệ; sau launch, link cũ phát sinh từ lúc LIVE và link mới cùng ánh xạ về một khách. Không gửi thiệp cho khách khi chưa kiểm thử.
 
 ## Bố cục Guest List hiện tại
 
@@ -56,3 +56,7 @@ Link gợi nhớ theo tên có thể bị người ngoài đoán. Người có h
 
 **Lưu ý:** Dữ liệu lịch sử link cũ từ PREP vẫn có thể nằm trong tab `RSVP Link History`, nhưng bộ nhận chỉ tra alias có thời gian **từ launch trở đi**. Không cần xóa dữ liệu cũ. Link ngẫu nhiên cũ trước launch cũng không được dùng. Khi test trước launch, chỉ link mới nhất hợp lệ.
 
+
+## Ghi chú khi chèn dòng khách mới
+
+Các công thức B/X trong tab kỹ thuật được cập nhật để theo tên/ghi chú của đúng người sau khi chèn dòng. Nếu thêm **khách mới hoàn toàn** vào Guest List, cần tạo cho khách một mã thiệp nội bộ mới và link mới, không sao chép link của khách phía trên. 15 khách mới đã được bổ sung ở lần rà soát 29/10/2026; 162 người hiện có link riêng. Các bản ghi ứng với khách đã xóa được giữ ẩn, không cấp lại mã cho khách khác.
