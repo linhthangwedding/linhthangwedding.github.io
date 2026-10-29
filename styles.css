@@ -341,3 +341,6 @@ footer{
   white-space:normal;
 }
 @media(max-width:760px){.decline-message{padding:17px 18px;font-size:15px;line-height:1.75}}
+
+/* During the English-only invitation review, keep the VN/EN switch hidden. */
+.lang-switch[hidden]{display:none!important}
