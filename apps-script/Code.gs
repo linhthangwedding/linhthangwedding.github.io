@@ -262,6 +262,21 @@ function canRsvp_(eventName) {
   // but the guest is still in the Capella invitation list.
   return eventName === "" || eventName === WEDDING_EVENT;
 }
+// Guests may submit through February 14, 2027, 23:59:59 (Vietnam, UTC+7).
+// The server is authoritative; the browser deadline is only for display.
+var RSVP_DEADLINE_MS = Date.parse("2027-02-14T23:59:59.999+07:00");
+function rsvpDeadlinePassed_() {
+  return Date.now() > RSVP_DEADLINE_MS;
+}
+function getRecordedReply_(record) {
+  var answer = String(record[7] || "").trim();
+  var answered = answer === "Có" || answer === "Không";
+  return {
+    responded:answered,
+    attending:answer === "Có" ? "yes" : answer === "Không" ? "no" : null,
+    partySize:answer === "Có" ? Number(record[8] || 0) : 0
+  };
+}
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
@@ -301,25 +316,33 @@ function doGet(e) {
     return js_(callback,{saved:false,invalid:true});
   try {
     var book=getWeddingBook_();
-    // No history writes or document lock on a PREP guest-name lookup.
-    // LIVE keeps history synchronization, so old sent links remain valid.
+    // PREP guest/status reads are read-only and do not acquire document locks.
+    // LIVE preserves aliases for invitations already sent.
     if (getInvitationPhase_(book).live) syncAliasesWithLock_(book);
     var found=findInvite_(book,String(q.invite||"").trim());
     if (!found) return js_(callback,{valid:false,invalid:true});
-    var guest=locateGuest_(book,found.row);
-    if (!guest) return js_(callback,{valid:false,invalid:true});
-    if (q.action === "guest") {
+    var reply=getRecordedReply_(found.row);
+    // Receipt verification needs only the private registry row; avoid an
+    // expensive second Guest List search on each confirmation poll.
+    if (q.action === "status") {
+      var receipt=String(q.receipt||"");
       return js_(callback,{
-        valid:true,
-        name:guest.name.slice(0,120),
-        canRsvp:canRsvp_(guest.event)
+        saved:!!receipt && receipt===String(found.row[11]||"").trim(),
+        responded:reply.responded,
+        attending:reply.attending,
+        partySize:reply.partySize
       });
     }
-    if (!canRsvp_(guest.event))
-      return js_(callback,{saved:false,invalid:true});
-    var receipt=String(q.receipt||"");
+    var guest=locateGuest_(book,found.row);
+    if (!guest) return js_(callback,{valid:false,invalid:true});
     return js_(callback,{
-      saved:!!receipt && receipt===String(found.row[11]||"").trim()
+      valid:true,
+      name:guest.name.slice(0,120),
+      canRsvp:canRsvp_(guest.event) && !reply.responded && !rsvpDeadlinePassed_(),
+      responded:reply.responded,
+      attending:reply.attending,
+      partySize:reply.partySize,
+      deadlinePassed:rsvpDeadlinePassed_()
     });
   } catch(err) {
     // Expose a non-sensitive error state rather than silently returning an
@@ -341,10 +364,16 @@ function doPost(e) {
   var lock=LockService.getDocumentLock()||LockService.getScriptLock();
   if (!lock.tryLock(15000)) return json_({ok:false,error:"busy"});
   try {
+    if (rsvpDeadlinePassed_())
+      return json_({ok:false,error:"rsvp_deadline_passed"});
     var book=getWeddingBook_();
-    syncAliasSnapshots_(book); // post already owns the document lock
+    // PREP does not need the costly full-registry alias synchronization.
+    // LIVE still protects old slugs under this same submission lock.
+    if (getInvitationPhase_(book).live) syncAliasSnapshots_(book);
     var found=findInvite_(book,invite);
     if (!found) return json_({ok:false,error:"unknown_invitation"});
+    if (getRecordedReply_(found.row).responded)
+      return json_({ok:false,error:"already_responded"});
     var guest=locateGuest_(book,found.row);
     if (!guest) return json_({ok:false,error:"guest_link_not_found"});
     if (!canRsvp_(guest.event))
@@ -358,9 +387,8 @@ function doPost(e) {
 
     found.registry.getRange(found.index,8,1,5)
       .setValues([[answer,count,note,time,receipt]]);
-    guest.tab.getRange(guest.rowNumber,guest.responseCol).setValue(
-      answer==="Có"&&count>1 ? "Có ("+count+" khách)" : answer
-    );
+    // Attendance count has its own column (G/R); RSVP F/Q is just Có/Không.
+    guest.tab.getRange(guest.rowNumber,guest.responseCol).setValue(answer);
     SpreadsheetApp.flush();
     return json_({ok:true});
   }catch(err){
