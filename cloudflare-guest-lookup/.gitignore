@@ -1,0 +1,7 @@
+# Never commit personal names or local credentials
+PRIVATE-*
+*guest-kv-*.json
+node_modules/
+.wrangler/
+.dev.vars*
+.env*
