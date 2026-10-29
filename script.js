@@ -195,28 +195,33 @@ if (inviteCode) {
   }
 }
 let inviteReady = false;
-// A short-lived, per-tab cache makes a return visit display the verified name
-// immediately. The backend is ALWAYS checked again before enabling RSVP.
+// Remember only guest names validated by the private registry, per browser.
+// Future visits can paint the exact accented name at first HTML parse, while
+// every RSVP still requires a fresh backend check.
 const inviteCacheKey=inviteCode ? "ltw:verifiedGuest:"+inviteCode : "";
 function readCachedInviteName() {
   if (!inviteCacheKey) return "";
-  try {
-    const c=JSON.parse(sessionStorage.getItem(inviteCacheKey) || "null");
-    return c && typeof c.name==="string" && c.expires>Date.now()
-      ? c.name.trim().slice(0,120) : "";
-  } catch (_) { return ""; }
+  for (const store of [localStorage, sessionStorage]) {
+    try {
+      const c=JSON.parse(store.getItem(inviteCacheKey) || "null");
+      if (c && typeof c.name==="string" && c.expires>Date.now())
+        return c.name.trim().slice(0,120);
+    } catch (_) { /* Storage can be blocked. */ }
+  }
+  return "";
 }
 function cacheVerifiedInviteName(name) {
   if (!inviteCacheKey) return;
-  try {
-    sessionStorage.setItem(inviteCacheKey,JSON.stringify({
-      name:name, expires:Date.now()+15*60*1000
-    }));
-  } catch (_) { /* The invitation still works if storage is unavailable. */ }
+  const entry=JSON.stringify({name:name, expires:Date.now()+3*24*60*60*1000});
+  for (const store of [localStorage, sessionStorage]) {
+    try { store.setItem(inviteCacheKey,entry); } catch (_) { /* Not essential for RSVP. */ }
+  }
 }
 function clearCachedInviteName() {
   if (!inviteCacheKey) return;
-  try { sessionStorage.removeItem(inviteCacheKey); } catch (_) {}
+  for (const store of [localStorage, sessionStorage]) {
+    try { store.removeItem(inviteCacheKey); } catch (_) {}
+  }
 }
 const cachedInviteName=readCachedInviteName();
 const inviteLabel = document.getElementById("inviteGuestName");
@@ -318,7 +323,11 @@ async function resolveInviteName() {
   let failedKey = "guestUnavailable";
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const guest = await readRSVPData("guest");
+      // The first lookup started in the document head, in parallel with
+      // HTML rendering. Reuse that result instead of starting another request.
+      const guest = attempt===0 && window.__ltwEarlyGuestLookup
+        ? await window.__ltwEarlyGuestLookup
+        : await readRSVPData("guest");
       if (guest && guest.valid === true && typeof guest.name === "string" && guest.name.trim()) {
         applyGuestName(guest.name);
         cacheVerifiedInviteName(inviteDisplayName);
