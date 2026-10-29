@@ -88,3 +88,11 @@ Lỗi này có thể xảy ra khi Web App vẫn chạy một bản Code.gs cũ h
 - `index.html`: thêm `preconnect` tới Google Apps Script và đổi cache version `script.js?v=42`.
 - **Bắt buộc triển khai lại backend để nhận tối ưu PREP:** vào Master File → Extensions → Apps Script; thay `Code.gs` bằng bản mới từ GitHub, **Save**; chọn hàm `verifyWeddingBackend` → Run kiểm tra; sau đó **Deploy → Manage deployments → Edit → New version → Deploy**. Không tạo deployment mới, không chạy `activateWeddingInvitations`.
 - Cold start của Google Apps Script vẫn có thể chậm trong lần truy cập đầu. Không publish dữ liệu Guest List lên GitHub và không thêm tên khách vào URL để tối ưu tốc độ.
+
+## Thiệp hiển thị tên ngay lập tức từ link (v43; giai đoạn PREP)
+
+- Link ở `Guest List!H/S` có dạng `?i=<slug>&to=<Tên khách URL-encoded>`. `i` vẫn là định danh liên kết; `to` **chỉ là gợi ý hiển thị**, không xác thực khách và không dùng để quyết định dòng ghi RSVP. Tên có thể xuất hiện ngay khi HTML được tải mà không phải đợi Apps Script. Website vẫn kiểm tra lại dữ liệu Google trước khi cho bấm RSVP, và xóa tên tạm nếu mã thiệp bị từ chối.
+- `Code.gs` đã chỉnh `locateGuest_` để nhận URL có `&to=` và legacy URL chỉ có `?i=`, đồng thời kiểm tra slug và nguồn tên ở Sheet. Không cập nhật định dạng này trong Apps Script sẽ khiến RSVP tra không ra khách **khi các link Guest List đã được cập nhật**, dù tên vẫn hiển thị.
+- **CẦN DEPLOY:** Mở Master Sheet → Extensions → Apps Script → thay `Code.gs` bằng GitHub bản mới → Save → chọn `verifyWeddingBackend` → Run → Deploy → Manage deployments → Edit deployment hiện có → New version → Deploy. Không chạy `activateWeddingInvitations` trước lúc launch thực sự.
+- Tên được kèm trong URL sẽ được những ai có đường link nhìn thấy, bao gồm khi copy/share link. Không đưa toàn bộ bảng tên/mã lên mã nguồn website.
+- Khi chốt danh sách từng đợt: kiểm tra đúng tên và link hiện tại trong Guest List, sau đó mới gửi. **LIVE là trạng thái chung, chỉ kích hoạt một lần khi gửi đợt đầu tiên**; giữ các link đã gửi ở các đợt trước nếu tên đổi. Không bật LIVE trước khi được yêu cầu.
