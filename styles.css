@@ -211,6 +211,8 @@ button,input,textarea{font:inherit}
 }
 .story-signoff{
   margin:28px 0 0;
+  white-space:pre-line;
+  line-height:1.5;
   font-family:"Noto Serif",serif;
   font-style:italic;
   font-size:29px;
