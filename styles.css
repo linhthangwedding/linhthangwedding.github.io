@@ -338,7 +338,7 @@ footer{
   font-weight:400;
   line-height:1.85;
   color:#625750;
-  white-space:normal;
+  white-space:pre-line;
 }
 @media(max-width:760px){.decline-message{padding:17px 18px;font-size:15px;line-height:1.75}}
 
