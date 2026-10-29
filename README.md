@@ -18,6 +18,16 @@ Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Scrip
 
 Tab **RSVP Online** được giữ **ẩn** để lưu mã gốc 30 ký tự, đuôi hiện tại ở cột Q, snapshot ở cột U, số khách, lời nhắn, thời gian và mã biên nhận. Tab **RSVP Link History** cũng được giữ ẩn để lưu các đuôi trước đó. Không xóa hoặc công khai hai tab này.
 
+## Chế độ chuẩn bị và phát thiệp (29/10/2026)
+
+**Hiện đang ở PREP** trong Master File, tab kỹ thuật ẩn `RSVP Online`, ô `V2`.
+
+- **PREP:** sửa tên khách thì link trong Guest List tự đổi. Chỉ **link hiện tại** được hệ thống nhận; link thử hoặc link cũ trước khi phát thiệp không được lưu thêm và không mở RSVP.
+- **LIVE:** từ lúc bật chính thức, mỗi lần sửa tên mới, link cũ và link mới đều còn hiệu lực. Tất cả đều hiển thị **tên mới nhất** và lưu RSVP vào đúng mã khách gốc.
+- Lịch sử được giữ trong tab ẩn `RSVP Link History`. Các link thử cũ từ giai đoạn PREP được giữ như dữ liệu lưu trữ, nhưng sẽ không được kích hoạt lại khi LIVE.
+
+**Kích hoạt khi launch:** Sau khi cập nhật, deploy [Code.gs](apps-script/Code.gs) phiên bản mới, chỉ cần vào Apps Script chọn hàm `activateWeddingInvitations` rồi bấm **Run** **một lần** vào ngày bắt đầu gửi thiệp. Hàm tự ghi ngày launch ở ô `W2` và chuyển `V2` thành `LIVE`. **Không cần deploy lại khi launch.** Không chạy hàm khi còn trong giai đoạn chuẩn bị.
+
 ## Kích hoạt và kiểm thử
 Việc đổi tên/link đã tự cập nhật bằng công thức Google Sheets. Mã Apps Script bổ sung `onEdit` lưu đuôi link trước khi đổi tên vào **RSVP Link History** (tab ẩn) và ánh xạ các link đó về mã khách gốc. **Cần cập nhật Apps Script và chọn Deploy → Manage deployments → Edit → New version → Deploy** để bật chức năng lưu link cũ. Xem [hướng dẫn](apps-script/README.md).
 
