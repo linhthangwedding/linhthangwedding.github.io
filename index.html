@@ -13,6 +13,7 @@
   <link rel="dns-prefetch" href="//script.googleusercontent.com">
   <link rel="preload" as="image" href="assets/hero-eiffel-original-1024.jpg?v=27" fetchpriority="high">
   <link rel="stylesheet" href="styles.css?v=43">
+  <script src="guest-lookup-config.js?v=1"></script>
   <!-- Begin the private guest lookup as soon as the HTML head is parsed.
        The response is held for script.js; no names are embedded in public files. -->
   <script>
@@ -20,6 +21,20 @@
     const slug = new URLSearchParams(location.search).get("i") ||
                  new URLSearchParams(location.search).get("invite") || "";
     if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) return;
+    // Fast private name service (when configured); this never authorizes RSVP.
+    const guestApi = window.LTW_GUEST_LOOKUP_ENDPOINT;
+    if (typeof guestApi === "string" && /^https:\/\//.test(guestApi)) {
+      try {
+        const fastUrl = new URL(guestApi);
+        fastUrl.searchParams.set("i", slug);
+        window.__ltwFastGuestLookup = fetch(fastUrl.toString(), {
+          mode: "cors", cache: "no-store", referrerPolicy: "no-referrer"
+        }).then(response => response.ok ? response.json() : null)
+          .then(data => data && data.valid === true && typeof data.name === "string"
+            ? data : null)
+          .catch(() => null);
+      } catch (_) { /* Fall back to Google Apps Script. */ }
+    }
     const endpoint = new URL("https://script.google.com/macros/s/AKfycbwDA6HVjo0JZUM0dCiPjVwNB2Whzjgsr4IiuTxulmd2LDijhpfQ3SR_c34VVJ6mXHNRxQ/exec");
     const callback = "ltEarlyGuest" + Math.random().toString(36).slice(2);
     endpoint.searchParams.set("action", "guest");
@@ -219,6 +234,6 @@ Linh &amp; Thang ♡</p>
   </footer>
 </main>
 
-<script src="script.js?v=47"></script>
+<script src="script.js?v=48"></script>
 </body>
 </html>
