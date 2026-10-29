@@ -30,6 +30,7 @@ const copy = {
     preview:"Phần xác nhận tham dự đang được kết nối. Vui lòng chưa gửi phản hồi tại đây.",
     missingInvite:"Vui lòng mở đường dẫn thiệp riêng mà Linh & Thang gửi cho bạn để xác nhận tham dự.",
     guestLoading:"Đang tải tên khách mời từ danh sách thiệp...",
+    guestInvalid:"Không tìm thấy thiệp tương ứng với đường dẫn này. Vui lòng kiểm tra link được gửi.",
     guestUnavailable:"Chưa tải được tên khách mời. Vui lòng thử lại sau khi hệ thống được cập nhật.",
     guestNotReady:"Thiệp của bạn đang chờ xác nhận sự kiện. Vui lòng liên hệ Linh & Thang.",
     pending:"Đang kiểm tra phản hồi của bạn...",
@@ -70,6 +71,7 @@ const copy = {
     preview:"Online RSVP is being connected. Responses cannot be submitted yet.",
     missingInvite:"Please use the personalized invitation link sent by Linh & Thang to RSVP.",
     guestLoading:"Loading your invitation name...",
+    guestInvalid:"This invitation link was not found. Please check the link you received.",
     guestUnavailable:"We could not load your invitation name yet. Please try again later.",
     guestNotReady:"This invitation is pending event confirmation. Please contact Linh & Thang.",
     pending:"Checking your response...",
@@ -108,6 +110,8 @@ function setLang(next){
   document.querySelector('meta[name="description"]')?.setAttribute("content",copy[next].pageDescription);
   const status=document.getElementById("formStatus");
   if(status?.dataset.messageKey) status.textContent=copy[next][status.dataset.messageKey];
+  const inviteNotice=document.getElementById("inviteGuestNotice");
+  if(inviteNotice?.dataset.messageKey) inviteNotice.textContent=copy[next][inviteNotice.dataset.messageKey];
   document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===next));
 }
 document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
@@ -120,7 +124,7 @@ document.querySelectorAll('input[name="attending"]').forEach(r=>r.addEventListen
 }));
 
 
-// Short personal URL: ?i=XXXXXXXXXXXXXXX (16 characters).
+// Personal URL: ?i=chi-thu-tam-kp. Historical slugs remain valid.
 // The name on the invitation is fetched from the private guest registry;
 // the optional legacy "&to=" is only a fallback for previously shared URLs.
 const inviteParams = new URLSearchParams(window.location.search);
@@ -128,6 +132,7 @@ const inviteCode = (inviteParams.get("i") || inviteParams.get("invite") || "").t
 let inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
 let inviteReady = false;
 const inviteLabel = document.getElementById("inviteGuestName");
+const inviteNotice = document.getElementById("inviteGuestNotice");
 const guestNameField = document.querySelector('#rsvpForm [name="guest_name"]');
 const submitButton = document.querySelector('#rsvpForm button[type="submit"]');
 document.getElementById("rsvpInvite").value = inviteCode;
@@ -144,6 +149,11 @@ function applyGuestName(value){
 }
 if (inviteCode && inviteDisplayName) applyGuestName(inviteDisplayName);
 
+function showInviteNotice(key) {
+  inviteNotice.dataset.messageKey = key || "";
+  inviteNotice.classList.toggle("hidden", !key);
+  inviteNotice.textContent = key ? copy[lang][key] : "";
+}
 function showRSVPStatus(key) {
   const el = document.getElementById("formStatus");
   el.dataset.messageKey = key || "";
@@ -181,7 +191,7 @@ function readRSVPData(action, params = {}) {
     };
     window[callback] = (result) => finish(null, result);
     script.onerror = () => finish(new Error("RSVP lookup unavailable"));
-    const timeout = setTimeout(() => finish(new Error("RSVP lookup timed out")), 7000);
+    const timeout = setTimeout(() => finish(new Error("RSVP lookup timed out")), 20000);
     script.src = endpoint.toString();
     document.head.appendChild(script);
   });
@@ -192,31 +202,40 @@ function readRSVPReceipt(receipt) {
 
 async function resolveInviteName() {
   if (!inviteCode) return;
+  showInviteNotice("guestLoading");
   if (!RSVP_ENDPOINT) {
-    showRSVPStatus("preview");
+    showInviteNotice("guestUnavailable");
     return;
   }
-  if (!inviteDisplayName) showRSVPStatus("guestLoading");
-  try {
-    const guest = await readRSVPData("guest");
-    if (guest?.valid === true && guest?.name) {
-      applyGuestName(guest.name);
-      inviteReady = guest.canRsvp === true;
-      submitButton.disabled = !inviteReady;
-      showRSVPStatus(inviteReady ? null : "guestNotReady");
-      return;
+  // Apps Script's first request after deployment can be slow.
+  // Retry once so temporary cold starts do not leave invitations blank.
+  let failedKey = "guestUnavailable";
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const guest = await readRSVPData("guest");
+      if (guest && guest.valid === true && typeof guest.name === "string" && guest.name.trim()) {
+        applyGuestName(guest.name);
+        inviteReady = guest.canRsvp === true;
+        submitButton.disabled = !inviteReady;
+        showInviteNotice(inviteReady ? null : "guestNotReady");
+        showRSVPStatus(null);
+        return;
+      }
+      if (guest && guest.invalid === true) {
+        failedKey = "guestInvalid";
+        break;
+      }
+      if (guest && guest.error) console.warn("RSVP guest lookup:", guest.error);
+    } catch (error) {
+      console.warn("RSVP guest lookup failed", error);
     }
-  } catch (_) {
-    // Legacy links with "&to=" continue to show the name if the API is not up to date.
+    if (attempt === 0) await wait(800);
   }
-  if (inviteDisplayName && inviteParams.has("invite")) {
-    // Existing full-length URLs remain usable on older Web App versions.
-    inviteReady = true;
-    submitButton.disabled = false;
-    showRSVPStatus(null);
-  } else {
-    showRSVPStatus("guestUnavailable");
-  }
+  // If legacy links carried the name, display it, but never claim the
+  // guest is verified or enable sending RSVP without the backend.
+  if (inviteDisplayName) applyGuestName(inviteDisplayName);
+  showInviteNotice(failedKey);
+  showRSVPStatus(failedKey);
 }
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
