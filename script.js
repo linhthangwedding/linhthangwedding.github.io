@@ -28,8 +28,9 @@ const copy = {
     partySizeInvalid:"Vui lòng nhập số người từ 1 đến 10.",
     successYes:"Cảm ơn bạn! Chúng mình đã ghi nhận {count} người tham dự.",
     successNo:"Cảm ơn bạn! Chúng mình đã ghi nhận bạn không thể tham dự.",
-    wishes:"Lời nhắn dành cho Linh & Thang",
-    wishesPlaceholder:"Để lại vài lời cho chúng mình...",
+    declineMessage:"Cảm ơn {name} vì đã là một phần thật đẹp trong thanh xuân của chúng mình. Chúng mình thật tiếc vì không thể có bạn bên cạnh trong ngày cưới. Dù vậy, những kỷ niệm đã có cùng nhau luôn rất đáng quý. Nếu bạn muốn gửi đôi lời chúc phúc, chúng mình sẽ rất vui khi được đọc và giữ lại như một món quà của ngày đặc biệt này. ♡",
+    wishes:"Gửi lời chúc phúc đến Linh & Thắng (không bắt buộc)",
+    wishesPlaceholder:"Gửi chúng mình đôi lời chúc nhé...",
     submit:"Gửi xác nhận",
     preview:"Phần xác nhận tham dự đang được kết nối. Vui lòng chưa gửi phản hồi tại đây.",
     missingInvite:"Vui lòng mở đường dẫn thiệp riêng mà Linh & Thang gửi cho bạn để xác nhận tham dự.",
@@ -73,8 +74,9 @@ const copy = {
     partySizeInvalid:"Please enter between 1 and 10 guests.",
     successYes:"Thank you! We've recorded {count} guest(s) attending.",
     successNo:"Thank you! We've recorded that you cannot attend.",
-    wishes:"A message for Linh & Thang",
-    wishesPlaceholder:"Leave us a little message...",
+    declineMessage:"Thank you, {name}, for being such a lovely part of our younger years. We're truly sorry that we won't get to celebrate our wedding day together. The memories we've shared will always mean so much to us. If you'd like to leave us a few warm wishes, we'd be delighted to read and treasure them as a gift on our special day. ♡",
+    wishes:"Your wishes for Linh & Thang (optional)",
+    wishesPlaceholder:"Send us a few warm wishes...",
     submit:"Send RSVP",
     preview:"Online RSVP is being connected. Responses cannot be submitted yet.",
     missingInvite:"Please use the personalized invitation link sent by Linh & Thang to RSVP.",
@@ -122,6 +124,7 @@ function setLang(next){
     status.textContent=template.replace("{count}",status.dataset.confirmedCount || "");
   }
   refreshPartyConfirmation();
+  refreshDeclineMessage();
   const inviteNotice=document.getElementById("inviteGuestNotice");
   if(inviteNotice?.dataset.messageKey) inviteNotice.textContent=copy[next][inviteNotice.dataset.messageKey];
   document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===next));
@@ -158,6 +161,11 @@ const inviteCode = (inviteParams.get("i") || inviteParams.get("invite") || "").t
 let inviteDisplayName = (inviteParams.get("to") || "").trim().slice(0,120);
 let inviteReady = false;
 const inviteLabel = document.getElementById("inviteGuestName");
+const declineMessage = document.getElementById("declineMessage");
+function refreshDeclineMessage() {
+  const guest = inviteDisplayName || (lang==="vi" ? "bạn" : "you");
+  declineMessage.textContent = copy[lang].declineMessage.replace("{name}",guest);
+}
 const inviteNotice = document.getElementById("inviteGuestNotice");
 const rsvpGuestSummary = document.getElementById("rsvpGuestSummary");
 const rsvpGuestName = document.getElementById("rsvpGuestName");
@@ -173,6 +181,7 @@ function applyGuestName(value){
   inviteLabel.classList.remove("hidden");
   rsvpGuestName.textContent = inviteDisplayName;
   rsvpGuestSummary.classList.remove("hidden");
+  refreshDeclineMessage();
 }
 if (inviteCode && inviteDisplayName) applyGuestName(inviteDisplayName);
 
