@@ -250,6 +250,26 @@ function js_(callback,obj) {
     callback+"("+JSON.stringify(obj)+");"
   ).setMimeType(ContentService.MimeType.JAVASCRIPT);
 }
+/**
+ * SAFE ONE-CLICK CHECK in the Apps Script editor.
+ * Reads one CURRENT guest from the master spreadsheet; never sends RSVP,
+ * changes the PREP/LIVE state, or writes guest data.
+ * Select verifyWeddingBackend -> Run, and check the Execution log.
+ */
+function verifyWeddingBackend() {
+  var book = getWeddingBook_();
+  var registry = book.getSheetByName(REGISTRY_TAB);
+  if (!registry) throw new Error("Missing RSVP Online registry");
+  var slug = String(registry.getRange(2,17).getDisplayValue() || "").trim();
+  if (!slug) throw new Error("Missing first guest slug in Q2");
+  var found = findInvite_(book,slug);
+  var guest = found && locateGuest_(book,found.row);
+  if (!guest) throw new Error("Guest not found. Check Guest List link and RSVP Online Q2.");
+  var mode = getInvitationPhase_(book).live ? "LIVE" : "PREP";
+  console.log("Wedding guest lookup OK | " + guest.name + " | Mode: " + mode);
+  return "OK: " + guest.name + " (" + mode + ")";
+}
+
 function doGet(e) {
   var q=(e&&e.parameter)||{},callback=String(q.callback||"");
   if (!/^[A-Za-z_$][A-Za-z0-9_$]{0,80}$/.test(callback)) {
