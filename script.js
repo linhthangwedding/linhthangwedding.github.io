@@ -296,14 +296,12 @@ async function resolveInviteName() {
       }
       if (guest && guest.invalid === true) {
         clearCachedInviteName();
-        // Remove any optimistic cached name for a now-invalid invitation.
-        if (cachedInviteName && !inviteParams.get("to")) {
-          inviteDisplayName="";
-          inviteLabel.textContent="";
-          inviteLabel.classList.add("hidden");
-          rsvpGuestName.textContent="";
-          rsvpGuestSummary.classList.add("hidden");
-        }
+        // Do not leave an unverified URL-provided name visible on an invalid link.
+        inviteDisplayName="";
+        inviteLabel.textContent="";
+        inviteLabel.classList.add("hidden");
+        rsvpGuestName.textContent="";
+        rsvpGuestSummary.classList.add("hidden");
         failedKey = "guestInvalid";
         break;
       }
