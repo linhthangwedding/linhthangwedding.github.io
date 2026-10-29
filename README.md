@@ -8,6 +8,10 @@ Website thiệp cưới: https://linhthangwedding.github.io
 
 Ba ảnh cũ đã có trong repo được dùng để demo trong `index.html`: `assets/garden.webp`, `assets/louvre.jpeg`, `assets/paris.jpeg`. Chỉ có 3 khung trắng nghiêng nhẹ, **không caption**. Desktop hiển thị một hàng, mobile hiển thị 2 khung trên và 1 khung căn giữa bên dưới, không tràn ngang; bố cục giữ nguyên khi thay đường dẫn ảnh sau này. Cả ba ảnh đều được crop gọn trong khung cố định 4:5 để không làm trang kéo dài hoặc lệch; ảnh garden hiện là bản thumbnail nên có thể hơi mờ, cần thay ảnh gốc khi chốt.
 
+## Tăng tốc tải tên (v42)
+
+Bản `script.js?v=42` hiển thị tên khách từ sessionStorage trong cùng tab cho lần mở lại sau khi đã xác minh; backend vẫn phải xác minh lại trước khi gửi RSVP. `Code.gs` tăng tốc tra cứu bằng TextFinder, bỏ thao tác lock/sync trên lần đọc khi PREP, và giữ link history khi LIVE. Phải redeploy `Code.gs` Web App đang có để áp dụng cải tiến backend. Tên khách/ID vẫn không được công khai trong repo.
+
 ## Thiệp cá nhân hóa
 - Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
 - Link riêng hiện dạng dễ đọc, ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp`.
