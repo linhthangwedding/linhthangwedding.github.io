@@ -212,6 +212,7 @@ if (inviteCode) {
   }
 }
 let inviteReady = false;
+let guestNameVerifiedByRsvp = false;
 // Remember only guest names validated by the private registry, per browser.
 // Future visits can paint the exact accented name at first HTML parse, while
 // every RSVP still requires a fresh backend check.
@@ -299,6 +300,17 @@ function applyGuestName(value){
 if (inviteCode && (inviteDisplayName || cachedInviteName)) {
   applyGuestName(inviteDisplayName || cachedInviteName);
 }
+// This is an early display hint only. The Google backend still validates the
+// invitation, enforces deadlines and checks whether RSVP is already closed.
+if (window.__ltwFastGuestLookup && inviteCode) {
+  window.__ltwFastGuestLookup.then(data => {
+    if (!guestNameVerifiedByRsvp &&
+        data && data.valid === true &&
+        typeof data.name === "string" && data.name.trim()) {
+      applyGuestName(data.name);
+    }
+  });
+}
 
 function showInviteNotice(key) {
   inviteNotice.dataset.messageKey = key || "";
@@ -378,6 +390,7 @@ async function resolveInviteName() {
         ? await window.__ltwEarlyGuestLookup
         : await readRSVPData("guest");
       if (guest && guest.valid === true && typeof guest.name === "string" && guest.name.trim()) {
+        guestNameVerifiedByRsvp = true;
         applyGuestName(guest.name);
         cacheVerifiedInviteName(inviteDisplayName);
         inviteReady = guest.canRsvp === true && !rsvpDeadlinePassed();
@@ -397,6 +410,7 @@ async function resolveInviteName() {
         return;
       }
       if (guest && guest.invalid === true) {
+        guestNameVerifiedByRsvp = true;
         clearCachedInviteName();
         // Do not leave an unverified URL-provided name visible on an invalid link.
         inviteDisplayName="";
