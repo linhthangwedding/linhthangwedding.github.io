@@ -1,0 +1,14 @@
+{
+  "name": "linh-thang-guest-lookup",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-29",
+  "workers_dev": true,
+  "kv_namespaces": [
+    {
+      "binding": "GUEST_NAMES"
+    }
+  ],
+  "observability": {
+    "enabled": false
+  }
+}
