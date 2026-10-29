@@ -47,6 +47,19 @@
 
     <p class="invite-kicker" data-i18n="formalInvite">WE'D LOVE TO CELEBRATE WITH YOU</p>
     <p id="inviteGuestName" class="invite-guest-name hidden" aria-live="polite"></p>
+    <!-- Paint the name from the personal URL immediately; backend verifies it before RSVP. -->
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const slug = (params.get("i") || params.get("invite") || "").trim();
+        const name = (params.get("to") || "").trim().slice(0, 120);
+        if (slug && name && /^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) {
+          const label = document.getElementById("inviteGuestName");
+          label.textContent = name;
+          label.classList.remove("hidden");
+        }
+      })();
+    </script>
     <p id="inviteGuestNotice" class="invite-guest-notice hidden" role="status"></p>
     <p class="invite-copy" data-i18n="inviteCopy">Come celebrate our wedding day with us and our families. It wouldn't be the same without you.</p>
 
@@ -156,6 +169,6 @@ Linh &amp; Thang ♡</p>
   </footer>
 </main>
 
-<script src="script.js?v=42"></script>
+<script src="script.js?v=43"></script>
 </body>
 </html>
