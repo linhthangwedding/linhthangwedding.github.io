@@ -201,8 +201,9 @@ let inviteReady = false;
 const inviteCacheKey=inviteCode ? "ltw:verifiedGuest:"+inviteCode : "";
 function readCachedInviteName() {
   if (!inviteCacheKey) return "";
-  for (const store of [localStorage, sessionStorage]) {
+  for (const kind of ["localStorage", "sessionStorage"]) {
     try {
+      const store=window[kind];
       const c=JSON.parse(store.getItem(inviteCacheKey) || "null");
       if (c && typeof c.name==="string" && c.expires>Date.now())
         return c.name.trim().slice(0,120);
@@ -213,14 +214,14 @@ function readCachedInviteName() {
 function cacheVerifiedInviteName(name) {
   if (!inviteCacheKey) return;
   const entry=JSON.stringify({name:name, expires:Date.now()+3*24*60*60*1000});
-  for (const store of [localStorage, sessionStorage]) {
-    try { store.setItem(inviteCacheKey,entry); } catch (_) { /* Not essential for RSVP. */ }
+  for (const kind of ["localStorage", "sessionStorage"]) {
+    try { window[kind].setItem(inviteCacheKey,entry); } catch (_) { /* Not essential for RSVP. */ }
   }
 }
 function clearCachedInviteName() {
   if (!inviteCacheKey) return;
-  for (const store of [localStorage, sessionStorage]) {
-    try { store.removeItem(inviteCacheKey); } catch (_) {}
+  for (const kind of ["localStorage", "sessionStorage"]) {
+    try { window[kind].removeItem(inviteCacheKey); } catch (_) {}
   }
 }
 const cachedInviteName=readCachedInviteName();
