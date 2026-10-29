@@ -225,6 +225,26 @@ button,input,textarea{font:inherit}
 }
 .rsvp-head{text-align:center;margin-bottom:32px}
 .rsvp-head p:last-child{color:var(--muted);font-size:14px}
+.rsvp-head .rsvp-deadline{
+  margin:14px auto 0;
+  color:#6d655d;
+  font-size:13px;
+  font-weight:600;
+}
+.rsvp-closed-panel{
+  max-width:650px;
+  margin:24px auto 0;
+  padding:26px 28px;
+  background:#f2eee8;
+  border:1px solid #d6cec5;
+  border-radius:12px;
+  text-align:center;
+  font-family:"Noto Serif",serif;
+  color:#534b44;
+  font-size:16px;
+  line-height:1.8;
+}
+.rsvp-closed-panel p{margin:0}
 .rsvp-form{
   max-width:650px;
   margin:0 auto;
