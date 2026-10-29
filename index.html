@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-eiffel-original-1024.jpg?v=27" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=32">
+  <link rel="stylesheet" href="styles.css?v=33">
 </head>
 <body>
 <main class="site-shell">
@@ -116,8 +116,10 @@
 
       <div id="yesBranch" class="branch hidden">
         <label>
-          <span data-i18n="partySize">Tổng số khách tham dự</span>
-          <input type="number" name="party_size" min="1" max="10" value="1">
+          <span data-i18n="partySize">Số người tham dự (bao gồm bạn)</span>
+          <input type="number" name="party_size" min="1" max="10" step="1" value="1" inputmode="numeric" disabled>
+          <small class="party-help" data-i18n="partySizeHelp">Vui lòng tính cả bạn trong tổng số người.</small>
+          <span class="party-summary" id="partyConfirmation" aria-live="polite"></span>
         </label>
       </div>
 
@@ -138,6 +140,6 @@
   </footer>
 </main>
 
-<script src="script.js?v=32"></script>
+<script src="script.js?v=33"></script>
 </body>
 </html>
