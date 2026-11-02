@@ -1,5 +1,15 @@
 # Thiệp cưới Linh & Thắng
 
+## Bản EN: 2 font / 3 cỡ chữ và đĩa than phát nhạc (02/11/2026)
+
+- Typography tiếng Anh chuẩn hóa ở `styles.css`: **Manrope** (nội dung và chú thích) + **Noto Serif** (tiêu đề và điểm nhấn); chỉ có **13px / 18px / 44px** trong phần văn bản thuộc website. Các quy tắc chỉ áp dụng khi `html lang="en"`; bản Việt vẫn giữ style cũ. Trình phát Spotify là iframe bên thứ ba và có typography riêng, không thể chỉnh CSS bên trong.
+- Phần `A LITTLE ABOUT US` được thay bằng `OUR SONG`, thiết kế đĩa than với nút phát/dừng và animation khi Spotify báo đang phát. Nội dung tạm thời: `Beautiful in White`, **Shane Filan**, URI `spotify:track:0lUdYoSr8Hm3GL0HZld4ac`.
+- Nhạc được Spotify phục vụ qua **iframe API chính thức**, không có file âm thanh hoặc lời bài hát lưu trên GitHub, **không autoplay**. Khách có thể điều khiển bằng đĩa than hoặc trình phát nhúng; link mở Spotify là phương án dự phòng. Mức phát nhạc đầy đủ/xem trước phụ thuộc người nghe và Spotify.
+- Ba ảnh Polaroid cũ được giữ trong `<template id="storyGalleryArchive">` của `index.html`, không hiển thị nhưng tài nguyên ảnh và markup vẫn còn, có thể khôi phục sau.
+- Không thay đổi backend RSVP, danh sách khách, thông tin hai tiệc hay liên kết lịch .ics. `index.html` dùng `styles.css?v=50` và `script.js?v=58` để tránh cache cũ.
+- Kiểm tra tĩnh JavaScript/CSS và nội dung HTML đã qua; **chưa thử được audio thực tế trên website live hoặc thiết bị di động**, cần xác nhận trong trình duyệt có Spotify.
+
+
 ## Hiển thị lựa chọn Vinh/HCM trong Guest List (02/11/2026)
 
 - Đã chèn 2 cột theo đúng tên `tiệc tham dự (khách chọn)`: **H** (bảng bên trái, sau số người G) và **T** (bảng bên phải, sau số người S). Link khách chuyển từ H/S sang **I/U**; bảng phải chuyển tên K → **L**, RSVP Q → **R**.
