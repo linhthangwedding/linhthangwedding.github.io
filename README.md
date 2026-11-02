@@ -11,6 +11,8 @@ Bản `apps-script/Code.gs` mới sử dụng CacheService với TTL 300 giây �
 
 Website thiệp cưới: https://linhthangwedding.github.io
 
+**Deadline RSVP mới (02/11/2026):** Thứ Tư, 10/02/2027 lúc 23:59 giờ Việt Nam = 17:59 CET. Mốc này áp dụng cho cả RSVP lần đầu và chỉnh sửa, trên cả bản EN và VN. `script.js` và `apps-script/Code.gs` đã được cập nhật; **cần redeploy Apps Script trên Web App hiện tại** để Google Sheets thực thi hạn mới. Ngày cưới 28/02/2027 và file lịch `.ics` không thay đổi.
+
 **Cập nhật giao diện 02/11/2026:** Dòng deadline chỉ sử dụng múi giờ Việt Nam và Central European Time (CET), không liệt kê từng quốc gia. Trong trạng thái RSVP đã xác nhận Có, `Update my RSVP` và `Add to my calendar` hiển thị cạnh nhau trên cùng một hàng, kể cả màn hình mobile. Tên khách xác minh từ Apps Script được yêu cầu từ đầu `<head>` trước các stylesheet và được hiển thị ngay khi có kết quả, không đợi bundle JavaScript cuối trang; không đưa tên khách vào repository. Lần mở đầu vẫn phụ thuộc vào tốc độ Google Apps Script.
 
 **Link Add to calendar duy nhất (02/11/2026):** `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics`. Cả nút Add to calendar ở thông tin sự kiện và nút Add to my calendar sau xác nhận RSVP đều tải đúng file .ics này. Không dùng link Google Calendar hoặc tạo link calendar khác trong invitation.
