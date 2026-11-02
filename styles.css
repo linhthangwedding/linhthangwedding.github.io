@@ -723,22 +723,22 @@ footer{
   .turntable-arm{right:4px;top:8px}
 }
 
-/* EN typography: one font and exactly three text sizes.
+/* Wedding website typography: exactly one font and three text sizes.
    Body = 16px, heading = 24px, title = 48px on desktop and mobile.
    Spotify's independently hosted iframe retains its own provider typography. */
-html[lang="en"] .site-shell,
-html[lang="en"] .site-shell *,
-html[lang="en"] .site-shell *::before,
-html[lang="en"] .site-shell *::after{
+html .site-shell,
+html .site-shell *,
+html .site-shell *::before,
+html .site-shell *::after{
   font-family:"Noto Serif",Georgia,serif!important;
   font-size:16px!important;
 }
-html[lang="en"] .site-shell :is(
+html .site-shell :is(
   .hero h1,.hero h1 em
 ){
   font-size:48px!important;
 }
-html[lang="en"] .site-shell :is(
+html .site-shell :is(
   .monogram,.invite-guest-name,.invite-kicker,.event-title,
   .section-kicker,.celebration-heading,.fact strong,
   .story-signoff,.vinyl-song-name,.rsvp-invitee strong,
