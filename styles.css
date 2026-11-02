@@ -124,6 +124,40 @@ button,input,textarea{font:inherit}
 .ornament i{font-style:normal;font-size:12px}
 .ornament.dark{margin:20px auto 24px}
 .event-title{font-size:17px;margin:0 0 26px}
+.celebration-panel{
+  margin:0 auto 22px;
+  padding:26px 18px 19px;
+  border:1px solid #ded6cb;
+  border-radius:14px;
+  background:rgba(255,253,249,.50);
+}
+.celebration-heading{
+  margin:0 0 23px;
+  font-family:"Manrope",sans-serif;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.18em;
+  color:#776a5f;
+}
+.celebration-panel .event-facts{margin-bottom:16px}
+.celebration-panel .fact{padding:0 clamp(8px,2vw,22px)}
+.celebration-panel .fact strong{
+  font-size:clamp(16px,2vw,21px);
+  white-space:normal;
+  overflow-wrap:break-word;
+}
+.celebration-links{display:flex;justify-content:center;gap:4px 20px;flex-wrap:wrap}
+.celebration-links .text-link{width:auto;margin:0}
+.celebration-rsvp-action{margin-top:20px}
+@media(max-width:760px){
+  .celebration-panel{padding:25px 15px 17px}
+  .celebration-panel .event-facts{margin-bottom:18px}
+  .celebration-panel .fact{padding:12px 8px}
+  .celebration-panel .fact:last-child{border-bottom:0}
+  .celebration-panel .fact strong{font-size:20px}
+  .celebration-links{flex-direction:column;align-items:center;gap:12px}
+  .celebration-rsvp-action .btn{width:100%}
+}
 .event-facts{
   display:grid;
   grid-template-columns:1fr 1fr 1.55fr;
