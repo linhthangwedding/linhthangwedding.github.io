@@ -245,6 +245,36 @@ button,input,textarea{font:inherit}
   line-height:1.8;
 }
 .rsvp-closed-panel p{margin:0}
+.rsvp-edit-controls{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  margin:22px auto 0;
+}
+.rsvp-edit-controls p{
+  max-width:490px;
+  font:400 13px/1.75 "Manrope",system-ui,sans-serif;
+  color:#766e67;
+}
+.rsvp-edit-controls .btn,
+.rsvp-calendar-button,
+.rsvp-cancel-edit{
+  font-family:"Manrope",system-ui,sans-serif;
+  font-size:13px;
+  font-weight:600;
+}
+.rsvp-calendar-button{
+  margin:20px auto 0;
+}
+.rsvp-cancel-edit{
+  width:100%;
+}
+@media(max-width:760px){
+  .rsvp-closed-panel{padding:25px 20px;}
+  .rsvp-edit-controls .btn,
+  .rsvp-calendar-button{width:100%;}
+}
 .rsvp-form{
   max-width:650px;
   margin:0 auto;
