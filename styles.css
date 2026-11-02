@@ -711,39 +711,31 @@ footer{
   .turntable-arm{right:4px;top:8px}
 }
 
-/* EN typography: exactly two families and three text-size tiers.
-   The third-party Spotify iframe renders its own interface outside this CSS.
-   Label 13px / Body 18px / Display 44px, unchanged on mobile. */
+/* EN typography: one font and exactly three text sizes.
+   Body = 16px, heading = 24px, title = 48px on desktop and mobile.
+   Spotify's independently hosted iframe retains its own provider typography. */
 html[lang="en"] .site-shell,
-html[lang="en"] .site-shell *{
-  font-family:"Manrope",sans-serif!important;
-  font-size:18px!important;
-}
-html[lang="en"] .site-shell :is(.hero h1,.hero h1 em,.invite-guest-name){
-  font-family:"Noto Serif",serif!important;
-  font-size:44px!important;
+html[lang="en"] .site-shell *,
+html[lang="en"] .site-shell *::before,
+html[lang="en"] .site-shell *::after{
+  font-family:"Noto Serif",Georgia,serif!important;
+  font-size:16px!important;
 }
 html[lang="en"] .site-shell :is(
-  .monogram,.hero-date,.invite-copy,.invite-kicker,
-  .event-title,.section-kicker,.fact strong,.fact small,
-  .rsvp-closed-panel,.rsvp-invitee strong,.decline-message,
-  .story-signoff,.vinyl-disc-label,.vinyl-song-name
+  .hero h1,.hero h1 em
 ){
-  font-family:"Noto Serif",serif!important;
-  font-size:18px!important;
+  font-size:48px!important;
 }
 html[lang="en"] .site-shell :is(
-  .eyebrow,.fact-label,.hero-tagline,.celebration-heading,
-  .vinyl-song-artist,.vinyl-status,.vinyl-spotify-link,
-  .rsvp-head .rsvp-deadline,.rsvp-edit-controls p,
-  .rsvp-venue-summary,.invite-guest-notice,.party-help,
-  .party-summary,.form-status,.text-link,footer,footer p,
-  .lang-switch,.lang-btn
+  .monogram,.invite-guest-name,.invite-kicker,.event-title,
+  .section-kicker,.celebration-heading,.fact strong,
+  .story-signoff,.vinyl-song-name,.rsvp-invitee strong,
+  .rsvp-closed-panel .rsvp-venue-summary
 ){
-  font-family:"Manrope",sans-serif!important;
-  font-size:13px!important;
+  font-size:24px!important;
 }
-
+/* Three font sizes also apply to input fields, buttons and responsive layouts.
+   Visual hierarchy below the heading tier comes from weight and spacing. */
 
 /* The record belongs in the HERO, replacing only its date/tagline lines.
    Keep it compact enough for the right column and for narrow phones. */
