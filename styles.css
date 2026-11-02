@@ -697,9 +697,20 @@ footer{
 }
 .vinyl-song-artist{margin:8px 0 0;color:#84786e}
 .vinyl-status{min-height:22px;margin:10px 0 0;color:#746c64}
+/* Assistive technology retains playback feedback; sighted guests see only the record. */
+.sr-only{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
 .spotify-embed-slot{max-width:540px;margin:0 auto}
 .spotify-embed-slot iframe{display:block;width:100%;height:152px;border:0;border-radius:12px}
-.vinyl-spotify-link{display:inline-block;margin:14px auto 0}
 @keyframes vinyl-rotate{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){
   .vinyl-disc{animation:none!important}
@@ -763,7 +774,6 @@ html[lang="en"] .site-shell :is(
 .hero .vinyl-song-artist{margin:3px 0 0}
 .hero .vinyl-status{margin:5px 0 0;min-height:17px}
 .hero .spotify-embed-slot iframe{height:80px}
-.hero .vinyl-spotify-link{margin:7px auto 0}
 @media(max-width:760px){
   .hero-copy{padding:42px 22px 52px}
   .hero .vinyl-player{max-width:340px}
