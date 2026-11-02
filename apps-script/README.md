@@ -1,5 +1,14 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
+## Tăng tốc hiển thị tên khách lần đầu (02/11/2026)
+
+- **Nguyên nhân:** lần đầu mở link `?i=<slug>`, website phải đợi phản hồi Google Apps Script; backend trước đây còn tra ngược về `Guest List` dù cột B của tab ẩn `RSVP Online` đã chứa tên hiển thị chính xác bằng công thức liên kết trực tiếp.
+- **Thay đổi trong `Code.gs`:** với `action=guest`, sau khi xác minh slug duy nhất ở cột Q (hoặc alias hợp lệ ở LIVE), dùng trực tiếp cột B và cột D cùng dòng registry để trả tên và sự kiện. Không thực hiện tra cứu Guest List lần thứ hai. Luồng **ghi/sửa RSVP vẫn đối chiếu dòng Guest List**, giữ nguyên cơ chế bảo vệ dữ liệu và hạn 10/02/2027.
+- **Bắt buộc redeploy backend:** Master File → Extensions → Apps Script → thay toàn bộ `Code.gs` bằng [bản hiện tại](./Code.gs) → Save → Deploy → Manage deployments → Edit → New version → Deploy, giữ nguyên Web App URL. Không chạy `activateWeddingInvitations`.
+- Không đưa danh sách khách ra GitHub hoặc thêm tên vào URL. Lần truy cập đầu vẫn cần một request tới Apps Script và có thể gặp cold start; thời gian phản hồi không được bảo đảm.
+
+
+
 ## Cập nhật RSVP và tải lịch (.ics) – 02/11/2026
 
 **Thời hạn mới (áp dụng cho gửi và chỉnh sửa):** Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam), tương đương 17:59 (CET). Đây là mốc backend phải kiểm tra. Để kích hoạt mốc này, copy `Code.gs` mới từ GitHub vào Apps Script và **Deploy → Manage deployments → Edit → New version → Deploy**; giữ nguyên URL `/exec`.
