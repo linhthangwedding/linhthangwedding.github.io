@@ -386,9 +386,9 @@ function canRsvp_(eventName) {
   // but the guest is still in the Capella invitation list.
   return eventName === "" || eventName === WEDDING_EVENT;
 }
-// Guests may submit through February 14, 2027, 23:59:59 (Vietnam, UTC+7).
+// Guests may submit or edit through February 10, 2027, 23:59:59 (Vietnam, UTC+7).
 // The server is authoritative; the browser deadline is only for display.
-var RSVP_DEADLINE_MS = Date.parse("2027-02-14T23:59:59.999+07:00");
+var RSVP_DEADLINE_MS = Date.parse("2027-02-10T23:59:59.999+07:00");
 function rsvpDeadlinePassed_() {
   return Date.now() > RSVP_DEADLINE_MS;
 }
