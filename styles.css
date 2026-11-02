@@ -802,3 +802,36 @@ html .site-shell :is(
   .hero .vinyl-play-button{width:152px;height:152px}
   .hero .turntable-arm{top:4px;right:0;height:83px}
 }
+
+
+/* Strict two-color text system across EN/VI and desktop/mobile.
+   Every website text/label/icon uses either dark ink or light ivory.
+   Spotify's external iframe is provider-controlled and not styleable here. */
+:root {
+  --lt-text-dark:#3D3530;
+  --lt-text-light:#FFFDF8;
+  --button:#61564D;
+  --button-dark:#4F453D;
+}
+html .site-shell,
+html .site-shell *,
+html .site-shell *::before,
+html .site-shell *::after {
+  color:var(--lt-text-dark)!important;
+}
+html .site-shell :is(.primary,.choice input:checked + span),
+html .site-shell :is(.primary,.choice input:checked + span) * {
+  color:var(--lt-text-light)!important;
+}
+html .site-shell .choice input:checked + span {
+  background:var(--button);
+  border-color:var(--button);
+}
+html .site-shell :is(input,textarea)::placeholder {
+  color:var(--lt-text-dark)!important;
+  opacity:1;
+}
+html .site-shell ::selection {
+  color:var(--lt-text-light)!important;
+  background:var(--lt-text-dark);
+}
