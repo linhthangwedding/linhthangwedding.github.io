@@ -19,7 +19,7 @@ const copy = {
     storySignoff:"Thương mến,\nLinh & Thắng ♡",
     rsvpTitle:"XÁC NHẬN THAM DỰ",
     rsvpIntro:"Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.",
-    rsvpDeadline:"Hạn xác nhận: Chủ nhật, 14/02/2027, lúc 23:59 (giờ Việt Nam), tương đương 17:59 (CET: Hà Lan, Đức và Đan Mạch).",
+    rsvpDeadline:"Hạn xác nhận: Chủ nhật, 14/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
     rsvpReceivedIntro:"Chúng mình đã nhận được lời xác nhận của bạn.",
     rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
     rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn).",
@@ -79,7 +79,7 @@ const copy = {
     storySignoff:"With love,\nLinh & Thang ♡",
     rsvpTitle:"CAN YOU MAKE IT?",
     rsvpIntro:"We really hope you can join us! Let us know below so we can plan for you.",
-    rsvpDeadline:"Please RSVP by Sunday, February 14, 2027, at 11:59 PM (Vietnam time), or 5:59 PM (CET: Netherlands, Germany & Denmark).",
+    rsvpDeadline:"Please RSVP by Sunday, February 14, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (Central European Time, CET).",
     rsvpReceivedIntro:"We've received your reply. Thank you for letting us know!",
     rsvpDeadlinePassedIntro:"RSVP is now closed.",
     rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you.",
@@ -269,6 +269,7 @@ const rsvpClosedPanel = document.getElementById("rsvpClosedPanel");
 const rsvpClosedMessage = document.getElementById("rsvpClosedMessage");
 const rsvpEditControls = document.getElementById("rsvpEditControls");
 const rsvpEditButton = document.getElementById("rsvpEditButton");
+const rsvpActionRow = document.getElementById("rsvpActionRow");
 const rsvpCalendarButton = document.getElementById("rsvpCalendarButton");
 const rsvpCancelEdit = document.getElementById("rsvpCancelEdit");
 const rsvpIntro = document.getElementById("rsvpIntro");
@@ -293,8 +294,10 @@ function refreshRsvpPanel() {
   const canChange = closed && confirmed && rsvpEditAllowed &&
     !rsvpDeadlinePassed() && !submissionUncertain;
   rsvpEditControls.classList.toggle("hidden", !canChange);
-  rsvpCalendarButton.classList.toggle("hidden",
-    !(closed && confirmed && rsvpView.attending === "yes"));
+  const showCalendar = closed && confirmed && rsvpView.attending === "yes";
+  rsvpEditButton.classList.toggle("hidden", !canChange);
+  rsvpCalendarButton.classList.toggle("hidden", !showCalendar);
+  rsvpActionRow.classList.toggle("hidden", !(canChange || showCalendar));
   rsvpCancelEdit.classList.toggle("hidden", !editingRsvp);
   submitButton.textContent = copy[lang][editingRsvp ? "submitUpdate" : "submit"];
   if (!closed) return;
