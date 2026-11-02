@@ -22,10 +22,16 @@ const copy = {
     rsvpDeadline:"Hạn xác nhận tham dự: Chủ nhật, 14/02/2027 (giờ Việt Nam).",
     rsvpReceivedIntro:"Chúng mình đã nhận được lời xác nhận của bạn.",
     rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
-    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn). Phần xác nhận đã được đóng.",
-    rsvpClosedNo:"Cảm ơn {name} đã phản hồi! Chúng mình đã ghi nhận bạn không thể tham dự. Phần xác nhận đã được đóng.",
+    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn).",
+    rsvpClosedNo:"Cảm ơn {name} đã phản hồi! Chúng mình đã ghi nhận bạn không thể tham dự.",
     rsvpClosedDeadline:"Hạn xác nhận đã kết thúc vào ngày 14/02/2027. Nếu cần thay đổi kế hoạch, vui lòng liên hệ trực tiếp Linh & Thang.",
     rsvpClosedNotReady:"Thiệp này hiện chưa mở nhận phản hồi. Vui lòng liên hệ Linh & Thang.",
+    rsvpEditHint:"Có thay đổi kế hoạch? Bạn có thể cập nhật câu trả lời đến hết ngày 14/02/2027 (giờ Việt Nam).",
+    rsvpEditButton:"Chỉnh sửa xác nhận",
+    rsvpEditingIntro:"Bạn có thể thay đổi câu trả lời bên dưới rồi lưu lại.",
+    rsvpCancelEdit:"Quay lại xác nhận",
+    submitUpdate:"Lưu thay đổi",
+    rsvpCalendarButton:"Thêm vào lịch của tôi",
     guestSummaryLabel:"Phản hồi dành cho",
     attendingQ:"Bạn có thể tham dự không?",
     yes:"Có",no:"Không",
@@ -76,10 +82,16 @@ const copy = {
     rsvpDeadline:"Please RSVP by Sunday, February 14, 2027 (Vietnam time).",
     rsvpReceivedIntro:"We've received your reply. Thank you for letting us know!",
     rsvpDeadlinePassedIntro:"RSVP is now closed.",
-    rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you. Your RSVP is now closed.",
-    rsvpClosedNo:"Thanks for replying, {name}! We've noted that you can't make it. Your RSVP is now closed.",
+    rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you.",
+    rsvpClosedNo:"Thank you, {name}! We've noted that you can't make it.",
     rsvpClosedDeadline:"RSVP closed on February 14, 2027. Please contact Linh & Thang directly if your plans change.",
     rsvpClosedNotReady:"RSVP isn't open for this invitation. Please contact Linh & Thang.",
+    rsvpEditHint:"Plans changed? You can update your RSVP until February 14, 2027 (Vietnam time).",
+    rsvpEditButton:"Update my RSVP",
+    rsvpEditingIntro:"Need to make a change? Update your reply below and save your changes.",
+    rsvpCancelEdit:"Back to my RSVP",
+    submitUpdate:"Save changes",
+    rsvpCalendarButton:"Add to my calendar",
     guestSummaryLabel:"Replying for",
     attendingQ:"Will you be joining us?",
     yes:"Yes, I'll be there!",
@@ -255,22 +267,38 @@ const submitButton = document.querySelector('#rsvpForm button[type="submit"]');
 const rsvpForm = document.getElementById("rsvpForm");
 const rsvpClosedPanel = document.getElementById("rsvpClosedPanel");
 const rsvpClosedMessage = document.getElementById("rsvpClosedMessage");
+const rsvpEditControls = document.getElementById("rsvpEditControls");
+const rsvpEditButton = document.getElementById("rsvpEditButton");
+const rsvpCalendarButton = document.getElementById("rsvpCalendarButton");
+const rsvpCancelEdit = document.getElementById("rsvpCancelEdit");
 const rsvpIntro = document.getElementById("rsvpIntro");
 // The exact cutoff is Feb 14, 2027 at 23:59:59.999, Vietnam (UTC+7).
 const RSVP_DEADLINE_UTC = Date.parse("2027-02-14T23:59:59.999+07:00");
 const rsvpDeadlinePassed = () => Date.now() > RSVP_DEADLINE_UTC;
 let rsvpView = {kind:"open",attending:null,partySize:0};
+let savedRsvp = {attending:null,partySize:0};
+let rsvpEditAllowed = false;
+let editingRsvp = false;
 let submissionUncertain = false;
 function refreshRsvpPanel() {
   const closed = rsvpView.kind !== "open";
   rsvpForm.classList.toggle("hidden", closed);
   rsvpClosedPanel.classList.toggle("hidden", !closed);
   rsvpIntro.textContent = copy[lang][
+    editingRsvp ? "rsvpEditingIntro" :
     rsvpView.kind === "responded" ? "rsvpReceivedIntro" :
     rsvpView.kind === "deadline" ? "rsvpDeadlinePassedIntro" : "rsvpIntro"
   ];
+  const confirmed = rsvpView.kind === "responded";
+  const canChange = closed && confirmed && rsvpEditAllowed &&
+    !rsvpDeadlinePassed() && !submissionUncertain;
+  rsvpEditControls.classList.toggle("hidden", !canChange);
+  rsvpCalendarButton.classList.toggle("hidden",
+    !(closed && confirmed && rsvpView.attending === "yes"));
+  rsvpCancelEdit.classList.toggle("hidden", !editingRsvp);
+  submitButton.textContent = copy[lang][editingRsvp ? "submitUpdate" : "submit"];
   if (!closed) return;
-  const key = rsvpView.kind === "responded"
+  const key = confirmed
     ? (rsvpView.attending === "yes" ? "rsvpClosedYes" : "rsvpClosedNo")
     : (rsvpView.kind === "deadline" ? "rsvpClosedDeadline" : "rsvpClosedNotReady");
   rsvpClosedMessage.textContent = copy[lang][key]
@@ -279,10 +307,33 @@ function refreshRsvpPanel() {
 }
 function closeRsvp(kind, attending, count) {
   rsvpView = {kind, attending:attending || null, partySize:Number(count)||0};
+  if (kind === "responded") {
+    savedRsvp = {attending:attending || null, partySize:Number(count)||0};
+  }
+  editingRsvp = false;
   inviteReady = false;
   submitButton.disabled = true;
   refreshRsvpPanel();
 }
+rsvpEditButton.addEventListener("click", () => {
+  if (!rsvpEditAllowed || rsvpDeadlinePassed() || submissionUncertain ||
+      rsvpView.kind !== "responded" || !savedRsvp.attending) return;
+  editingRsvp = true;
+  rsvpView = {kind:"open",attending:null,partySize:0};
+  inviteReady = true;
+  const savedChoice = document.querySelector(
+    'input[name="attending"][value="' + savedRsvp.attending + '"]'
+  );
+  savedChoice.checked = true;
+  partySizeField.value = String(savedRsvp.partySize || 1);
+  savedChoice.dispatchEvent(new Event("change", {bubbles:true}));
+  refreshRsvpPanel();
+  submitButton.disabled = false;
+});
+rsvpCancelEdit.addEventListener("click", () => {
+  if (submissionUncertain || rsvpCancelEdit.disabled) return;
+  closeRsvp("responded", savedRsvp.attending, savedRsvp.partySize);
+});
 document.getElementById("rsvpInvite").value = inviteCode;
 // All RSVP submissions require a verified personalized link.
 submitButton.disabled = true;
@@ -380,6 +431,7 @@ async function resolveInviteName() {
         applyGuestName(guest.name);
         cacheVerifiedInviteName(inviteDisplayName);
         inviteReady = guest.canRsvp === true && !rsvpDeadlinePassed();
+        rsvpEditAllowed = guest.canEdit === true && !rsvpDeadlinePassed();
         if (guest.responded === true) {
           closeRsvp("responded", guest.attending, guest.partySize);
         } else if (guest.deadlinePassed === true || rsvpDeadlinePassed()) {
@@ -459,6 +511,7 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
   });
 
   button.disabled = true;
+  rsvpCancelEdit.disabled = true;
   showRSVPStatus("pending");
   try {
     // Opaque responses do not count as confirmation.
@@ -477,7 +530,7 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
           stored = true;
           break;
         }
-        if (check?.responded === true) {
+        if (check?.responded === true && !editingRsvp) {
           previousReply = check;
           break;
         }
@@ -500,6 +553,7 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
     showRSVPStatus("uncertain");
   } finally {
     button.disabled = !inviteReady || submissionUncertain || rsvpView.kind !== "open";
+    rsvpCancelEdit.disabled = submissionUncertain;
   }
 });
 
