@@ -1,5 +1,13 @@
 # Thiệp cưới Linh & Thắng
 
+## Hiển thị lựa chọn Vinh/HCM trong Guest List (02/11/2026)
+
+- Đã chèn 2 cột theo đúng tên `tiệc tham dự (khách chọn)`: **H** (bảng bên trái, sau số người G) và **T** (bảng bên phải, sau số người S). Link khách chuyển từ H/S sang **I/U**; bảng phải chuyển tên K → **L**, RSVP Q → **R**.
+- Công thức ở H2:H163 và T2:T163 dò mã thiệp trong link I/U, chỉ hiển thị giá trị Vinh/HCM từ `RSVP Online!Y` khi phản hồi RSVP là `Có`; nếu chưa xác nhận hoặc chọn `Không` sẽ để trống. Không nhập tay vào cột công thức.
+- Đã đối chiếu 324/324 công thức và 156 link mời hiện hữu sau khi chèn. Định dạng header tự ngắt dòng, cột rộng 212 px. Mã Apps Script tìm các cột bằng tiêu đề nên không cần thay logic khi vị trí thay đổi. Vẫn cần deploy bản backend hỗ trợ lưu Y nếu chưa triển khai.
+- Các dòng dùng chung một mã thiệp sẽ hiển thị cùng lựa chọn Vinh/HCM. Khi thống kê, tránh cộng trùng theo số dòng.
+
+
 ## Hai tiệc Vinh và HCM, lựa chọn trong RSVP (02/11/2026)
 
 - Trang thiệp hiện hiển thị hai buổi tiệc: **Vinh** ngày **16/02/2027, 11:00** tại **Nhà hàng Giao Tế, TP. Vinh, Nghệ An** và **HCM** ngày **28/02/2027, 11:00** tại **Capella Parkview**. Mỗi buổi có liên kết Google Maps tìm địa điểm tương ứng.
@@ -11,7 +19,7 @@
 
 ## Hiển thị tên khách tức thì từ link thiệp (02/11/2026)
 
-- **Nguồn link hiện hành:** `Guest List!H/S` dùng `https://linhthangwedding.github.io/?i=<slug>&to=<ENCODEURL(tên khách mời)>`. Tên được lấy từ `RSVP Online!B` cùng bản ghi với mã `Q`, vì một số dòng chia sẻ cùng một mã thiệp. Nếu `B/K` của dòng trống thì không tạo link.
+- **Nguồn link hiện hành:** `Guest List!I/U` dùng `https://linhthangwedding.github.io/?i=<slug>&to=<ENCODEURL(tên khách mời)>`. Tên được lấy từ `RSVP Online!B` cùng bản ghi với mã `Q`, vì một số dòng chia sẻ cùng một mã thiệp. Nếu `B/K` của dòng trống thì không tạo link.
 - **Đã kiểm tra:** 157 ô có công thức, 156 link đang có hiệu lực; cả 156 link đều đúng `i`, giải mã `to` trùng tên hiển thị của registry và không có `utm_*`. Có bốn nhóm dòng dùng chung mã thiệp và giữ nguyên.
 - **Tốc độ:** website đọc `to` để hiển thị tên ngay khi HTML được dựng; Apps Script vẫn kiểm tra lại mã `i`, tên đúng và quyền RSVP. Browser xóa `to` khỏi thanh địa chỉ sau khi đã đọc để giữ link hiển thị gọn. Link đã gửi vẫn có thể chứa tên; đó là đánh đổi quyền riêng tư được chấp nhận cho phương án này.
 - **Không thay đổi RSVP:** mã thiệp, ngày khóa 10/02/2027, các cột RSVP và backend giữ nguyên. Không dùng `to` để xác thực người gửi. Các liên kết `?i=...` cũ vẫn tra cứu được nhưng tải tên chậm ở lần đầu.
@@ -61,8 +69,8 @@ Hiện có **162 khách mời có link riêng**, bao gồm 15 khách mới bổ 
 
 ## Quản lý khách mời
 Chỉ dùng HAI bảng có sẵn trong tab **Guest List**, không tạo bảng thứ ba:
-- Bảng hồng bên trái: tên ở cột **B**, RSVP ở cột **F**, **Số người tham dự ở G**, link ở cột **H**.
-- Bảng bên phải: tên ở cột **K**, RSVP ở cột **Q**, **Số người tham dự ở R**, link ở cột **S**.
+- Bảng hồng bên trái: tên ở cột **B**, RSVP ở cột **F**, **Số người tham dự ở G**, **tiệc tham dự (khách chọn) ở H**, link ở cột **I**.
+- Bảng bên phải: tên ở cột **L**, RSVP ở cột **R**, **Số người tham dự ở S**, **tiệc tham dự (khách chọn) ở T**, link ở cột **U**.
 
 Cấu trúc các cột có thể được đổi trên Google Sheets; Apps Script phiên bản hiện tại tìm cột theo tiêu đề ở hàng 1, không theo số cột cố định, kể cả khi kiểm tra tên vừa chỉnh sửa. Cột Số người tham dự là công thức: phản hồi Có hiển thị 1–10, Không hiển thị 0, chưa có phản hồi để trống.
 
