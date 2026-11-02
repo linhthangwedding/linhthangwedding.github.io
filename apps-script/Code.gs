@@ -171,14 +171,14 @@ function findInvite_(book, invite) {
       .createTextFinder(invite).matchEntireCell(true).findAll();
     if (hits.length !== 1) return null;
     var index=hits[0].getRow();
-    var rec=registry.getRange(index,1,1,21).getDisplayValues()[0];
+    var rec=registry.getRange(index,1,1,25).getDisplayValues()[0];
     if (!String(rec[0]||"").trim() ||
         String(rec[16]||"").trim() !== invite) return null;
     return {registry:registry,index:index,row:rec};
   }
 
   // LIVE still checks post-launch aliases against stable internal guest IDs.
-  var rows=registry.getRange(2,1,count,21).getDisplayValues();
+  var rows=registry.getRange(2,1,count,25).getDisplayValues();
   var candidates={},byId={};
   rows.forEach(function(rec,i) {
     var id=String(rec[0]||"").trim();
@@ -384,7 +384,9 @@ function locateGuest_(book, record) {
 function canRsvp_(eventName) {
   // A blank Event cell in the wedding Guest List means not yet categorized,
   // but the guest is still in the Capella invitation list.
-  return eventName === "" || eventName === WEDDING_EVENT;
+  // Both the Vinh engagement celebration and the HCM wedding can RSVP.
+  return eventName === "" || eventName === WEDDING_EVENT ||
+    eventName === "Dạm ngõ + Đám hỏi";
 }
 // Guests may submit or edit through February 10, 2027, 23:59:59 (Vietnam, UTC+7).
 // The server is authoritative; the browser deadline is only for display.
@@ -398,7 +400,9 @@ function getRecordedReply_(record) {
   return {
     responded:answered,
     attending:answer === "Có" ? "yes" : answer === "Không" ? "no" : null,
-    partySize:answer === "Có" ? Number(record[8] || 0) : 0
+    partySize:answer === "Có" ? Number(record[8] || 0) : 0,
+    venue:answer === "Có" && (record[24] === "Vinh" || record[24] === "HCM")
+      ? record[24] : ""
   };
 }
 function json_(obj) {
@@ -454,7 +458,9 @@ function doGet(e) {
         saved:!!receipt && receipt===String(found.row[11]||"").trim(),
         responded:reply.responded,
         attending:reply.attending,
-        partySize:reply.partySize
+        partySize:reply.partySize,
+        venue:reply.venue,
+        venueSupported:true
       });
     }
     // Registry B is the live formula linked to Guest List's display name;
@@ -474,6 +480,8 @@ function doGet(e) {
       responded:reply.responded,
       attending:reply.attending,
       partySize:reply.partySize,
+      venue:reply.venue,
+      venueSupported:true,
       deadlinePassed:rsvpDeadlinePassed_()
     });
   } catch(err) {
@@ -487,9 +495,11 @@ function doPost(e) {
   var p=(e&&e.parameter)||{};
   var invite=String(p.invite||"").trim();
   var attending=String(p.attending||"").trim();
+  var venue=String(p.venue||"").trim();
   var receipt=String(p.receipt||"").trim();
   if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(invite) ||
       !/^(yes|no)$/.test(attending) ||
+      (attending==="yes" && venue!=="Vinh" && venue!=="HCM") ||
       !/^[a-zA-Z0-9-]{8,100}$/.test(receipt))
     return json_({ok:false,error:"invalid_parameters"});
 
@@ -523,6 +533,9 @@ function doPost(e) {
     var note=submittedNote || String(found.row[9] || "");
     var time=new Date();
 
+    // RSVP Online Y stores the selected celebration without changing H:L.
+    // Set the venue before the receipt, so a confirmed receipt implies it is saved.
+    found.registry.getRange(found.index,25).setValue(attending==="yes" ? venue : "");
     found.registry.getRange(found.index,8,1,5)
       .setValues([[answer,count,note,time,receipt]]);
     // Attendance count has its own column (G/R); RSVP F/Q is just Có/Không.
