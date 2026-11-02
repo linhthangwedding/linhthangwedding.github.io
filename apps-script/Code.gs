@@ -41,8 +41,9 @@ function cleanText_(value, max) {
 function getInvitationPhase_(book) {
   var registry = book.getSheetByName(REGISTRY_TAB);
   if (!registry) throw new Error("Missing RSVP Online");
-  var mode = String(registry.getRange(2,22).getDisplayValue() || "").trim();
-  var started = registry.getRange(2,23).getValue();
+  var state = registry.getRange(2,22,1,2).getValues()[0];
+  var mode = String(state[0] || "").trim();
+  var started = state[1];
   var ms = started instanceof Date && !isNaN(started.getTime()) ?
     started.getTime() : null;
   return {live:mode === "LIVE" && ms !== null, startedMs:ms};
@@ -142,7 +143,9 @@ function onEdit(e) {
   }
   if (!editedNameColumn) return;
   SpreadsheetApp.flush();
-  syncAliasesWithLock_(e.source || getWeddingBook_());
+  var book=e.source || getWeddingBook_();
+  invalidateGuestNameCacheForEdit_(book,e.range.getRow(),e.range.getLastRow());
+  syncAliasesWithLock_(book);
 }
 /**
  * Resolve a CURRENT slug, a historic slug or a legacy random invitation ID.
@@ -199,6 +202,127 @@ function findInvite_(book, invite) {
   }
   var ids=Object.keys(candidates);
   return ids.length===1?byId[ids[0]]:null;
+}
+
+/**
+ * Short-lived, script-only cache for guest DISPLAY NAMES and source locations.
+ * We never cache RSVP status, the official PREP/LIVE phase, or authorization.
+ * findInvite_ still validates the CURRENT slug against the private registry
+ * before this cache is consulted, preserving PREP and LIVE link rules.
+ */
+var GUEST_CACHE_SECONDS_ = 300;
+function getCachedGuest_(record) {
+  var id = String(record[0] || "").trim();
+  if (!id) return null;
+  try {
+    var value = CacheService.getScriptCache().get("ltw:guest:v3:" + id);
+    if (!value) return null;
+    var data = JSON.parse(value);
+    if (data && data.name &&
+        data.side === String(record[14] || "").trim() &&
+        data.sourceRow === String(record[15] || "").trim() &&
+        data.slug === String(record[16] || "").trim()) {
+      return {name:data.name, event:String(record[3] || "").trim()};
+    }
+  } catch (_) { /* Cache outages must never prevent an invitation lookup. */ }
+  return null;
+}
+function cacheGuest_(record, guest) {
+  var id = String(record[0] || "").trim();
+  if (!id || !guest || !guest.name) return;
+  try {
+    CacheService.getScriptCache().put("ltw:guest:v3:" + id, JSON.stringify({
+      name:guest.name,
+      side:String(record[14] || "").trim(),
+      sourceRow:String(record[15] || "").trim(),
+      slug:String(record[16] || "").trim()
+    }),GUEST_CACHE_SECONDS_);
+  } catch (_) { /* Cache is optional: direct spreadsheet lookup remains valid. */ }
+}
+/**
+ * Read one precise Guest List row from the stable registry source pointer,
+ * rather than TextFinder-scanning all guest links on every first visit.
+ * Column positions still come from the actual header row and are cached only
+ * briefly. If the pointer is stale or columns differ, use strict legacy search.
+ *
+ * This is used ONLY by the read-only guest endpoint, never RSVP submission.
+ * RSVP submissions continue to use locateGuest_ duplicate-link checks.
+ */
+function locateGuestForDisplay_(book, record) {
+  var cached = getCachedGuest_(record);
+  if (cached) return cached;
+
+  var sheet = book.getSheetByName(GUEST_TAB);
+  var sourceRow = Number(record[15]);
+  var side = String(record[14] || "").trim();
+  var slug = String(record[16] || "").trim();
+  if (sheet && Number.isInteger(sourceRow) && sourceRow >= 2 &&
+      sourceRow <= sheet.getLastRow() &&
+      (side === "LEFT" || side === "RIGHT") &&
+      /^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) {
+    try {
+      var schema=null, schemaKey="ltw:columns:v3";
+      try {
+        var saved=CacheService.getScriptCache().get(schemaKey);
+        if (saved) schema=JSON.parse(saved);
+      } catch (_) {}
+      if (!schema || schema.width !== sheet.getLastColumn()) {
+        var width=sheet.getLastColumn();
+        var headers=sheet.getRange(1,1,1,width).getDisplayValues()[0];
+        var names=[], links=[];
+        headers.forEach(function(h,i) {
+          if (h === "Tên khách mời" || h === "Name") names.push(i);
+          if (h === "Link") links.push(i);
+        });
+        schema={
+          width:width,
+          nameCols:names,
+          linkCols:links
+        };
+        try { CacheService.getScriptCache().put(schemaKey,JSON.stringify(schema),300); }
+        catch (_) {}
+      }
+      var which=side === "LEFT" ? 0 : 1;
+      if (schema.nameCols.length > which && schema.linkCols.length > which) {
+        var nameCol=schema.nameCols[which], linkCol=schema.linkCols[which];
+        if (linkCol > nameCol) {
+          var row=sheet.getRange(sourceRow,nameCol+1,1,linkCol-nameCol+1)
+            .getDisplayValues()[0];
+          var name=String(row[0] || "").trim();
+          var url=String(row[linkCol-nameCol] || "").trim();
+          var foundSlug=url.match(
+            /^https:\/\/linhthangwedding\.github\.io\/\?i=([a-z0-9-]{2,76})(?:&to=[^#\s]*)?$/
+          );
+          if (name && foundSlug && foundSlug[1] === slug) {
+            var guest={name:name,event:String(record[3] || "").trim()};
+            cacheGuest_(record,guest);
+            return guest;
+          }
+        }
+      }
+    } catch (_) { /* Use strict lookup if row pointers cannot be read. */ }
+  }
+  var fallback=locateGuest_(book,record);
+  if (fallback) cacheGuest_(record,fallback);
+  return fallback;
+}
+// Manual name changes need to invalidate cached names, even if an edit
+// changes only accents/punctuation and leaves the readable slug unchanged.
+function invalidateGuestNameCacheForEdit_(book, firstRow, lastRow) {
+  try {
+    var registry=book.getSheetByName(REGISTRY_TAB);
+    if (!registry || registry.getLastRow()<2) return;
+    var pairs=registry.getRange(2,1,registry.getLastRow()-1,16)
+      .getDisplayValues();
+    var keys=[];
+    pairs.forEach(function(row) {
+      var index=Number(row[15]), id=String(row[0]||"").trim();
+      if (id && index >= firstRow && index <= lastRow)
+        keys.push("ltw:guest:v3:" + id);
+    });
+    if (keys.length) CacheService.getScriptCache().removeAll(keys);
+    CacheService.getScriptCache().remove("ltw:columns:v3");
+  } catch (_) { /* Correctness still gated by current registry slugs. */ }
 }
 
 /**
@@ -299,7 +423,7 @@ function verifyWeddingBackend() {
   var slug = String(registry.getRange(2,17).getDisplayValue() || "").trim();
   if (!slug) throw new Error("Missing first guest slug in Q2");
   var found = findInvite_(book,slug);
-  var guest = found && locateGuest_(book,found.row);
+  var guest = found && locateGuestForDisplay_(book,found.row);
   if (!guest) throw new Error("Guest not found. Check Guest List link and RSVP Online Q2.");
   var mode = getInvitationPhase_(book).live ? "LIVE" : "PREP";
   console.log("Wedding guest lookup OK | " + guest.name + " | Mode: " + mode);
@@ -333,7 +457,7 @@ function doGet(e) {
         partySize:reply.partySize
       });
     }
-    var guest=locateGuest_(book,found.row);
+    var guest=locateGuestForDisplay_(book,found.row);
     if (!guest) return js_(callback,{valid:false,invalid:true});
     return js_(callback,{
       valid:true,
