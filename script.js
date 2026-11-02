@@ -711,7 +711,7 @@ resolveInviteName();
     }
   });
 
-  window.onSpotifyIframeApiReady = (IFrameAPI) => {
+  const createSpotifyController = (IFrameAPI) => {
     try {
       IFrameAPI.createController(
         container,
@@ -747,12 +747,17 @@ resolveInviteName();
     }
   };
 
-  // The early preconnect/preload in <head> makes this request less likely
-  // to wait for the rest of the page's images and styles.
-  const loader = document.createElement("script");
-  loader.async = true;
-  loader.fetchPriority = "high";
-  loader.src = "https://open.spotify.com/embed/iframe-api/v1";
-  loader.onerror = () => { button.disabled = true; setMessage("musicUnavailable"); };
-  document.head.appendChild(loader);
+  // The API is downloaded asynchronously in <head>, even before this JS.
+  // Its callback stores the object until the DOM is ready; no duplicate request.
+  window.__ltwSpotifyReady = createSpotifyController;
+  if (window.__ltwSpotifyIframeApi) {
+    createSpotifyController(window.__ltwSpotifyIframeApi);
+  }
+  const loader = document.getElementById("ltwSpotifyApiLoader");
+  if (loader) {
+    loader.addEventListener("error", () => {
+      button.disabled = true;
+      setMessage("musicUnavailable");
+    });
+  }
 })();
