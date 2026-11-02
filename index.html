@@ -75,7 +75,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-eiffel-original-1024.jpg?v=27" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=50">
+  <link rel="stylesheet" href="styles.css?v=51">
 </head>
 <body>
 <main class="site-shell">
@@ -99,8 +99,26 @@
       <p class="eyebrow" data-i18n="weddingOf">WE'RE GETTING MARRIED</p>
       <h1>Linh <em>&amp;</em> Thang</h1>
       <div class="fine-rule" aria-hidden="true"></div>
-      <p class="hero-date">28 · 02 · 2027</p>
-      <p class="hero-tagline" data-i18n="heroTagline">A new chapter, with our favorite people.</p>
+    <div class="vinyl-player" id="vinylPlayer">
+      <div class="turntable-deck">
+        <div class="turntable-arm" aria-hidden="true"></div>
+        <button class="vinyl-play-button" id="vinylPlayButton" type="button" disabled
+          aria-label="Play Beautiful in White" data-i18n-aria-label="musicPlayLabel" aria-pressed="false">
+          <span class="vinyl-disc" aria-hidden="true"><span class="vinyl-disc-label">L &amp; T</span></span>
+          <span class="vinyl-control" aria-hidden="true">
+            <svg class="vinyl-icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m9 6 10 6-10 6z"/></svg>
+            <svg class="vinyl-icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></svg>
+          </span>
+        </button>
+      </div>
+      <div class="vinyl-song-details">
+        <p class="vinyl-song-name">Beautiful in White</p>
+        <p class="vinyl-song-artist">Shane Filan</p>
+        <p id="vinylStatus" class="vinyl-status" data-i18n="musicLoading">Loading music player…</p>
+      </div>
+      <div class="spotify-embed-slot" id="spotifyEmbedSlot" aria-label="Spotify player for Beautiful in White"></div>
+      <a class="vinyl-spotify-link text-link" href="https://open.spotify.com/track/0lUdYoSr8Hm3GL0HZld4ac" target="_blank" rel="noopener" data-i18n="musicOpenSpotify">Open in Spotify ↗</a>
+    </div>
     </div>
   </section>
 
@@ -210,32 +228,13 @@
     </div>
   </section>
 
-  <section class="story-section music-section" id="story" aria-labelledby="music-section-heading">
-    <p class="section-kicker" id="music-section-heading" data-i18n="musicSectionTitle">OUR SONG</p>
+  <section class="story-section" id="story">
+    <p class="section-kicker" data-i18n="storyTitle">A LITTLE ABOUT US</p>
     <div class="ornament dark"><span></span><i>♥</i><span></span></div>
-    <div class="vinyl-player" id="vinylPlayer">
-      <div class="turntable-deck">
-        <div class="turntable-arm" aria-hidden="true"></div>
-        <button class="vinyl-play-button" id="vinylPlayButton" type="button" disabled
-          aria-label="Play Beautiful in White" data-i18n-aria-label="musicPlayLabel" aria-pressed="false">
-          <span class="vinyl-disc" aria-hidden="true"><span class="vinyl-disc-label">L &amp; T</span></span>
-          <span class="vinyl-control" aria-hidden="true">
-            <svg class="vinyl-icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m9 6 10 6-10 6z"/></svg>
-            <svg class="vinyl-icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></svg>
-          </span>
-        </button>
-      </div>
-      <div class="vinyl-song-details">
-        <p class="vinyl-song-name">Beautiful in White</p>
-        <p class="vinyl-song-artist">Shane Filan</p>
-        <p id="vinylStatus" class="vinyl-status" data-i18n="musicLoading">Loading music player…</p>
-      </div>
-      <div class="spotify-embed-slot" id="spotifyEmbedSlot" aria-label="Spotify player for Beautiful in White"></div>
-      <a class="vinyl-spotify-link text-link" href="https://open.spotify.com/track/0lUdYoSr8Hm3GL0HZld4ac" target="_blank" rel="noopener" data-i18n="musicOpenSpotify">Open in Spotify ↗</a>
-    </div>
-    <!-- Preserve the previously approved Polaroid assets and markup for easy restoration. -->
-    <template id="storyGalleryArchive">
-    <div class="polaroid-gallery" role="group" aria-label="Three favorite moments of Linh and Thang">
+    <p class="story-copy" data-i18n="storyCopy">From everyday moments to adventures far from home, we've shared a lot of laughs, a few surprises, and so many happy memories. Now we're ready for the next chapter, together.</p>
+
+    <!-- Three original Polaroid photos restored, with their approved images unchanged. -->
+<div class="polaroid-gallery" role="group" aria-label="Three favorite moments of Linh and Thang">
       <figure class="polaroid polaroid--one">
         <div class="polaroid-photo"><img src="assets/polaroid-street.jpeg?v=20261102b" onerror="this.onerror=null;this.src='assets/garden.webp'" alt="Linh and Thang on a cobblestone street" loading="lazy" decoding="async"></div>
       </figure>
@@ -246,7 +245,9 @@
         <div class="polaroid-photo"><img src="assets/polaroid-eiffel.jpeg?v=20261102b" onerror="this.onerror=null;this.src='assets/paris.jpeg'" alt="Linh and Thang at the Eiffel Tower" loading="lazy" decoding="async"></div>
       </figure>
     </div>
-    </template>
+
+    <p class="story-signoff" data-i18n="storySignoff">With love,
+Linh &amp; Thang ♡</p>
   </section>
 
   <section class="rsvp-section" id="rsvp">
