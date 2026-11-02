@@ -69,7 +69,7 @@ const copy = {
     wedding:"OUR WEDDING DAY",
     dateLabel:"Date",
     timeLabel:"Time",
-    locationLabel:"Where",
+    locationLabel:"Venue",
     city:"Ho Chi Minh City, Vietnam",
     rsvpButton:"Let us know",
     direction:"Get directions ↗",
