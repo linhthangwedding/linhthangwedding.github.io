@@ -1,5 +1,13 @@
 # Thiệp cưới Linh & Thắng
 
+## Hiển thị tên khách tức thì từ link thiệp (02/11/2026)
+
+- **Nguồn link hiện hành:** `Guest List!H/S` dùng `https://linhthangwedding.github.io/?i=<slug>&to=<ENCODEURL(tên khách mời)>`. Tên được lấy từ `RSVP Online!B` cùng bản ghi với mã `Q`, vì một số dòng chia sẻ cùng một mã thiệp. Nếu `B/K` của dòng trống thì không tạo link.
+- **Đã kiểm tra:** 157 ô có công thức, 156 link đang có hiệu lực; cả 156 link đều đúng `i`, giải mã `to` trùng tên hiển thị của registry và không có `utm_*`. Có bốn nhóm dòng dùng chung mã thiệp và giữ nguyên.
+- **Tốc độ:** website đọc `to` để hiển thị tên ngay khi HTML được dựng; Apps Script vẫn kiểm tra lại mã `i`, tên đúng và quyền RSVP. Browser xóa `to` khỏi thanh địa chỉ sau khi đã đọc để giữ link hiển thị gọn. Link đã gửi vẫn có thể chứa tên; đó là đánh đổi quyền riêng tư được chấp nhận cho phương án này.
+- **Không thay đổi RSVP:** mã thiệp, ngày khóa 10/02/2027, các cột RSVP và backend giữ nguyên. Không dùng `to` để xác thực người gửi. Các liên kết `?i=...` cũ vẫn tra cứu được nhưng tải tên chậm ở lần đầu.
+- **Lưu ý phát hiện khi đối chiếu:** có các dòng chung mã thiệp, trong khi backend hiện tại từ chối nếu nhiều dòng Guest List khớp cùng slug. Đó là vấn đề có sẵn trước khi thêm `to` và cần kiểm thử hoặc xử lý riêng trước khi gửi hàng loạt; cập nhật link này không sửa luồng ghi RSVP.
+
 ## Tối ưu tên khách bằng Apps Script (02/11/2026)
 
 Giữ nguyên link `?i=...`, PREP và cơ chế RSVP. Cloudflare đã được loại khỏi website và repository.
@@ -29,14 +37,14 @@ Bản `script.js?v=42` hiển thị tên khách từ sessionStorage trong cùng 
 
 ## Link thiệp chính thức gọn (29/10/2026)
 
-Các công thức `Guest List!H/S` tạo link chỉ có `?i=<slug>`, không còn `&to=`, `utm_source=` hoặc `#story`. Đã kiểm tra 162/162 link có công thức. Tên khách được tra từ Master Google Sheet sau khi website tải; lần mở lại cùng tab có thể hiện sớm nhờ sessionStorage của `script.js?v=43`. Không công khai danh sách khách trong mã nguồn. Backend `Code.gs` vẫn tương thích cả link cũ có `&to=` và link mới chỉ có mã `i`.
+**Lịch sử (29/10/2026, không còn là cấu hình hiện hành):** các công thức `Guest List!H/S` trước đây chỉ tạo `?i=<slug>` và không có `&to=`. Quy tắc mới ngày 02/11/2026 được ghi phía trên. Tên khách được tra từ Master Google Sheet sau khi website tải; lần mở lại cùng tab có thể hiện sớm nhờ sessionStorage của `script.js?v=43`. Không công khai danh sách khách trong mã nguồn. Backend `Code.gs` vẫn tương thích cả link cũ có `&to=` và link mới chỉ có mã `i`.
 
 Chỉ bật LIVE khi người dùng báo sẵn sàng gửi batch đầu tiên. LIVE là trạng thái chung, không bật lại cho từng batch. Hai khách đang chờ chốt tên chưa được cấp link trong Guest List.
 
 ## Thiệp cá nhân hóa
 - Tiệc Thành hôn tại Capella Park View, TP.HCM ngày 28/02/2027; mời khách khoảng 11:00.
-- Link riêng hiện dạng dễ đọc, ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp`.
-- Tên xuất hiện trên thiệp lấy TRỰC TIẾP từ cột **Tên khách mời** thuộc đúng dòng khách ở **Guest List**, không phải từ đuôi link.
+- Link riêng hiện có mã thiệp và tên được mã hóa URL; ví dụ: `https://linhthangwedding.github.io/?i=chi-thu-tam-kp&to=Ch%E1%BB%8B%20Thu%20T%C3%A2m`.
+- Tên trên thiệp hiện ngay từ tham số `to` của link, sau đó được đối chiếu bằng tên chính xác từ `RSVP Online`/`Guest List` khi backend xác minh mã thiệp.
 - Đuôi link **tự thay đổi khi sửa tên** trong Guest List, không cần chỉnh tay. Công thức chuyển tiếng Việt có dấu thành chữ thường không dấu; nếu trùng, hệ thống thêm phần phân biệt để giữ đúng khách.
 - **Khi PREP:** chỉ link mới nhất hoạt động. **Sau khi LIVE:** link đã phát kể từ launch được giữ lại khi đổi tên; cả link cũ và mới đều trả về cùng khách.
 
