@@ -1,5 +1,17 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
+## Tối ưu tên khách qua Google Apps Script (PREP, 02/11/2026)
+
+- Không dùng Cloudflare, không đưa Guest List hoặc mã thiệp gốc lên GitHub.
+- `getInvitationPhase_` đọc V2:W2 trong một lần, còn `findInvite_` vẫn xác minh **link PREP mới nhất** hoặc link lịch sử hợp lệ **sau LIVE**. Không lấy tính hợp lệ của link từ cache.
+- `locateGuestForDisplay_` đọc trực tiếp dòng nguồn P của RSVP Online (sau khi kiểm tra slug hiện tại và link Guest List) thay vì quét mọi link ở lần tải đầu. Nếu dòng nguồn không khớp, hệ thống quay về `locateGuest_` để tra cứu nghiêm ngặt.
+- Tên và vị trí đã xác minh được giữ tối đa **300 giây** trong `CacheService.getScriptCache()`. Tên được xóa khỏi cache khi sửa tên bằng thao tác thủ công trên Guest List. Trạng thái RSVP, quyền gửi và deadline luôn đọc dữ liệu thật, **không cache**, nên khách đã phản hồi vẫn bị khóa.
+- Website tiếp tục gửi yêu cầu lấy tên ngay trong `<head>`, và các lần truy cập lại cùng trình duyệt có thể sử dụng cache đã xác minh trên thiết bị.
+- Google có thể xóa cache sớm; lần đầu hoặc khi cache hết hạn vẫn phải truy vấn Sheets. Không bảo đảm hiển thị tức thì trên thiết bị mới.
+
+**Cần deploy backend để áp dụng:** Master File → Extensions → Apps Script → thay **toàn bộ** file `Code.gs` bằng bản mới từ thư mục `apps-script` trên GitHub (không xóa các file .gs khác) → Save → Run `verifyWeddingBackend` (chỉ đọc) → Deploy → Manage deployments → Edit → New version → Deploy. Giữ nguyên URL Web App /exec. Không chạy `activateWeddingInvitations`; đang PREP và chỉ người dùng quyết định launch.
+
+
 Đuôi link hiện dùng **tên không dấu**, ví dụ `?i=chi-thu-tam-kp`, thay cho mã 16 ký tự ngẫu nhiên. 162 link khách hiện có đuôi duy nhất (15 link mới được tạo sau khi Guest List bổ sung khách). Mã 30 ký tự vẫn là định danh nội bộ. Khi **PREP**, Web App chỉ nhận slug hiện tại; khi **LIVE**, các slug cũ ghi nhận từ thời điểm launch mới được chấp nhận.
 
 ## Cập nhật deployment (bắt buộc sau lần thay đổi này)
