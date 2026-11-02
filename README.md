@@ -1,5 +1,14 @@
 # Thiệp cưới Linh & Thắng
 
+## Hai tiệc Vinh và HCM, lựa chọn trong RSVP (02/11/2026)
+
+- Trang thiệp hiện hiển thị hai buổi tiệc: **Vinh** ngày **16/02/2027, 11:00** tại **Nhà hàng Giao Tế, TP. Vinh, Nghệ An** và **HCM** ngày **28/02/2027, 11:00** tại **Capella Parkview**. Mỗi buổi có liên kết Google Maps tìm địa điểm tương ứng.
+- Khi khách chọn **Yes** trong RSVP, khách phải chọn **Vinh hoặc HCM**, sau đó khai báo tổng số người tham dự. Chọn **No** thì không yêu cầu địa điểm. Khi chỉnh sửa RSVP, lựa chọn trước đó được tải lại.
+- `RSVP Online!Y` là cột mới **Tiệc xác nhận (Vinh/HCM)** có dropdown. Backend `apps-script/Code.gs` mới ghi/đọc cột này và nhận cả hai nhóm sự kiện `Dạm ngõ + Đám hỏi` và `Đám cưới`. Các cột phản hồi và số người cũ giữ nguyên. **Cần cập nhật Code.gs và redeploy Web App hiện tại** để cho phép gửi biểu mẫu mới; website cố tình khóa gửi nếu backend chưa hỗ trợ cột Y.
+- Link lịch `.ics` được giữ **duy nhất** tại `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics`. File này hiện chứa lịch HCM nên chỉ hiện cùng HCM, không gắn với tiệc Vinh để tránh sai lịch.
+- **Cần kiểm thử riêng trước khi gửi rộng rãi:** một số dòng Guest List dùng chung mã thiệp; backend đã có cơ chế từ chối nếu một slug xuất hiện trên nhiều dòng khi ghi RSVP. Đây là vấn đề cũ chưa xử lý trong lần cập nhật hai tiệc.
+
+
 ## Hiển thị tên khách tức thì từ link thiệp (02/11/2026)
 
 - **Nguồn link hiện hành:** `Guest List!H/S` dùng `https://linhthangwedding.github.io/?i=<slug>&to=<ENCODEURL(tên khách mời)>`. Tên được lấy từ `RSVP Online!B` cùng bản ghi với mã `Q`, vì một số dòng chia sẻ cùng một mã thiệp. Nếu `B/K` của dòng trống thì không tạo link.
