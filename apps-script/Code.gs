@@ -2,9 +2,10 @@
  * Linh & Thang RSVP receiver, bound to the wedding Master Google Sheet.
  *
  * Public invitation links live INSIDE the existing Guest List tables:
- *   Bride-side pink table: Name B, RSVP F, count G, Link H
- *   Other guest table:     Name K, RSVP Q, count R, Link S
- *   RSVP count is calculated in Guest List from private registry columns H/I.
+ *   Bride-side pink table: Name B, RSVP F, count G, selected party H, Link I
+ *   Other guest table:     Name L, RSVP R, count S, selected party T, Link U
+ *   RSVP count and selected party are calculated from private registry H/I/Y.
+ *   Runtime column lookup uses headers, not fixed Guest List positions.
  *
  * Slugs and links automatically recalculate in Google Sheets formulas.
  * PREP mode: only the newest guest link works; old test slugs are ignored.
