@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Linh and Thang//Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:linh-thang-vinh-20270216@linhthangwedding.github.io
+DTSTAMP:20261102T120000Z
+DTSTART:20270216T040000Z
+DTEND:20270216T070000Z
+SUMMARY:Linh & Thang - Vinh Celebration
+LOCATION:Nhà hàng Giao Tế\, Vinh City\, Nghệ An\, Vietnam
+DESCRIPTION:Join us for our Vinh celebration on Tuesday\, February 16\, 202
+ 7 at 11:00 AM Vietnam time. End time is approximate.
+URL:https://linhthangwedding.github.io/
+END:VEVENT
+END:VCALENDAR
