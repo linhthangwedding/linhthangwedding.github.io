@@ -337,7 +337,8 @@ function refreshRsvpPanel() {
   if (!closed) return;
   const key = confirmed
     ? (rsvpView.attending === "yes" ? "rsvpClosedYes" : "rsvpClosedNo")
-    : (rsvpView.kind === "deadline" ? "rsvpClosedDeadline" : "rsvpClosedNotReady");
+    : (rsvpView.kind === "deadline" ? "rsvpClosedDeadline" :
+      rsvpView.kind === "maintenance" ? "rsvpMaintenance" : "rsvpClosedNotReady");
   rsvpClosedMessage.textContent = copy[lang][key]
     .replace("{name}", inviteDisplayName || (lang === "vi" ? "bạn" : "friend"))
     .replace("{count}", String(rsvpView.partySize));
@@ -481,7 +482,7 @@ async function resolveInviteName() {
         } else if (guest.deadlinePassed === true || rsvpDeadlinePassed()) {
           closeRsvp("deadline");
         } else if (!inviteReady) {
-          closeRsvp("notready");
+          closeRsvp(venueBackendReady ? "notready" : "maintenance");
         } else {
           rsvpView = {kind:"open",attending:null,partySize:0,venue:""};
           refreshRsvpPanel();
