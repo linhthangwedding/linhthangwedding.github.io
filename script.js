@@ -22,6 +22,15 @@ const copy = {
     direction:"Chỉ đường ↗",
     saveDate:"Lưu ngày vào lịch",
     storyTitle:"CÂU CHUYỆN CỦA CHÚNG MÌNH",
+    musicSectionTitle:"GIAI ĐIỆU CỦA CHÚNG MÌNH",
+    musicPlayLabel:"Phát Beautiful in White",
+    musicPauseLabel:"Tạm dừng Beautiful in White",
+    musicLoading:"Đang tải trình phát nhạc…",
+    musicReady:"Nhấn vào đĩa than để phát nhạc",
+    musicPlaying:"Đang phát qua Spotify",
+    musicPaused:"Nhạc đã tạm dừng",
+    musicUnavailable:"Không tải được trình phát. Bạn có thể mở bài hát bằng liên kết Spotify bên dưới.",
+    musicOpenSpotify:"Mở bằng Spotify ↗",
     storyCopy:"Cùng nhau đi qua những hành trình, những thành phố và những mùa hoa. Giờ đây, chúng mình sẵn sàng bắt đầu một chương mới.",
     storySignoff:"Thương mến,\nLinh & Thắng ♡",
     rsvpTitle:"XÁC NHẬN THAM DỰ",
@@ -95,6 +104,15 @@ const copy = {
     direction:"Get directions ↗",
     saveDate:"Add to calendar",
     storyTitle:"A LITTLE ABOUT US",
+    musicSectionTitle:"OUR SONG",
+    musicPlayLabel:"Play Beautiful in White",
+    musicPauseLabel:"Pause Beautiful in White",
+    musicLoading:"Loading music player…",
+    musicReady:"Tap the record to play",
+    musicPlaying:"Playing through Spotify",
+    musicPaused:"Music paused",
+    musicUnavailable:"Player unavailable. You can open the song in Spotify below.",
+    musicOpenSpotify:"Open in Spotify ↗",
     storyCopy:"From everyday moments to adventures far from home, we've shared a lot of laughs, a few surprises, and so many happy memories. Now we're ready for the next chapter, together.",
     storySignoff:"With love,\nLinh & Thang ♡",
     rsvpTitle:"CAN YOU MAKE IT?",
@@ -621,3 +639,57 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
 setLang(lang);
 if (!inviteCode) showRSVPStatus("missingInvite");
 resolveInviteName();
+
+
+// The record is decorative UI for Spotify's licensed, user-initiated Embed.
+// Never host the recording or attempt to autoplay music on page load.
+(function initWeddingVinylPlayer() {
+  const player = document.getElementById("vinylPlayer");
+  const button = document.getElementById("vinylPlayButton");
+  const status = document.getElementById("vinylStatus");
+  const container = document.getElementById("spotifyEmbedSlot");
+  if (!player || !button || !status || !container) return;
+
+  const trackUri = "spotify:track:0lUdYoSr8Hm3GL0HZld4ac";
+  let controller = null;
+  let isPlaying = false;
+  function setMessage(key) {
+    status.dataset.i18n = key;
+    status.textContent = copy[lang][key];
+  }
+  function setState(playing) {
+    isPlaying = Boolean(playing);
+    player.classList.toggle("is-playing", isPlaying);
+    button.setAttribute("aria-pressed", String(isPlaying));
+    button.dataset.i18nAriaLabel = isPlaying ? "musicPauseLabel" : "musicPlayLabel";
+    button.setAttribute("aria-label", copy[lang][button.dataset.i18nAriaLabel]);
+    setMessage(isPlaying ? "musicPlaying" : "musicPaused");
+  }
+  button.addEventListener("click", () => {
+    if (!controller) return;
+    controller.togglePlay();
+  });
+
+  window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    IFrameAPI.createController(
+      container,
+      {uri:trackUri, width:"100%", height:152},
+      (embedController) => {
+        controller = embedController;
+        button.disabled = false;
+        setMessage("musicReady");
+        embedController.addListener("playback_started", () => setState(true));
+        embedController.addListener("playback_update", (event) => {
+          if (event && event.data && typeof event.data.isPaused === "boolean") {
+            setState(!event.data.isPaused);
+          }
+        });
+      }
+    );
+  };
+  const loader = document.createElement("script");
+  loader.async = true;
+  loader.src = "https://open.spotify.com/embed/iframe-api/v1";
+  loader.onerror = () => { button.disabled = true; setMessage("musicUnavailable"); };
+  document.body.appendChild(loader);
+})();
