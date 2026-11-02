@@ -249,31 +249,47 @@ button,input,textarea{font:inherit}
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:14px;
-  margin:22px auto 0;
+  margin:20px auto 0;
 }
 .rsvp-edit-controls p{
   max-width:490px;
   font:400 13px/1.75 "Manrope",system-ui,sans-serif;
   color:#766e67;
 }
-.rsvp-edit-controls .btn,
-.rsvp-calendar-button,
+.rsvp-action-row{
+  display:flex;
+  flex-wrap:nowrap;
+  justify-content:center;
+  align-items:stretch;
+  gap:12px;
+  margin:18px auto 0;
+  width:100%;
+}
+.rsvp-action-row .btn{
+  flex:1 1 0;
+  min-width:0;
+  max-width:245px;
+  min-height:50px;
+  padding:10px 14px;
+  text-align:center;
+  white-space:normal;
+  line-height:1.35;
+}
+.rsvp-action-row .btn,
 .rsvp-cancel-edit{
   font-family:"Manrope",system-ui,sans-serif;
   font-size:13px;
   font-weight:600;
 }
-.rsvp-calendar-button{
-  margin:20px auto 0;
-}
-.rsvp-cancel-edit{
-  width:100%;
-}
+.rsvp-cancel-edit{width:100%}
 @media(max-width:760px){
-  .rsvp-closed-panel{padding:25px 20px;}
-  .rsvp-edit-controls .btn,
-  .rsvp-calendar-button{width:100%;}
+  .rsvp-closed-panel{padding:25px 16px;}
+  .rsvp-action-row{gap:8px;}
+  .rsvp-action-row .btn{
+    padding:10px 7px;
+    font-size:clamp(10px,3vw,12px);
+    min-height:50px;
+  }
 }
 .rsvp-form{
   max-width:650px;
