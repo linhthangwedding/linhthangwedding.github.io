@@ -26,7 +26,9 @@ const copy = {
     musicPlayLabel:"Phát Beautiful in White",
     musicPauseLabel:"Tạm dừng Beautiful in White",
     musicLoading:"Đang tải trình phát nhạc…",
-    musicReady:"Nhấn vào đĩa than để phát nhạc",
+    musicReady:"Đã sẵn sàng. Nhấn đĩa than để phát nhạc",
+    musicTryingAutoplay:"Đang thử phát nhạc tự động…",
+    musicAutoplayBlocked:"Trình duyệt chặn tự phát. Chạm đĩa than để nghe nhạc",
     musicPlaying:"Đang phát qua Spotify",
     musicPaused:"Nhạc đã tạm dừng",
     musicUnavailable:"Không tải được trình phát. Bạn có thể mở bài hát bằng liên kết Spotify bên dưới.",
@@ -108,7 +110,9 @@ const copy = {
     musicPlayLabel:"Play Beautiful in White",
     musicPauseLabel:"Pause Beautiful in White",
     musicLoading:"Loading music player…",
-    musicReady:"Tap the record to play",
+    musicReady:"Ready. Tap the record to play",
+    musicTryingAutoplay:"Trying to play music automatically…",
+    musicAutoplayBlocked:"Autoplay blocked. Tap the record to play",
     musicPlaying:"Playing through Spotify",
     musicPaused:"Music paused",
     musicUnavailable:"Player unavailable. You can open the song in Spotify below.",
@@ -641,8 +645,8 @@ if (!inviteCode) showRSVPStatus("missingInvite");
 resolveInviteName();
 
 
-// The record is decorative UI for Spotify's licensed, user-initiated Embed.
-// Never host the recording or attempt to autoplay music on page load.
+// Licensed Spotify Embed: attempt to start promptly, with a one-tap fallback.
+// Browser autoplay and Spotify permissions always decide whether sound is allowed.
 (function initWeddingVinylPlayer() {
   const player = document.getElementById("vinylPlayer");
   const button = document.getElementById("vinylPlayButton");
@@ -650,46 +654,105 @@ resolveInviteName();
   const container = document.getElementById("spotifyEmbedSlot");
   if (!player || !button || !status || !container) return;
 
+  // Placeholder song until a verified Spotify URI for the requested track is supplied.
   const trackUri = "spotify:track:0lUdYoSr8Hm3GL0HZld4ac";
   let controller = null;
-  let isPlaying = false;
+  let playing = false;
+  let userStarted = false;
+  let autoplayAttempted = false;
+  let autoplayFallback = null;
+
   function setMessage(key) {
     status.dataset.i18n = key;
-    status.textContent = copy[lang][key];
+    status.textContent = copy[lang][key] || "";
   }
-  function setState(playing) {
-    isPlaying = Boolean(playing);
-    player.classList.toggle("is-playing", isPlaying);
-    button.setAttribute("aria-pressed", String(isPlaying));
-    button.dataset.i18nAriaLabel = isPlaying ? "musicPauseLabel" : "musicPlayLabel";
+  function setState(isPlaying) {
+    playing = Boolean(isPlaying);
+    if (playing && autoplayFallback) {
+      clearTimeout(autoplayFallback);
+      autoplayFallback = null;
+    }
+    player.classList.toggle("is-playing", playing);
+    button.setAttribute("aria-pressed", String(playing));
+    button.dataset.i18nAriaLabel = playing ? "musicPauseLabel" : "musicPlayLabel";
     button.setAttribute("aria-label", copy[lang][button.dataset.i18nAriaLabel]);
-    setMessage(isPlaying ? "musicPlaying" : "musicPaused");
+    setMessage(playing ? "musicPlaying" : "musicPaused");
+  }
+  function startAutomatically() {
+    if (autoplayAttempted || userStarted || playing || !controller) return;
+    autoplayAttempted = true;
+    setMessage("musicTryingAutoplay");
+    try {
+      // Spotify officially supports play(), but browsers may silently reject it.
+      const attempt = controller.play();
+      if (attempt && typeof attempt.catch === "function") {
+        attempt.catch(() => {
+          if (!playing && !userStarted) setMessage("musicAutoplayBlocked");
+        });
+      }
+    } catch (_) {
+      setMessage("musicAutoplayBlocked");
+    }
+    autoplayFallback = setTimeout(() => {
+      if (!playing && !userStarted) setMessage("musicAutoplayBlocked");
+      autoplayFallback = null;
+    }, 2200);
   }
   button.addEventListener("click", () => {
     if (!controller) return;
-    controller.togglePlay();
+    userStarted = true;
+    if (autoplayFallback) clearTimeout(autoplayFallback);
+    autoplayFallback = null;
+    setMessage("musicLoading");
+    try {
+      controller.togglePlay();
+    } catch (_) {
+      setMessage("musicUnavailable");
+    }
   });
 
   window.onSpotifyIframeApiReady = (IFrameAPI) => {
-    IFrameAPI.createController(
-      container,
-      {uri:trackUri, width:"100%", height:80},
-      (embedController) => {
-        controller = embedController;
-        button.disabled = false;
-        setMessage("musicReady");
-        embedController.addListener("playback_started", () => setState(true));
-        embedController.addListener("playback_update", (event) => {
-          if (event && event.data && typeof event.data.isPaused === "boolean") {
-            setState(!event.data.isPaused);
-          }
-        });
-      }
-    );
+    try {
+      IFrameAPI.createController(
+        container,
+        {uri:trackUri, width:"100%", height:80},
+        (embedController) => {
+          controller = embedController;
+          button.disabled = false;
+          setMessage("musicReady");
+          controller.addListener("playback_started", () => setState(true));
+          controller.addListener("playback_update", (event) => {
+            if (event && event.data && typeof event.data.isPaused === "boolean") {
+              // Do not claim that a blocked autoplay attempt succeeded.
+              if (!event.data.isPaused) setState(true);
+              else if (playing || userStarted) setState(false);
+            }
+          });
+          // "ready" signals that the embed is able to stream.
+          controller.addListener("ready", () => {
+            if (document.visibilityState === "visible") startAutomatically();
+            else {
+              document.addEventListener("visibilitychange", function onVisible() {
+                if (document.visibilityState !== "visible") return;
+                document.removeEventListener("visibilitychange", onVisible);
+                startAutomatically();
+              });
+            }
+          });
+        }
+      );
+    } catch (_) {
+      button.disabled = true;
+      setMessage("musicUnavailable");
+    }
   };
+
+  // The early preconnect/preload in <head> makes this request less likely
+  // to wait for the rest of the page's images and styles.
   const loader = document.createElement("script");
   loader.async = true;
+  loader.fetchPriority = "high";
   loader.src = "https://open.spotify.com/embed/iframe-api/v1";
   loader.onerror = () => { button.disabled = true; setMessage("musicUnavailable"); };
-  document.body.appendChild(loader);
+  document.head.appendChild(loader);
 })();
