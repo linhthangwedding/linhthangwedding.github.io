@@ -1,5 +1,12 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
+## Cột lựa chọn tiệc trên Guest List (02/11/2026)
+
+- Trong Guest List, **H** và **T** có nhãn chính xác `tiệc tham dự (khách chọn)`; dữ liệu là công thức tham chiếu từ `RSVP Online!Y` (chỉ hiện Vinh/HCM sau RSVP **Có**). Cột link giờ là **I/U**, số người **G/S**, RSVP **F/R**.
+- Hai cột được **chèn**, không ghi đè link hoặc dữ liệu cũ. Công thức link và công thức của tab registry tự điều chỉnh theo Google Sheets. Mã `Code.gs` dò vị trí theo nhãn cột, không theo chỉ số cố định của Guest List.
+- Từng lời mời dùng chung slug hiển thị cùng kết quả. Không cộng số người bằng cách đếm tất cả dòng này mà không loại trùng mã thiệp.
+
+
 ## Lưu địa điểm Vinh/HCM trong RSVP (02/11/2026)
 
 - Tab ẩn `RSVP Online` được bổ sung cột **Y** (`Tiệc xác nhận (Vinh/HCM)`), có danh sách chọn `Vinh` và `HCM`. Không thay đổi các cột H–L chứa dữ liệu RSVP gốc.
@@ -11,7 +18,7 @@
 
 ## Link mời có tên để hiển thị ngay (02/11/2026)
 
-- **Cấu hình mới nhất:** các cột `Guest List!H` và `Guest List!S` tạo link `?i=<slug>&to=<ENCODEURL(tên từ RSVP Online!B)>`. Backend vẫn chỉ tin cậy mã `i`; `to` được dùng để vẽ tên trước khi request xác minh hoàn tất.
+- **Cấu hình mới nhất:** các cột `Guest List!I` và `Guest List!U` tạo link `?i=<slug>&to=<ENCODEURL(tên từ RSVP Online!B)>`. Backend vẫn chỉ tin cậy mã `i`; `to` được dùng để vẽ tên trước khi request xác minh hoàn tất.
 - **Đã kiểm tra trên Google Sheets:** 157 ô công thức, 156 link có hiệu lực; 156/156 tên giải mã và slug khớp registry. Không thêm tham số theo dõi. Bốn nhóm dòng đang dùng chung một mã thiệp được giữ nguyên.
 - **Không cần deploy lại Apps Script** chỉ để hỗ trợ `to`: regex đang chấp nhận link có tham số này. Khi cập nhật tên, link trong Sheet tự đổi; link cũ có thể hiển thị tên cũ ban đầu cho đến khi backend gửi lại tên hiện tại.
 - **Cần kiểm thử riêng trước khi gửi hàng loạt:** hàm `locateGuest_` hiện từ chối slug xuất hiện nhiều lần trong Guest List. Các nhóm dùng chung một mã đã tồn tại trước thay đổi; chưa có xác nhận end-to-end về hành vi RSVP của những nhóm này.
@@ -78,7 +85,7 @@ Các cột có thể dịch chuyển khi sửa bảng. Code.gs tìm tên cột d
 
 ## Kiểm thử
 1. Sao chép một link ở cột H hoặc S, mở bằng cửa sổ ẩn danh. Tên có dấu phải hiện dưới dòng `TRÂN TRỌNG KÍNH MỜI`.
-2. Gửi thử RSVP bằng một khách thử, nhập số người (ví dụ 2), kiểm tra trạng thái ở cột F/Q và **số người ở G/R** đúng như đã nhập.
+2. Gửi thử RSVP bằng một khách thử, nhập số người (ví dụ 2), kiểm tra trạng thái ở cột F/R, **số người ở G/S**, và **tiệc tham dự (khách chọn) ở H/T** đúng như đã nhập.
 3. Xác minh cột H–L của tab ẩn RSVP Online có phản hồi, tổng số người, lời nhắn và biên nhận; sau kiểm thử, hoàn nguyên dữ liệu thử.
 4. Chỉ bắt đầu gửi thiệp sau khi chức năng RSVP hoạt động đầu cuối.
 
@@ -116,7 +123,7 @@ Các công thức B/X trong tab kỹ thuật được cập nhật để theo t�
 
 - Trên website v33, chọn **Có** sẽ hiển thị trường **Số người tham dự (bao gồm bạn)**, cần nhập số nguyên 1–10. Khi chọn **Không**, form không yêu cầu nhập số và bộ nhận ghi 0.
 - Sau khi Google Sheets xác nhận lưu thành công qua mã biên nhận, website sẽ hiển thị thông báo kèm số người đã ghi nhận.
-- Không thêm bảng thứ ba; trong Guest List, ngay sau RSVP ở cột **F/Q** là cột **Số người tham dự G/R**, link dịch sang **H/S**.
+- Không thêm bảng thứ ba; trong Guest List, sau RSVP **F/R** là số người **G/S**, cột `tiệc tham dự (khách chọn)` **H/T**, tiếp theo là link **I/U**. Đây là cấu trúc hiện hành kể từ 02/11/2026.
 - Số người ở Guest List đọc trực tiếp tab ẩn RSVP Online (cột I) theo **đuôi link hiện tại**, không bị lẫn khi thay đổi tên. Giá trị 0 là Không tham dự; ô trống là Chưa phản hồi.
 - Vì các cột của bảng bên phải đã dịch chuyển, **Code.gs cũng đã đổi onEdit sang nhận dạng vị trí cột Tên khách mời theo tiêu đề**, cần Save và **Deploy → Manage deployments → Edit → New version → Deploy** để bật đúng quy trình lưu link sau launch. Website tự xuất bản khi GitHub Pages cập nhật, không cần deploy riêng.
 
