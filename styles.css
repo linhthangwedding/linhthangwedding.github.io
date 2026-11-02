@@ -744,14 +744,14 @@ footer{
 }
 
 /* Wedding website typography: exactly one font and three text sizes.
-   Body = 16px, heading = 24px, title = 48px on desktop and mobile.
+   Body = 15px, heading = 20px, title = 48px on desktop and mobile.
    Spotify's independently hosted iframe retains its own provider typography. */
 html .site-shell,
 html .site-shell *,
 html .site-shell *::before,
 html .site-shell *::after{
   font-family:"Noto Serif",Georgia,serif!important;
-  font-size:16px!important;
+  font-size:15px!important;
 }
 html .site-shell :is(
   .hero h1,.hero h1 em
@@ -764,7 +764,7 @@ html .site-shell :is(
   .story-signoff,.vinyl-song-name,.rsvp-invitee strong,
   .rsvp-closed-panel .rsvp-venue-summary
 ){
-  font-size:24px!important;
+  font-size:20px!important;
 }
 /* Three font sizes also apply to input fields, buttons and responsive layouts.
    Visual hierarchy below the heading tier comes from weight and spacing. */
