@@ -1,5 +1,15 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
+## Link mời có tên để hiển thị ngay (02/11/2026)
+
+- **Cấu hình mới nhất:** các cột `Guest List!H` và `Guest List!S` tạo link `?i=<slug>&to=<ENCODEURL(tên từ RSVP Online!B)>`. Backend vẫn chỉ tin cậy mã `i`; `to` được dùng để vẽ tên trước khi request xác minh hoàn tất.
+- **Đã kiểm tra trên Google Sheets:** 157 ô công thức, 156 link có hiệu lực; 156/156 tên giải mã và slug khớp registry. Không thêm tham số theo dõi. Bốn nhóm dòng đang dùng chung một mã thiệp được giữ nguyên.
+- **Không cần deploy lại Apps Script** chỉ để hỗ trợ `to`: regex đang chấp nhận link có tham số này. Khi cập nhật tên, link trong Sheet tự đổi; link cũ có thể hiển thị tên cũ ban đầu cho đến khi backend gửi lại tên hiện tại.
+- **Cần kiểm thử riêng trước khi gửi hàng loạt:** hàm `locateGuest_` hiện từ chối slug xuất hiện nhiều lần trong Guest List. Các nhóm dùng chung một mã đã tồn tại trước thay đổi; chưa có xác nhận end-to-end về hành vi RSVP của những nhóm này.
+- **Bảo mật:** tên đầy đủ nằm trong URL khi khách nhận link, dù browser sẽ loại `to` khỏi address bar sau khi đọc. Không coi mã slug là xác thực danh tính mạnh.
+
+
+
 ## Tăng tốc hiển thị tên khách lần đầu (02/11/2026)
 
 - **Nguyên nhân:** lần đầu mở link `?i=<slug>`, website phải đợi phản hồi Google Apps Script; backend trước đây còn tra ngược về `Guest List` dù cột B của tab ẩn `RSVP Online` đã chứa tên hiển thị chính xác bằng công thức liên kết trực tiếp.
@@ -123,7 +133,7 @@ Lỗi này có thể xảy ra khi Web App vẫn chạy một bản Code.gs cũ h
 
 ## Trở lại link gọn (29/10/2026)
 
-- **Link gửi khách** lấy từ `Guest List!H/S` chỉ có `?i=<slug>`. Đã bỏ `&to=<tên>` khỏi 162 công thức. `utm_source=chatgpt.com` và `#story` không có trong link gốc của Sheet.
+- **Lịch sử 29/10 (đã thay thế từ 02/11):** link gửi khách ở `Guest List!H/S` từng chỉ có `?i=<slug>`. Cấu hình hiện nay có thêm `&to=` để hiển thị tên ngay; vẫn không có `utm_source=chatgpt.com` hay `#story`.
 - Tên khách sẽ được truy vấn từ backend, nên lần mở đầu tiên có thể phải chờ Apps Script; trong cùng tab, tên đã xác minh có thể hiện sớm từ cache 15 phút.
 - Backend vẫn chấp nhận link cũ từng có `&to=` (để tương thích), nhưng **không dùng tham số này làm căn cứ RSVP**. Nếu Code.gs trên Web App vẫn là bản trước v43, link sạch cũng có thể hoạt động: nó dùng mã `i` trong liên kết.
 - Cần giữ PREP cho tới khi người dùng yêu cầu launch batch đầu tiên. Khi LIVE, những link đã gửi từ sau thời điểm launch được lưu lịch sử.
