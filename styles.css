@@ -175,8 +175,28 @@ button,input,textarea{font:inherit}
   text-align:left;
 }
 .fact:last-child{border-right:0}
-.fact-icon{font-family:"Noto Serif",serif;font-size:29px;color:#8b8279}
-.fact-icon svg{display:block;width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+/* Each celebration icon has the same drawing box and SVG stroke on all screens. */
+.fact-icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  color:#8b8279;
+  line-height:1;
+}
+.fact-icon svg{
+  display:block;
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:1.8;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
 .fact-label{
   display:block;
   font-size:10px;
