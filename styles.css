@@ -563,10 +563,6 @@ footer{
 
 
 /* Vintage turntable for OUR SONG. Spotify controls the actual audio. */
-.music-section{
-  text-align:center;
-  background:linear-gradient(180deg,#f6f3ed 0%,#ece7df 100%);
-}
 .vinyl-player{
   width:min(100%,610px);
   margin:0 auto;
@@ -723,7 +719,7 @@ html[lang="en"] .site-shell *{
   font-family:"Manrope",sans-serif!important;
   font-size:18px!important;
 }
-html[lang="en"] .site-shell :is(.hero h1,.hero h1 em,.invite-guest-name,.vinyl-song-name){
+html[lang="en"] .site-shell :is(.hero h1,.hero h1 em,.invite-guest-name){
   font-family:"Noto Serif",serif!important;
   font-size:44px!important;
 }
@@ -731,7 +727,7 @@ html[lang="en"] .site-shell :is(
   .monogram,.hero-date,.invite-copy,.invite-kicker,
   .event-title,.section-kicker,.fact strong,.fact small,
   .rsvp-closed-panel,.rsvp-invitee strong,.decline-message,
-  .story-signoff,.vinyl-disc-label
+  .story-signoff,.vinyl-disc-label,.vinyl-song-name
 ){
   font-family:"Noto Serif",serif!important;
   font-size:18px!important;
@@ -746,4 +742,40 @@ html[lang="en"] .site-shell :is(
 ){
   font-family:"Manrope",sans-serif!important;
   font-size:13px!important;
+}
+
+
+/* The record belongs in the HERO, replacing only its date/tagline lines.
+   Keep it compact enough for the right column and for narrow phones. */
+.hero-copy{padding:60px 34px 43px 30px}
+.hero-copy .fine-rule{margin:22px auto 14px}
+.hero .vinyl-player{
+  width:min(100%,360px);
+  margin:0;
+  padding:5px 8px 8px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.hero .turntable-deck{width:186px;height:164px}
+.hero .vinyl-play-button{width:152px;height:152px}
+.hero .vinyl-disc-label{width:62px;height:62px}
+.hero .turntable-arm{top:4px;right:0;height:83px;width:6px}
+.hero .turntable-arm::before{top:-10px;left:-7px;width:20px;height:20px}
+.hero .turntable-arm::after{bottom:-6px;left:-4px;width:14px;height:18px}
+.hero .vinyl-control{right:6px;bottom:6px;width:36px;height:36px}
+.hero .vinyl-control svg{width:19px;height:19px}
+.hero .vinyl-song-details{margin:4px auto 7px}
+.hero .vinyl-song-name{line-height:1.3}
+.hero .vinyl-song-artist{margin:3px 0 0}
+.hero .vinyl-status{margin:5px 0 0;min-height:17px}
+.hero .spotify-embed-slot iframe{height:80px}
+.hero .vinyl-spotify-link{margin:7px auto 0}
+@media(max-width:760px){
+  .hero-copy{padding:42px 22px 52px}
+  .hero .vinyl-player{max-width:340px}
+  .hero .turntable-deck{height:166px}
+  .hero .vinyl-play-button{width:152px;height:152px}
+  .hero .turntable-arm{top:4px;right:0;height:83px}
 }
