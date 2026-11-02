@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Linh and Thang//Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:linh-thang-wedding-20270228@linhthangwedding.github.io
+DTSTAMP:20261102T120000Z
+DTSTART:20270228T040000Z
+DTEND:20270228T070000Z
+SUMMARY:Linh & Thang's Wedding
+LOCATION:Capella Parkview\, Ho Chi Minh City\, Vietnam
+DESCRIPTION:Come celebrate our wedding day! Starts at 11:00 AM Vietnam time on Sunday\, February 28\, 2027. End time is approximate.
+URL:https://linhthangwedding.github.io/
+END:VEVENT
+END:VCALENDAR
