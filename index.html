@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://script.google.com">
   <link rel="dns-prefetch" href="//script.googleusercontent.com">
   <link rel="preload" as="image" href="assets/hero-eiffel-original-1024.jpg?v=27" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=43">
+  <link rel="stylesheet" href="styles.css?v=44">
   <!-- Begin the private guest lookup as soon as the HTML head is parsed.
        The response is held for script.js; no names are embedded in public files. -->
   <script>
@@ -177,6 +177,11 @@ Linh &amp; Thang ♡</p>
 
     <div id="rsvpClosedPanel" class="rsvp-closed-panel hidden" role="status" aria-live="polite">
       <p id="rsvpClosedMessage"></p>
+      <div id="rsvpEditControls" class="rsvp-edit-controls hidden">
+        <p data-i18n="rsvpEditHint">Plans changed? You can update your RSVP until February 14, 2027 (Vietnam time).</p>
+        <button type="button" id="rsvpEditButton" class="btn ghost" data-i18n="rsvpEditButton">Update my RSVP</button>
+      </div>
+      <a id="rsvpCalendarButton" class="btn primary rsvp-calendar-button hidden" href="assets/linh-thang-wedding.ics" download="Linh-Thang-Wedding.ics" data-i18n="rsvpCalendarButton">Add to my calendar</a>
     </div>
 
     <form id="rsvpForm" class="rsvp-form">
@@ -210,6 +215,7 @@ Linh &amp; Thang ♡</p>
       </div>
 
       <button class="btn primary full" type="submit" data-i18n="submit">Send my RSVP</button>
+      <button id="rsvpCancelEdit" class="btn ghost rsvp-cancel-edit hidden" type="button" data-i18n="rsvpCancelEdit">Back to my RSVP</button>
       <p id="formStatus" class="form-status" role="status"></p>
     </form>
   </section>
@@ -219,6 +225,6 @@ Linh &amp; Thang ♡</p>
   </footer>
 </main>
 
-<script src="script.js?v=49"></script>
+<script src="script.js?v=50"></script>
 </body>
 </html>
