@@ -35,6 +35,12 @@ const copy = {
     guestSummaryLabel:"Phản hồi dành cho",
     attendingQ:"Bạn có thể tham dự không?",
     yes:"Có",no:"Không",
+    venueQuestion:"Bạn sẽ tham dự tiệc ở đâu?",
+    venueVinh:"Vinh",
+    venueHCM:"TP. Hồ Chí Minh",
+    venueSummary:"Tiệc tham dự: {venue}",
+    venueRequired:"Vui lòng chọn Vinh hoặc TP. Hồ Chí Minh.",
+    rsvpMaintenance:"Phần xác nhận đang được cập nhật. Vui lòng thử lại khi hệ thống hoàn tất.",
     partySize:"Số người tham dự (bao gồm bạn)",
     partySizeHelp:"Vui lòng tính cả bạn trong tổng số người.",
     partySummary:"Bạn sẽ xác nhận: {count} người tham dự.",
@@ -96,6 +102,12 @@ const copy = {
     attendingQ:"Will you be joining us?",
     yes:"Yes, I'll be there!",
     no:"Sorry, I can't",
+    venueQuestion:"Which celebration will you be joining?",
+    venueVinh:"Vinh",
+    venueHCM:"Ho Chi Minh City",
+    venueSummary:"Celebration: {venue}",
+    venueRequired:"Please choose Vinh or Ho Chi Minh City.",
+    rsvpMaintenance:"RSVP is being updated. Please check back when the update is complete.",
     partySize:"How many are coming (including you)?",
     partySizeHelp:"Please include yourself in the total.",
     partySummary:"That's {count} in your group, including you.",
@@ -174,6 +186,8 @@ document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=
 const yesBranch=document.getElementById("yesBranch");
 const noBranch=document.getElementById("noBranch");
 const partySizeField= document.querySelector('#yesBranch [name="party_size"]');
+const venueFieldset=document.getElementById("rsvpVenueFieldset");
+const venueRadios=[...document.querySelectorAll('input[name="venue"]')];
 function refreshPartyConfirmation() {
   const value=Number(partySizeField.value);
   const el=document.getElementById("partyConfirmation");
@@ -188,6 +202,11 @@ document.querySelectorAll('input[name="attending"]').forEach(r=>r.addEventListen
   noBranch.classList.toggle("hidden",!no);
   partySizeField.disabled=!yes;
   partySizeField.required=yes;
+  venueFieldset.disabled=!yes;
+  venueRadios.forEach(option=>{
+    option.disabled=!yes;
+    option.required=yes;
+  });
   refreshPartyConfirmation();
 }));
 partySizeField.addEventListener("input",refreshPartyConfirmation);
@@ -267,6 +286,7 @@ const submitButton = document.querySelector('#rsvpForm button[type="submit"]');
 const rsvpForm = document.getElementById("rsvpForm");
 const rsvpClosedPanel = document.getElementById("rsvpClosedPanel");
 const rsvpClosedMessage = document.getElementById("rsvpClosedMessage");
+const rsvpVenueSummary=document.getElementById("rsvpVenueSummary");
 const rsvpEditControls = document.getElementById("rsvpEditControls");
 const rsvpEditButton = document.getElementById("rsvpEditButton");
 const rsvpActionRow = document.getElementById("rsvpActionRow");
@@ -276,8 +296,8 @@ const rsvpIntro = document.getElementById("rsvpIntro");
 // The exact cutoff is February 10, 2027 at 23:59:59.999, Vietnam (UTC+7).
 const RSVP_DEADLINE_UTC = Date.parse("2027-02-10T23:59:59.999+07:00");
 const rsvpDeadlinePassed = () => Date.now() > RSVP_DEADLINE_UTC;
-let rsvpView = {kind:"open",attending:null,partySize:0};
-let savedRsvp = {attending:null,partySize:0};
+let rsvpView = {kind:"open",attending:null,partySize:0,venue:""};
+let savedRsvp = {attending:null,partySize:0,venue:""};
 let rsvpEditAllowed = false;
 let editingRsvp = false;
 let submissionUncertain = false;
@@ -294,7 +314,7 @@ function refreshRsvpPanel() {
   const canChange = closed && confirmed && rsvpEditAllowed &&
     !rsvpDeadlinePassed() && !submissionUncertain;
   rsvpEditControls.classList.toggle("hidden", !canChange);
-  const showCalendar = closed && confirmed && rsvpView.attending === "yes";
+  const showCalendar = closed && confirmed && rsvpView.attending === "yes" && rsvpView.venue === "HCM";
   rsvpEditButton.classList.toggle("hidden", !canChange);
   rsvpCalendarButton.classList.toggle("hidden", !showCalendar);
   rsvpActionRow.classList.toggle("hidden", !(canChange || showCalendar));
@@ -307,11 +327,16 @@ function refreshRsvpPanel() {
   rsvpClosedMessage.textContent = copy[lang][key]
     .replace("{name}", inviteDisplayName || (lang === "vi" ? "bạn" : "friend"))
     .replace("{count}", String(rsvpView.partySize));
+  const selectedVenue = rsvpView.venue === "Vinh" ? copy[lang].venueVinh :
+    rsvpView.venue === "HCM" ? copy[lang].venueHCM : "";
+  rsvpVenueSummary.classList.toggle("hidden", !(confirmed && rsvpView.attending === "yes" && selectedVenue));
+  rsvpVenueSummary.textContent = selectedVenue ? copy[lang].venueSummary.replace("{venue}",selectedVenue) : "";
 }
-function closeRsvp(kind, attending, count) {
-  rsvpView = {kind, attending:attending || null, partySize:Number(count)||0};
+function closeRsvp(kind, attending, count, venue) {
+  const selectedVenue = attending === "yes" && ["Vinh","HCM"].includes(venue) ? venue : "";
+  rsvpView = {kind, attending:attending || null, partySize:Number(count)||0,venue:selectedVenue};
   if (kind === "responded") {
-    savedRsvp = {attending:attending || null, partySize:Number(count)||0};
+    savedRsvp = {...rsvpView};
   }
   editingRsvp = false;
   inviteReady = false;
@@ -322,12 +347,13 @@ rsvpEditButton.addEventListener("click", () => {
   if (!rsvpEditAllowed || rsvpDeadlinePassed() || submissionUncertain ||
       rsvpView.kind !== "responded" || !savedRsvp.attending) return;
   editingRsvp = true;
-  rsvpView = {kind:"open",attending:null,partySize:0};
+  rsvpView = {kind:"open",attending:null,partySize:0,venue:""};
   inviteReady = true;
   const savedChoice = document.querySelector(
     'input[name="attending"][value="' + savedRsvp.attending + '"]'
   );
   savedChoice.checked = true;
+  venueRadios.forEach(option=>{option.checked=option.value===savedRsvp.venue;});
   partySizeField.value = String(savedRsvp.partySize || 1);
   savedChoice.dispatchEvent(new Event("change", {bubbles:true}));
   refreshRsvpPanel();
@@ -335,7 +361,7 @@ rsvpEditButton.addEventListener("click", () => {
 });
 rsvpCancelEdit.addEventListener("click", () => {
   if (submissionUncertain || rsvpCancelEdit.disabled) return;
-  closeRsvp("responded", savedRsvp.attending, savedRsvp.partySize);
+  closeRsvp("responded", savedRsvp.attending, savedRsvp.partySize, savedRsvp.venue);
 });
 document.getElementById("rsvpInvite").value = inviteCode;
 // All RSVP submissions require a verified personalized link.
@@ -433,21 +459,22 @@ async function resolveInviteName() {
       if (guest && guest.valid === true && typeof guest.name === "string" && guest.name.trim()) {
         applyGuestName(guest.name);
         cacheVerifiedInviteName(inviteDisplayName);
-        inviteReady = guest.canRsvp === true && !rsvpDeadlinePassed();
-        rsvpEditAllowed = guest.canEdit === true && !rsvpDeadlinePassed();
+        const venueBackendReady = guest.venueSupported === true;
+        inviteReady = venueBackendReady && guest.canRsvp === true && !rsvpDeadlinePassed();
+        rsvpEditAllowed = venueBackendReady && guest.canEdit === true && !rsvpDeadlinePassed();
         if (guest.responded === true) {
-          closeRsvp("responded", guest.attending, guest.partySize);
+          closeRsvp("responded", guest.attending, guest.partySize, guest.venue);
         } else if (guest.deadlinePassed === true || rsvpDeadlinePassed()) {
           closeRsvp("deadline");
         } else if (!inviteReady) {
           closeRsvp("notready");
         } else {
-          rsvpView = {kind:"open",attending:null,partySize:0};
+          rsvpView = {kind:"open",attending:null,partySize:0,venue:""};
           refreshRsvpPanel();
         }
         submitButton.disabled = !inviteReady;
         showInviteNotice(null);
-        showRSVPStatus(null);
+        showRSVPStatus(venueBackendReady ? null : "rsvpMaintenance");
         return;
       }
       if (guest && guest.invalid === true) {
@@ -495,6 +522,12 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
   }
   if (!["yes", "no"].includes(data.attending)) return;
   const people=data.attending==="yes" ? Number(data.party_size) : 0;
+  const venue=data.attending==="yes" ? String(data.venue||"") : "";
+  if (data.attending==="yes" && !["Vinh","HCM"].includes(venue)) {
+    showRSVPStatus("venueRequired");
+    venueRadios[0].focus();
+    return;
+  }
   if (data.attending==="yes" &&
       (!Number.isInteger(people)||people<1||people>10)) {
     showRSVPStatus("partySizeInvalid");
@@ -508,6 +541,7 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
     invite: inviteCode,
     attending: data.attending,
     party_size: String(people),
+    venue: venue,
     wishes: data.wishes || "",
     language: lang,
     receipt: receipt
@@ -529,7 +563,7 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
       if (delay) await wait(delay);
       try {
         const check = await readRSVPReceipt(receipt);
-        if (check?.saved === true) {
+        if (check?.saved === true && (data.attending==="no" || check.venue===venue)) {
           stored = true;
           break;
         }
@@ -542,9 +576,9 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
     }
     if (stored) {
       showRSVPConfirmation(data.attending, people);
-      closeRsvp("responded", data.attending, people);
+      closeRsvp("responded", data.attending, people, venue);
     } else if (previousReply) {
-      closeRsvp("responded", previousReply.attending, previousReply.partySize);
+      closeRsvp("responded", previousReply.attending, previousReply.partySize, previousReply.venue);
     } else {
       // A no-cors POST can succeed despite a failed receipt lookup. Avoid
       // offering a second submission until the page checks the server again.
