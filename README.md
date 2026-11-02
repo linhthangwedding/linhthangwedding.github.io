@@ -1,14 +1,13 @@
 # Thiệp cưới Linh & Thắng
 
-## Bản EN: 2 font / 3 cỡ chữ và đĩa than phát nhạc (02/11/2026)
+## Typography 1 font / 3 cấp chữ và đĩa than ở hero (02/11/2026)
 
-- Typography tiếng Anh chuẩn hóa ở `styles.css`: **Manrope** (nội dung và chú thích) + **Noto Serif** (tiêu đề và điểm nhấn); chỉ có **13px / 18px / 44px** trong phần văn bản thuộc website. Các quy tắc chỉ áp dụng khi `html lang="en"`; bản Việt vẫn giữ style cũ. Trình phát Spotify là iframe bên thứ ba và có typography riêng, không thể chỉnh CSS bên trong.
-- **Vị trí đúng:** đĩa than nằm ở phần **hero**, bên phải ảnh cưới, dưới tên `Linh & Thang`, thay đúng hai dòng ngày `28 · 02 · 2027` và tagline cũ. Thiết kế có nút phát/dừng và animation khi Spotify báo đang phát. Nhạc tạm thời: `Beautiful in White`, **Shane Filan**, URI `spotify:track:0lUdYoSr8Hm3GL0HZld4ac`.
-- Nhạc được Spotify phục vụ qua **iframe API chính thức**, không có file âm thanh hoặc lời bài hát lưu trên GitHub, **không autoplay**. Khách có thể điều khiển bằng đĩa than hoặc trình phát nhúng; link mở Spotify là phương án dự phòng. Mức phát nhạc đầy đủ/xem trước phụ thuộc người nghe và Spotify.
-- **A LITTLE ABOUT US đã được khôi phục nguyên vẹn** từ phiên bản trước khi đặt nhầm nhạc vào Story: cả nội dung, chữ ký và ba ảnh Polaroid hiển thị đúng thứ tự cũ. Không còn `<template id="storyGalleryArchive">`.
-- Không thay đổi backend RSVP, danh sách khách, thông tin hai tiệc hay liên kết lịch .ics. `index.html` dùng `styles.css?v=51` và `script.js?v=59` để tránh cache cũ; Spotify dùng embed rút gọn 80px ở hero.
-- Kiểm tra tĩnh JavaScript/CSS và nội dung HTML đã qua; **chưa thử được audio thực tế trên website live hoặc thiết bị di động**, cần xác nhận trong trình duyệt có Spotify.
-
+- Typography trên **cả hai phiên bản EN/VI**: duy nhất **Noto Serif** từ Google Fonts, dùng chính xác **48px (Title), 24px (Heading 1), 16px (Body text)** trong phần website. Các nhãn, điều khiển, chú thích và phiên bản mobile đều dùng một trong ba cỡ này. Spotify iframe của bên thứ ba có kiểu chữ riêng nằm ngoài phạm vi CSS.
+- Đĩa than nằm ở **hero**, dưới `Linh & Thang`, thay dòng ngày và tagline cũ. `A LITTLE ABOUT US` đã khôi phục nguyên vẹn: đoạn văn, chữ ký, ba ảnh Polaroid và thứ tự ảnh.
+- Bài nhạc hiện hành: **I Think They Call This Love (Cover) – Matthew Ifield**, Spotify track `spotify:track:14mT8BCOXiUUcGlb7KujkT` (trùng bản thu do Matthew Ifield thể hiện). Dùng Spotify iframe API chính thức; không lưu bản thu hay lời nhạc lên GitHub.
+- Trang bắt đầu tải API Spotify từ `<head>`; khi player báo `ready`, mã gọi `play()` **một lần** để thử tự phát. Safari/Chrome hoặc Spotify có thể chặn âm thanh khi chưa có tương tác. Nếu bị chặn, người xem nhấn đĩa than để phát. Đĩa chỉ quay khi trạng thái thực sự là playing, không giả vờ đã phát.
+- Không thay đổi backend RSVP, danh sách khách, ảnh hero, nội dung hai tiệc hay liên kết lịch `.ics`. `index.html` sử dụng `styles.css?v=55` và `script.js?v=62`.
+- Đã kiểm thử mã nguồn tĩnh và cú pháp JavaScript; cần kiểm thử nghe thực tế trên iPhone/Safari và Chrome để xác minh hạn chế autoplay theo trình duyệt.
 
 ## Hiển thị lựa chọn Vinh/HCM trong Guest List (02/11/2026)
 
