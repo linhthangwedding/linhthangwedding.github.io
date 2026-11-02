@@ -673,7 +673,7 @@ resolveInviteName();
   window.onSpotifyIframeApiReady = (IFrameAPI) => {
     IFrameAPI.createController(
       container,
-      {uri:trackUri, width:"100%", height:152},
+      {uri:trackUri, width:"100%", height:80},
       (embedController) => {
         controller = embedController;
         button.disabled = false;
