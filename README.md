@@ -11,6 +11,8 @@ Bản `apps-script/Code.gs` mới sử dụng CacheService với TTL 300 giây �
 
 Website thiệp cưới: https://linhthangwedding.github.io
 
+**Cập nhật giao diện 02/11/2026:** Dòng deadline chỉ sử dụng múi giờ Việt Nam và Central European Time (CET), không liệt kê từng quốc gia. Trong trạng thái RSVP đã xác nhận Có, `Update my RSVP` và `Add to my calendar` hiển thị cạnh nhau trên cùng một hàng, kể cả màn hình mobile. Tên khách xác minh từ Apps Script được yêu cầu từ đầu `<head>` trước các stylesheet và được hiển thị ngay khi có kết quả, không đợi bundle JavaScript cuối trang; không đưa tên khách vào repository. Lần mở đầu vẫn phụ thuộc vào tốc độ Google Apps Script.
+
 **Link Add to calendar duy nhất (02/11/2026):** `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics`. Cả nút Add to calendar ở thông tin sự kiện và nút Add to my calendar sau xác nhận RSVP đều tải đúng file .ics này. Không dùng link Google Calendar hoặc tạo link calendar khác trong invitation.
 
 **English-only preview (v37):** Mọi nội dung hiển thị đã được rà lại theo hướng casual, ấm áp; ẩn switch VN/EN trong `index.html` và đặt `setLang("en")` trong `script.js`. Nội dung tiếng Việt **vẫn được giữ** ở `copy.vi` để bật lại sau. Khách mời vẫn giữ tên tiếng Việt theo Guest List. Không thay đổi backend/RSVP, hình ảnh, địa điểm hoặc lịch tiệc.
