@@ -75,7 +75,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-eiffel-original-1024.jpg?v=27" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=46">
+  <link rel="stylesheet" href="styles.css?v=47">
 </head>
 <body>
 <main class="site-shell">
@@ -139,39 +139,73 @@
 
     <div class="ornament"><span></span><i>♥</i><span></span></div>
 
-    <p class="event-title" data-i18n="wedding">OUR WEDDING DAY</p>
+    <p class="event-title" data-i18n="celebrationsTitle">OUR CELEBRATIONS</p>
 
-    <div class="event-facts">
-      <div class="fact">
-        <div class="fact-icon">□</div>
-        <div>
-          <span class="fact-label" data-i18n="dateLabel">Date</span>
-          <strong>28.02.2027</strong>
+    <div class="celebration-panel celebration-panel--vinh">
+      <p class="celebration-heading" data-i18n="vinhCelebration">VINH CELEBRATION</p>
+      <div class="event-facts">
+        <div class="fact">
+          <div class="fact-icon">□</div>
+          <div>
+            <span class="fact-label" data-i18n="dateLabel">Date</span>
+            <strong>16.02.2027</strong>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon clock">◷</div>
+          <div>
+            <span class="fact-label" data-i18n="timeLabel">Time</span>
+            <strong>11:00</strong>
+          </div>
+        </div>
+        <div class="fact location-fact">
+          <div class="fact-icon">⌖</div>
+          <div>
+            <span class="fact-label" data-i18n="locationLabel">Venue</span>
+            <strong data-i18n="vinhVenue">Giao Tế Restaurant</strong>
+            <small data-i18n="vinhCity">Vinh City, Nghệ An, Vietnam</small>
+          </div>
         </div>
       </div>
-
-      <div class="fact">
-        <div class="fact-icon clock">◷</div>
-        <div>
-          <span class="fact-label" data-i18n="timeLabel">Time</span>
-          <strong>11:00</strong>
-        </div>
-      </div>
-
-      <div class="fact location-fact">
-        <div class="fact-icon">⌖</div>
-        <div>
-          <span class="fact-label" data-i18n="locationLabel">Venue</span>
-          <strong>Capella Parkview</strong>
-          <small data-i18n="city">Ho Chi Minh City, Vietnam</small>
-        </div>
+      <div class="celebration-links">
+        <a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Nh%C3%A0+h%C3%A0ng+Giao+T%E1%BA%BF+Vinh+Ngh%E1%BB%87+An" target="_blank" rel="noopener" data-i18n="vinhDirections">Directions to Giao Tế ↗</a>
       </div>
     </div>
 
-    <div class="invite-actions">
+    <div class="celebration-panel celebration-panel--hcm">
+      <p class="celebration-heading" data-i18n="hcmCelebration">HO CHI MINH CITY CELEBRATION</p>
+      <div class="event-facts">
+        <div class="fact">
+          <div class="fact-icon">□</div>
+          <div>
+            <span class="fact-label" data-i18n="dateLabel">Date</span>
+            <strong>28.02.2027</strong>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon clock">◷</div>
+          <div>
+            <span class="fact-label" data-i18n="timeLabel">Time</span>
+            <strong>11:00</strong>
+          </div>
+        </div>
+        <div class="fact location-fact">
+          <div class="fact-icon">⌖</div>
+          <div>
+            <span class="fact-label" data-i18n="locationLabel">Venue</span>
+            <strong>Capella Parkview</strong>
+            <small data-i18n="city">Ho Chi Minh City, Vietnam</small>
+          </div>
+        </div>
+      </div>
+      <div class="celebration-links">
+        <a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Capella+Parkview+Ho+Chi+Minh+City" target="_blank" rel="noopener" data-i18n="hcmDirections">Directions to Capella Parkview ↗</a>
+        <a class="text-link" href="https://linhthangwedding.github.io/assets/linh-thang-wedding.ics" download="Linh-Thang-Wedding.ics" data-i18n="saveDate">Add to calendar</a>
+      </div>
+    </div>
+
+    <div class="invite-actions celebration-rsvp-action">
       <a class="btn primary" href="#rsvp" data-i18n="rsvpButton">Let us know</a>
-      <a class="btn ghost" href="https://www.google.com/maps/search/?api=1&query=Capella+Parkview+Ho+Chi+Minh+City" target="_blank" rel="noopener" data-i18n="direction">Get directions ↗</a>
-      <a class="text-link" href="https://linhthangwedding.github.io/assets/linh-thang-wedding.ics" download="Linh-Thang-Wedding.ics" data-i18n="saveDate">Add to calendar</a>
     </div>
   </section>
 
@@ -264,6 +298,6 @@ Linh &amp; Thang ♡</p>
   </footer>
 </main>
 
-<script src="script.js?v=55"></script>
+<script src="script.js?v=56"></script>
 </body>
 </html>
