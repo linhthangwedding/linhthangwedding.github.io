@@ -463,6 +463,8 @@ function doGet(e) {
       valid:true,
       name:guest.name.slice(0,120),
       canRsvp:canRsvp_(guest.event) && !reply.responded && !rsvpDeadlinePassed_(),
+      // Edits are allowed for the same verified invitation until the deadline.
+      canEdit:canRsvp_(guest.event) && !rsvpDeadlinePassed_(),
       responded:reply.responded,
       attending:reply.attending,
       partySize:reply.partySize,
@@ -496,8 +498,11 @@ function doPost(e) {
     if (getInvitationPhase_(book).live) syncAliasSnapshots_(book);
     var found=findInvite_(book,invite);
     if (!found) return json_({ok:false,error:"unknown_invitation"});
-    if (getRecordedReply_(found.row).responded)
-      return json_({ok:false,error:"already_responded"});
+    // Updating an existing reply is permitted through the same verified
+    // personal invitation. Every update remains deadline- and event-gated.
+    // Repeated delivery of an identical receipt is idempotent.
+    if (receipt === String(found.row[11] || "").trim())
+      return json_({ok:true,unchanged:true});
     var guest=locateGuest_(book,found.row);
     if (!guest) return json_({ok:false,error:"guest_link_not_found"});
     if (!canRsvp_(guest.event))
@@ -506,7 +511,10 @@ function doPost(e) {
     var count=attending==="yes" ?
       Math.max(1,Math.min(10,parseInt(p.party_size,10)||1)) : 0;
     var answer=attending==="yes"?"Có":"Không";
-    var note=cleanText_(p.wishes,1000);
+    // An attendance-only amendment must not accidentally erase a previous
+    // written wish. A newly provided nonempty wish replaces the old one.
+    var submittedNote=cleanText_(p.wishes,1000);
+    var note=submittedNote || String(found.row[9] || "");
     var time=new Date();
 
     found.registry.getRange(found.index,8,1,5)
