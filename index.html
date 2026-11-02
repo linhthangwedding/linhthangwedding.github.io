@@ -206,6 +206,7 @@ Linh &amp; Thang ♡</p>
 
     <div id="rsvpClosedPanel" class="rsvp-closed-panel hidden" role="status" aria-live="polite">
       <p id="rsvpClosedMessage"></p>
+      <p id="rsvpVenueSummary" class="rsvp-venue-summary hidden"></p>
       <div id="rsvpEditControls" class="rsvp-edit-controls hidden">
         <p data-i18n="rsvpEditHint">Plans changed? You can update your RSVP until February 10, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (CET).</p>
       </div>
@@ -232,6 +233,13 @@ Linh &amp; Thang ♡</p>
       </fieldset>
 
       <div id="yesBranch" class="branch hidden">
+        <fieldset id="rsvpVenueFieldset" disabled>
+          <legend data-i18n="venueQuestion">Which celebration will you be joining?</legend>
+          <div class="choice-row">
+            <label class="choice"><input type="radio" name="venue" value="Vinh" required disabled><span data-i18n="venueVinh">Vinh</span></label>
+            <label class="choice"><input type="radio" name="venue" value="HCM" required disabled><span data-i18n="venueHCM">Ho Chi Minh City</span></label>
+          </div>
+        </fieldset>
         <label>
           <span data-i18n="partySize">How many are coming (including you)?</span>
           <input type="number" name="party_size" min="1" max="10" step="1" value="1" inputmode="numeric" disabled>
@@ -256,6 +264,6 @@ Linh &amp; Thang ♡</p>
   </footer>
 </main>
 
-<script src="script.js?v=54"></script>
+<script src="script.js?v=55"></script>
 </body>
 </html>
