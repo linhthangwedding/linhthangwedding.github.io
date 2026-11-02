@@ -1,5 +1,14 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
+## Lưu địa điểm Vinh/HCM trong RSVP (02/11/2026)
+
+- Tab ẩn `RSVP Online` được bổ sung cột **Y** (`Tiệc xác nhận (Vinh/HCM)`), có danh sách chọn `Vinh` và `HCM`. Không thay đổi các cột H–L chứa dữ liệu RSVP gốc.
+- `Code.gs` nhận `venue=Vinh|HCM` khi RSVP **Có**, xác thực lựa chọn và ghi vào Y; khi **Không** thì để Y trống. `doGet` trả `venue` cùng các trạng thái `responded`, `partySize`, `venueSupported` để website cho chỉnh sửa được lựa chọn cũ.
+- Cả nhóm `Đám cưới` và `Dạm ngõ + Đám hỏi` đều có thể RSVP. Website chỉ hiển thị tệp lịch HCM cho người đã chọn HCM. Cần redeploy `Code.gs` để bật backend mới; giao diện tạm khóa gửi cho đến khi API trả `venueSupported:true`.
+- **Triển khai:** Master Wedding Planner → Extensions → Apps Script → thay toàn bộ `Code.gs` bằng bản trong repo → Save → Deploy → Manage deployments → Edit → New version → Deploy. Giữ URL `/exec`; không chạy `activateWeddingInvitations`.
+- **Không gửi RSVP thử bằng dữ liệu thật** khi chưa chuẩn bị hoàn nguyên phản hồi. Những link chung mã thiệp cần được kiểm thử riêng và có thể đang không gửi được do kiểm tra trùng link trong `locateGuest_`.
+
+
 ## Link mời có tên để hiển thị ngay (02/11/2026)
 
 - **Cấu hình mới nhất:** các cột `Guest List!H` và `Guest List!S` tạo link `?i=<slug>&to=<ENCODEURL(tên từ RSVP Online!B)>`. Backend vẫn chỉ tin cậy mã `i`; `to` được dùng để vẽ tên trước khi request xác minh hoàn tất.
