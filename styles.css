@@ -761,7 +761,7 @@ html .site-shell :is(
 html .site-shell :is(
   .monogram,.invite-guest-name,.invite-kicker,.event-title,
   .section-kicker,.celebration-heading,.fact strong,
-  .story-signoff,.vinyl-song-name,.rsvp-invitee strong,
+  .story-signoff,.rsvp-invitee strong,
   .rsvp-closed-panel .rsvp-venue-summary
 ){
   font-size:20px!important;
