@@ -265,6 +265,7 @@ button,input,textarea{font:inherit}
   color:#6d655d;
   font-size:13px;
   font-weight:600;
+  white-space:pre-line;
 }
 .rsvp-closed-panel{
   max-width:650px;
