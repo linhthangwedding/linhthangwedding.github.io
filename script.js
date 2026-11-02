@@ -19,14 +19,14 @@ const copy = {
     storySignoff:"Thương mến,\nLinh & Thắng ♡",
     rsvpTitle:"XÁC NHẬN THAM DỰ",
     rsvpIntro:"Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.",
-    rsvpDeadline:"Hạn xác nhận: Chủ nhật, 14/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
+    rsvpDeadline:"Hạn xác nhận: Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
     rsvpReceivedIntro:"Chúng mình đã nhận được lời xác nhận của bạn.",
     rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
     rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn).",
     rsvpClosedNo:"Cảm ơn {name} đã phản hồi! Chúng mình đã ghi nhận bạn không thể tham dự.",
-    rsvpClosedDeadline:"Hạn xác nhận đã kết thúc vào ngày 14/02/2027. Nếu cần thay đổi kế hoạch, vui lòng liên hệ trực tiếp Linh & Thang.",
+    rsvpClosedDeadline:"Hạn xác nhận đã kết thúc vào ngày 10/02/2027. Nếu cần thay đổi kế hoạch, vui lòng liên hệ trực tiếp Linh & Thang.",
     rsvpClosedNotReady:"Thiệp này hiện chưa mở nhận phản hồi. Vui lòng liên hệ Linh & Thang.",
-    rsvpEditHint:"Có thay đổi kế hoạch? Bạn có thể cập nhật câu trả lời đến hết ngày 14/02/2027 (giờ Việt Nam).",
+    rsvpEditHint:"Có thay đổi kế hoạch? Bạn có thể cập nhật phản hồi đến 23:59 ngày 10/02/2027 (giờ Việt Nam) / 17:59 (CET).",
     rsvpEditButton:"Chỉnh sửa xác nhận",
     rsvpEditingIntro:"Bạn có thể thay đổi câu trả lời bên dưới rồi lưu lại.",
     rsvpCancelEdit:"Quay lại xác nhận",
@@ -79,14 +79,14 @@ const copy = {
     storySignoff:"With love,\nLinh & Thang ♡",
     rsvpTitle:"CAN YOU MAKE IT?",
     rsvpIntro:"We really hope you can join us! Let us know below so we can plan for you.",
-    rsvpDeadline:"Please RSVP by Sunday, February 14, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (Central European Time, CET).",
+    rsvpDeadline:"Please RSVP by Wednesday, February 10, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (Central European Time, CET).",
     rsvpReceivedIntro:"We've received your reply. Thank you for letting us know!",
     rsvpDeadlinePassedIntro:"RSVP is now closed.",
     rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you.",
     rsvpClosedNo:"Thank you, {name}! We've noted that you can't make it.",
-    rsvpClosedDeadline:"RSVP closed on February 14, 2027. Please contact Linh & Thang directly if your plans change.",
+    rsvpClosedDeadline:"RSVP closed on February 10, 2027. Please contact Linh & Thang directly if your plans change.",
     rsvpClosedNotReady:"RSVP isn't open for this invitation. Please contact Linh & Thang.",
-    rsvpEditHint:"Plans changed? You can update your RSVP until February 14, 2027 (Vietnam time).",
+    rsvpEditHint:"Plans changed? You can update your RSVP until February 10, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (CET).",
     rsvpEditButton:"Update my RSVP",
     rsvpEditingIntro:"Need to make a change? Update your reply below and save your changes.",
     rsvpCancelEdit:"Back to my RSVP",
@@ -273,8 +273,8 @@ const rsvpActionRow = document.getElementById("rsvpActionRow");
 const rsvpCalendarButton = document.getElementById("rsvpCalendarButton");
 const rsvpCancelEdit = document.getElementById("rsvpCancelEdit");
 const rsvpIntro = document.getElementById("rsvpIntro");
-// The exact cutoff is Feb 14, 2027 at 23:59:59.999, Vietnam (UTC+7).
-const RSVP_DEADLINE_UTC = Date.parse("2027-02-14T23:59:59.999+07:00");
+// The exact cutoff is February 10, 2027 at 23:59:59.999, Vietnam (UTC+7).
+const RSVP_DEADLINE_UTC = Date.parse("2027-02-10T23:59:59.999+07:00");
 const rsvpDeadlinePassed = () => Date.now() > RSVP_DEADLINE_UTC;
 let rsvpView = {kind:"open",attending:null,partySize:0};
 let savedRsvp = {attending:null,partySize:0};
