@@ -328,7 +328,16 @@ function refreshRsvpPanel() {
   const canChange = closed && confirmed && rsvpEditAllowed &&
     !rsvpDeadlinePassed() && !submissionUncertain;
   rsvpEditControls.classList.toggle("hidden", !canChange);
-  const showCalendar = closed && confirmed && rsvpView.attending === "yes" && rsvpView.venue === "HCM";
+  const showCalendar = closed && confirmed && rsvpView.attending === "yes" &&
+    (rsvpView.venue === "HCM" || rsvpView.venue === "Vinh");
+  if (showCalendar) {
+    const isVinh = rsvpView.venue === "Vinh";
+    rsvpCalendarButton.href = isVinh
+      ? "https://linhthangwedding.github.io/assets/linh-thang-wedding-vinh.ics"
+      : "https://linhthangwedding.github.io/assets/linh-thang-wedding.ics";
+    rsvpCalendarButton.download = isVinh
+      ? "Linh-Thang-Wedding-Vinh.ics" : "Linh-Thang-Wedding.ics";
+  }
   rsvpEditButton.classList.toggle("hidden", !canChange);
   rsvpCalendarButton.classList.toggle("hidden", !showCalendar);
   rsvpActionRow.classList.toggle("hidden", !(canChange || showCalendar));
