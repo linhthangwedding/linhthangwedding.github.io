@@ -245,6 +245,12 @@ button,input,textarea{font:inherit}
   line-height:1.8;
 }
 .rsvp-closed-panel p{margin:0}
+.rsvp-closed-panel .rsvp-venue-summary{
+  margin:8px auto 0;
+  font:600 13px/1.6 "Manrope",system-ui,sans-serif;
+  color:#635a50;
+}
+
 .rsvp-edit-controls{
   display:flex;
   flex-direction:column;
@@ -324,6 +330,10 @@ button,input,textarea{font:inherit}
 }
 .choice input:checked+span{background:#817b74;color:#fff;border-color:#817b74}
 .branch{display:grid;gap:18px}
+#rsvpVenueFieldset{margin:0;padding:0;border:0}
+#rsvpVenueFieldset legend{margin-bottom:3px}
+#rsvpVenueFieldset .choice span{padding:8px 12px;text-align:center}
+
 .hidden{display:none!important}
 .full{width:100%}
 .form-status{text-align:center;color:#7a726b;font-size:12px;min-height:18px}
