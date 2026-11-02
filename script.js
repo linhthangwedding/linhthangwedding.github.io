@@ -121,7 +121,7 @@ const copy = {
     storySignoff:"With love,\nLinh & Thang ♡",
     rsvpTitle:"CAN YOU MAKE IT?",
     rsvpIntro:"We really hope you can join us! Let us know below so we can plan for you.",
-    rsvpDeadline:"Please RSVP by Wednesday, February 10, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (Central European Time, CET).",
+    rsvpDeadline:"Please RSVP by Wednesday, February 10, 2027,\nat 11:59 PM (Vietnam time) or 5:59 PM (European time).",
     rsvpReceivedIntro:"We've received your reply. Thank you for letting us know!",
     rsvpDeadlinePassedIntro:"RSVP is now closed.",
     rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you.",
