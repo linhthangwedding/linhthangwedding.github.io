@@ -176,6 +176,7 @@ button,input,textarea{font:inherit}
 }
 .fact:last-child{border-right:0}
 .fact-icon{font-family:"Noto Serif",serif;font-size:29px;color:#8b8279}
+.fact-icon svg{display:block;width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .fact-label{
   display:block;
   font-size:10px;
