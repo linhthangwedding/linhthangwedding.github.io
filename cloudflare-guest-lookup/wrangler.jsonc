@@ -1,9 +1,0 @@
-{
-  "name": "linh-thang-guest-lookup",
-  "main": "worker.mjs",
-  "compatibility_date": "2026-10-29",
-  "workers_dev": true,
-  "observability": {
-    "enabled": false
-  }
-}
