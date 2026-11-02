@@ -2,8 +2,10 @@
 
 ## Cập nhật RSVP và tải lịch (.ics) – 02/11/2026
 
+**Thời hạn mới (áp dụng cho gửi và chỉnh sửa):** Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam), tương đương 17:59 (CET). Đây là mốc backend phải kiểm tra. Để kích hoạt mốc này, copy `Code.gs` mới từ GitHub vào Apps Script và **Deploy → Manage deployments → Edit → New version → Deploy**; giữ nguyên URL `/exec`.
+
 - Sau khi khách phản hồi, website xác nhận trạng thái, đồng thời hiển thị **Add to my calendar** nếu khách đã chọn Có. File `assets/linh-thang-wedding.ics` chứa lịch ngày 28/02/2027 bắt đầu 11:00 (giờ Việt Nam), thời điểm kết thúc 14:00 là **ước lượng**.
-- Website có nút **Update my RSVP** để mở lại form, giữ lựa chọn Có/Không và số người cũ; có thể đổi lựa chọn, số người và gửi lại tới 23:59:59 ngày 14/02/2027 (giờ Việt Nam).
+- Website có nút **Update my RSVP** để mở lại form, giữ lựa chọn Có/Không và số người cũ; có thể đổi lựa chọn, số người và gửi lại tới 23:59:59 ngày 10/02/2027 (giờ Việt Nam).
 - Backend `Code.gs` phải được **copy và redeploy vào Web App hiện tại** thì nút sửa mới xuất hiện; API trả `canEdit` cho link hợp lệ và ghi đè câu trả lời cũ với biên nhận mới. Lời chúc cũ được giữ khi khách không nhập lời chúc mới.
 - Khi redeploy, giữ URL `/exec` hiện tại, không tạo deployment mới, không chạy `activateWeddingInvitations`. Test bằng một khách thử và kiểm tra ở cả Guest List lẫn RSVP Online trước khi gửi thiệp chính thức.
 - Nút **Add to my calendar** không yêu cầu thay đổi Apps Script; nó chỉ phụ thuộc vào trạng thái đã xác nhận Có.
@@ -14,7 +16,7 @@
 - Không dùng Cloudflare, không đưa Guest List hoặc mã thiệp gốc lên GitHub.
 - `getInvitationPhase_` đọc V2:W2 trong một lần, còn `findInvite_` vẫn xác minh **link PREP mới nhất** hoặc link lịch sử hợp lệ **sau LIVE**. Không lấy tính hợp lệ của link từ cache.
 - `locateGuestForDisplay_` đọc trực tiếp dòng nguồn P của RSVP Online (sau khi kiểm tra slug hiện tại và link Guest List) thay vì quét mọi link ở lần tải đầu. Nếu dòng nguồn không khớp, hệ thống quay về `locateGuest_` để tra cứu nghiêm ngặt.
-- Tên và vị trí đã xác minh được giữ tối đa **300 giây** trong `CacheService.getScriptCache()`. Tên được xóa khỏi cache khi sửa tên bằng thao tác thủ công trên Guest List. Trạng thái RSVP, quyền gửi và deadline luôn đọc dữ liệu thật, **không cache**. Bản mới cho phép khách đã phản hồi chỉnh sửa cho đến hết 14/02/2027 (giờ Việt Nam), nếu link cá nhân và Event còn hợp lệ.
+- Tên và vị trí đã xác minh được giữ tối đa **300 giây** trong `CacheService.getScriptCache()`. Tên được xóa khỏi cache khi sửa tên bằng thao tác thủ công trên Guest List. Trạng thái RSVP, quyền gửi và deadline luôn đọc dữ liệu thật, **không cache**. Bản mới cho phép khách đã phản hồi chỉnh sửa cho đến hết 10/02/2027 (giờ Việt Nam), nếu link cá nhân và Event còn hợp lệ.
 - Website tiếp tục gửi yêu cầu lấy tên ngay trong `<head>`, và các lần truy cập lại cùng trình duyệt có thể sử dụng cache đã xác minh trên thiết bị.
 - Google có thể xóa cache sớm; lần đầu hoặc khi cache hết hạn vẫn phải truy vấn Sheets. Không bảo đảm hiển thị tức thì trên thiết bị mới.
 
