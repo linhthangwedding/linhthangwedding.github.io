@@ -5,7 +5,7 @@
 - Trang thiệp hiện hiển thị hai buổi tiệc: **Vinh** ngày **16/02/2027, 11:00** tại **Nhà hàng Giao Tế, TP. Vinh, Nghệ An** và **HCM** ngày **28/02/2027, 11:00** tại **Capella Parkview**. Mỗi buổi có liên kết Google Maps tìm địa điểm tương ứng.
 - Khi khách chọn **Yes** trong RSVP, khách phải chọn **Vinh hoặc HCM**, sau đó khai báo tổng số người tham dự. Chọn **No** thì không yêu cầu địa điểm. Khi chỉnh sửa RSVP, lựa chọn trước đó được tải lại.
 - `RSVP Online!Y` là cột mới **Tiệc xác nhận (Vinh/HCM)** có dropdown. Backend `apps-script/Code.gs` mới ghi/đọc cột này và nhận cả hai nhóm sự kiện `Dạm ngõ + Đám hỏi` và `Đám cưới`. Các cột phản hồi và số người cũ giữ nguyên. **Cần cập nhật Code.gs và redeploy Web App hiện tại** để cho phép gửi biểu mẫu mới; website cố tình khóa gửi nếu backend chưa hỗ trợ cột Y.
-- Link lịch `.ics` được giữ **duy nhất** tại `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics`. File này hiện chứa lịch HCM nên chỉ hiện cùng HCM, không gắn với tiệc Vinh để tránh sai lịch.
+- Mỗi tiệc có **file lịch `.ics` riêng**: HCM giữ nguyên `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics` (28/02/2027), Vinh sử dụng `https://linhthangwedding.github.io/assets/linh-thang-wedding-vinh.ics` (16/02/2027). Nút sau RSVP tải đúng file theo lựa chọn Vinh/HCM. Giờ kết thúc Vinh tạm đặt 14:00 (giờ Việt Nam) vì chưa có thông tin chính thức.
 - **Cần kiểm thử riêng trước khi gửi rộng rãi:** một số dòng Guest List dùng chung mã thiệp; backend đã có cơ chế từ chối nếu một slug xuất hiện trên nhiều dòng khi ghi RSVP. Đây là vấn đề cũ chưa xử lý trong lần cập nhật hai tiệc.
 
 
@@ -32,7 +32,7 @@ Website thiệp cưới: https://linhthangwedding.github.io
 
 **Cập nhật giao diện 02/11/2026:** Dòng deadline chỉ sử dụng múi giờ Việt Nam và Central European Time (CET), không liệt kê từng quốc gia. Trong trạng thái RSVP đã xác nhận Có, `Update my RSVP` và `Add to my calendar` hiển thị cạnh nhau trên cùng một hàng, kể cả màn hình mobile. Tên khách xác minh từ Apps Script được yêu cầu từ đầu `<head>` trước các stylesheet và được hiển thị ngay khi có kết quả, không đợi bundle JavaScript cuối trang; không đưa tên khách vào repository. Lần mở đầu vẫn phụ thuộc vào tốc độ Google Apps Script.
 
-**Link Add to calendar duy nhất (02/11/2026):** `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics`. Cả nút Add to calendar ở thông tin sự kiện và nút Add to my calendar sau xác nhận RSVP đều tải đúng file .ics này. Không dùng link Google Calendar hoặc tạo link calendar khác trong invitation.
+**Lịch HCM cố định (02/11/2026):** `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics` vẫn là lịch duy nhất cho tiệc HCM. Theo yêu cầu bổ sung tiệc Vinh, lịch Vinh ở `https://linhthangwedding.github.io/assets/linh-thang-wedding-vinh.ics`; không dùng nhầm file HCM cho Vinh.
 
 **English-only preview (v37):** Mọi nội dung hiển thị đã được rà lại theo hướng casual, ấm áp; ẩn switch VN/EN trong `index.html` và đặt `setLang("en")` trong `script.js`. Nội dung tiếng Việt **vẫn được giữ** ở `copy.vi` để bật lại sau. Khách mời vẫn giữ tên tiếng Việt theo Guest List. Không thay đổi backend/RSVP, hình ảnh, địa điểm hoặc lịch tiệc.
 
