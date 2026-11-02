@@ -1,5 +1,14 @@
 # Thiệp cưới Linh & Thắng
 
+## Tối ưu tên khách bằng Apps Script (02/11/2026)
+
+Giữ nguyên link `?i=...`, PREP và cơ chế RSVP. Cloudflare đã được loại khỏi website và repository.
+
+Bản `apps-script/Code.gs` mới sử dụng CacheService với TTL 300 giây để lưu tạm tên khách đã xác thực theo mã nội bộ. Lần đầu tra trực tiếp dòng nguồn từ registry (có kiểm tra đúng link), lần sau lấy từ cache. Tên được xóa khỏi cache khi sửa thủ công trong Guest List. Mỗi lần mở thiệp vẫn **kiểm tra tính hợp lệ của slug hiện tại** cùng trạng thái RSVP thật; cache không được dùng để quyết định quyền gửi phản hồi hoặc bật lại link PREP cũ. Website vẫn preload tên từ Apps Script ngay trong phần `head`.
+
+**Cần cập nhật Web App Apps Script thủ công** để thay đổi backend có hiệu lực: xem [hướng dẫn trong apps-script](apps-script/README.md). Việc GitHub Pages deploy thành công không thay thế bước này. Không chạy `activateWeddingInvitations` trước ngày chính thức launch. Các cache của Google có thể hết hạn sớm, và lần mở đầu không bảo đảm tải tức thì.
+
+
 Website thiệp cưới: https://linhthangwedding.github.io
 
 **English-only preview (v37):** Mọi nội dung hiển thị đã được rà lại theo hướng casual, ấm áp; ẩn switch VN/EN trong `index.html` và đặt `setLang("en")` trong `script.js`. Nội dung tiếng Việt **vẫn được giữ** ở `copy.vi` để bật lại sau. Khách mời vẫn giữ tên tiếng Việt theo Guest List. Không thay đổi backend/RSVP, hình ảnh, địa điểm hoặc lịch tiệc.
