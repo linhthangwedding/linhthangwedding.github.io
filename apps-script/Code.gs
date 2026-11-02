@@ -457,14 +457,20 @@ function doGet(e) {
         partySize:reply.partySize
       });
     }
-    var guest=locateGuestForDisplay_(book,found.row);
-    if (!guest) return js_(callback,{valid:false,invalid:true});
+    // Registry B is the live formula linked to Guest List's display name;
+    // Q (validated above by findInvite_) is calculated from that same name.
+    // Avoid a second Guest List read + link scan on every first-time visit.
+    // RSVP writes still validate the source guest row independently.
+    var displayName=String(found.row[1] || "").trim();
+    var guestEvent=String(found.row[3] || "").trim();
+    if (!displayName) return js_(callback,{valid:false,invalid:true});
+    var canReply=canRsvp_(guestEvent) && !rsvpDeadlinePassed_();
     return js_(callback,{
       valid:true,
-      name:guest.name.slice(0,120),
-      canRsvp:canRsvp_(guest.event) && !reply.responded && !rsvpDeadlinePassed_(),
+      name:displayName.slice(0,120),
+      canRsvp:canReply && !reply.responded,
       // Edits are allowed for the same verified invitation until the deadline.
-      canEdit:canRsvp_(guest.event) && !rsvpDeadlinePassed_(),
+      canEdit:canReply,
       responded:reply.responded,
       attending:reply.attending,
       partySize:reply.partySize,
