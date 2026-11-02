@@ -23,8 +23,8 @@ const copy = {
     saveDate:"Lưu ngày vào lịch",
     storyTitle:"CÂU CHUYỆN CỦA CHÚNG MÌNH",
     musicSectionTitle:"GIAI ĐIỆU CỦA CHÚNG MÌNH",
-    musicPlayLabel:"Phát Beautiful in White",
-    musicPauseLabel:"Tạm dừng Beautiful in White",
+    musicPlayLabel:"Phát I Think They Call This Love (Cover)",
+    musicPauseLabel:"Tạm dừng I Think They Call This Love (Cover)",
     musicLoading:"Đang tải trình phát nhạc…",
     musicReady:"Đã sẵn sàng. Nhấn đĩa than để phát nhạc",
     musicTryingAutoplay:"Đang thử phát nhạc tự động…",
@@ -107,8 +107,8 @@ const copy = {
     saveDate:"Add to calendar",
     storyTitle:"A LITTLE ABOUT US",
     musicSectionTitle:"OUR SONG",
-    musicPlayLabel:"Play Beautiful in White",
-    musicPauseLabel:"Pause Beautiful in White",
+    musicPlayLabel:"Play I Think They Call This Love (Cover)",
+    musicPauseLabel:"Pause I Think They Call This Love (Cover)",
     musicLoading:"Loading music player…",
     musicReady:"Ready. Tap the record to play",
     musicTryingAutoplay:"Trying to play music automatically…",
@@ -655,7 +655,7 @@ resolveInviteName();
   if (!player || !button || !status || !container) return;
 
   // Placeholder song until a verified Spotify URI for the requested track is supplied.
-  const trackUri = "spotify:track:0lUdYoSr8Hm3GL0HZld4ac";
+  const trackUri = "spotify:track:14mT8BCOXiUUcGlb7KujkT";
   let controller = null;
   let playing = false;
   let userStarted = false;
