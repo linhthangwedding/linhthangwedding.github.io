@@ -11,6 +11,8 @@ Bản `apps-script/Code.gs` mới sử dụng CacheService với TTL 300 giây �
 
 Website thiệp cưới: https://linhthangwedding.github.io
 
+**Link Add to calendar duy nhất (02/11/2026):** `https://linhthangwedding.github.io/assets/linh-thang-wedding.ics`. Cả nút Add to calendar ở thông tin sự kiện và nút Add to my calendar sau xác nhận RSVP đều tải đúng file .ics này. Không dùng link Google Calendar hoặc tạo link calendar khác trong invitation.
+
 **English-only preview (v37):** Mọi nội dung hiển thị đã được rà lại theo hướng casual, ấm áp; ẩn switch VN/EN trong `index.html` và đặt `setLang("en")` trong `script.js`. Nội dung tiếng Việt **vẫn được giữ** ở `copy.vi` để bật lại sau. Khách mời vẫn giữ tên tiếng Việt theo Guest List. Không thay đổi backend/RSVP, hình ảnh, địa điểm hoặc lịch tiệc.
 
 ## Ảnh polaroid ở phần A little about us (demo)
