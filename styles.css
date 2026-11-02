@@ -148,13 +148,6 @@ button,input,textarea{font:inherit}
 }
 .celebration-links{display:flex;justify-content:center;gap:4px 20px;flex-wrap:wrap}
 .celebration-links .text-link{width:auto;margin:0}
-.celebration-links .calendar-download-button{
-  min-height:44px;
-  padding:0 24px;
-  font-size:13px;
-  line-height:1.35;
-  white-space:nowrap;
-}
 .celebration-rsvp-action{margin-top:20px}
 @media(max-width:760px){
   .celebration-panel{padding:25px 15px 17px}
