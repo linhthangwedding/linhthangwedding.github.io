@@ -1035,3 +1035,45 @@ html[lang="vi"] .story-origin-art{
   .invite-card{padding-top:72px;padding-bottom:76px}
   .rsvp-section{padding-top:80px}
 }
+
+/* Gentle automatic sway for decorative illustrations; retain each original tilt/mirror. */
+@keyframes invitation-doodle-sway{
+  0%,100%{
+    transform:scaleX(var(--sway-flip,1)) rotate(calc(var(--sway-rest,0deg) - var(--sway-range,4deg)));
+  }
+  50%{
+    transform:scaleX(var(--sway-flip,1)) rotate(calc(var(--sway-rest,0deg) + var(--sway-range,4deg)));
+  }
+}
+@media(prefers-reduced-motion:no-preference){
+  .invite-card .botanical,.story-origin-art,.story-doodle,
+  .rsvp-section::before,.rsvp-section::after{
+    animation:invitation-doodle-sway var(--sway-duration,5s) ease-in-out infinite;
+    animation-delay:var(--sway-delay,0s);
+    transform-origin:50% 50%;
+  }
+  .invite-card .branch-left{
+    --sway-flip:-1;--sway-range:3.5deg;--sway-duration:6.4s;--sway-delay:-1.9s;
+  }
+  .invite-card .branch-right{
+    --sway-range:3.5deg;--sway-duration:6s;--sway-delay:-4.2s;
+  }
+  .story-origin-art{
+    --sway-range:2.25deg;--sway-duration:6.8s;--sway-delay:-2.7s;
+  }
+  .story-doodle-hearts{
+    --sway-rest:9deg;--sway-range:5deg;--sway-duration:4.8s;--sway-delay:-1.1s;
+  }
+  .story-doodle-letter{
+    --sway-rest:-9deg;--sway-range:4.5deg;--sway-duration:5.4s;--sway-delay:-3.6s;
+  }
+  .story-doodle-sparkles{
+    --sway-range:5deg;--sway-duration:4.6s;--sway-delay:-2.1s;
+  }
+  .rsvp-section::before{
+    --sway-rest:-12deg;--sway-range:4.5deg;--sway-duration:5.8s;--sway-delay:-.8s;
+  }
+  .rsvp-section::after{
+    --sway-rest:9deg;--sway-range:5deg;--sway-duration:5.2s;--sway-delay:-3.2s;
+  }
+}
