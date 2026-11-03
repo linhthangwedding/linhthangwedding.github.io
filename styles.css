@@ -111,9 +111,9 @@ button,input,textarea{font:inherit}
   margin:-34px auto 0;
   padding:46px 78px 42px;
   text-align:center;
-  background:#ffffff;
+  background:var(--ink);
   box-shadow:none;
-  border:1px solid rgba(154,187,207,.50);
+  border:1px solid var(--ink);
   overflow:hidden;
 }
 .invite-kicker{font-size:20px;margin:0 0 14px}
@@ -849,3 +849,25 @@ html .site-shell ::selection {
   color:var(--lt-text-light)!important;
   background:var(--lt-text-dark);
 }
+
+/* Navy invitation section: light introductory text and an inverted RSVP button. */
+html .site-shell .invite-card :is(
+  .invite-kicker,.invite-guest-name,.invite-guest-notice,
+  .invite-copy,.ornament,.ornament i
+){
+  color:var(--lt-text-light)!important;
+}
+.invite-card .ornament span{background:rgba(255,255,255,.55)}
+html .site-shell .invite-card .btn.primary,
+html .site-shell .invite-card .btn.primary *{
+  color:var(--lt-text-dark)!important;
+}
+.invite-card .primary{
+  background:#ffffff;
+  border-color:#ffffff;
+}
+.invite-card .primary:hover{
+  background:#e6eff5;
+  border-color:#e6eff5;
+}
+.invite-card .primary:focus-visible{outline-color:#ffffff}
