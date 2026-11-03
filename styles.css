@@ -74,6 +74,7 @@ button,input,textarea{font:inherit}
   justify-content:center;
   align-items:center;
   text-align:center;
+  background:#faf5f1;
   padding:90px 54px 84px 36px;
 }
 .eyebrow,.section-kicker,.invite-kicker,.event-title{
