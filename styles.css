@@ -972,7 +972,6 @@ html[lang="vi"] .story-origin-art{
 }
 .story-doodle-sparkles{
   left:24px;bottom:70px;width:140px;height:140px;
-  background:#d7c7ba;opacity:1;
   -webkit-mask-position:right center;mask-position:right center;
 }
 @media(max-width:1099px){
