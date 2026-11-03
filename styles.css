@@ -150,8 +150,8 @@ button,input,textarea{font:inherit}
   white-space:normal;
   overflow-wrap:break-word;
 }
-.celebration-links{display:flex;justify-content:center;gap:4px 20px;flex-wrap:wrap}
-.celebration-links .text-link{width:auto;margin:0}
+.celebration-links{display:flex;align-items:baseline;justify-content:center;gap:4px 20px;flex-wrap:wrap}
+.celebration-links .text-link{width:auto;margin:0;line-height:1.6}
 .celebration-rsvp-action{margin-top:20px}
 @media(max-width:760px){
   .celebration-panel{padding:25px 15px 17px}
