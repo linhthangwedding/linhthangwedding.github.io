@@ -920,3 +920,5 @@ html .site-shell .invite-card .btn.primary *{
 .rsvp-section .rsvp-form :is(input,textarea):focus-visible{
   outline-color:#ffffff;
 }
+
+.rsvp-closed-panel .rsvp-see-you{margin:16px auto 0}

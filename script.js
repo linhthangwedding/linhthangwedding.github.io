@@ -40,7 +40,7 @@ const copy = {
     rsvpDeadline:"Hạn xác nhận: Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
     rsvpReceivedIntro:"Chúng mình đã nhận được lời xác nhận của bạn.",
     rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
-    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn). Hẹn gặp bạn trong ngày vui của chúng mình!",
+    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn).",
     rsvpClosedNo:"Cảm ơn {name} đã phản hồi! Chúng mình đã ghi nhận bạn không thể tham dự.",
     rsvpClosedDeadline:"Hạn xác nhận đã kết thúc vào ngày 10/02/2027. Nếu cần thay đổi kế hoạch, vui lòng liên hệ trực tiếp Linh & Thang.",
     rsvpClosedNotReady:"Thiệp này hiện chưa mở nhận phản hồi. Vui lòng liên hệ Linh & Thang.",
@@ -56,7 +56,8 @@ const copy = {
     venueQuestion:"Bạn sẽ tham dự tiệc ở đâu?",
     venueVinh:"Nghệ An",
     venueHCM:"TP. Hồ Chí Minh",
-    venueSummary:"Tiệc tham dự: {venue}",
+    rsvpSeeYou:"Hẹn gặp bạn tại",
+    venueSummary:"tiệc cưới ở {venue}!",
     venueRequired:"Vui lòng chọn Vinh hoặc TP. Hồ Chí Minh.",
     rsvpMaintenance:"Phần xác nhận đang được cập nhật. Vui lòng thử lại khi hệ thống hoàn tất.",
     partySize:"Số người tham dự (bao gồm bạn)",
@@ -124,7 +125,7 @@ const copy = {
     rsvpDeadline:"Please RSVP by Wednesday, 10th Feb 2027,\nat 11:59 PM (VN time) or 5:59 PM (EU time).",
     rsvpReceivedIntro:"We've received your reply. Thank you for letting us know!",
     rsvpDeadlinePassedIntro:"RSVP is now closed.",
-    rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you. See you there!",
+    rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you.",
     rsvpClosedNo:"Thank you, {name}! We've noted that you can't make it.",
     rsvpClosedDeadline:"RSVP closed on February 10, 2027. Please contact Linh & Thang directly if your plans change.",
     rsvpClosedNotReady:"RSVP isn't open for this invitation. Please contact Linh & Thang.",
@@ -141,7 +142,8 @@ const copy = {
     venueQuestion:"Which celebration will you be joining?",
     venueVinh:"Nghe An",
     venueHCM:"Ho Chi Minh City",
-    venueSummary:"Celebration: {venue}",
+    rsvpSeeYou:"See you at our",
+    venueSummary:"{venue} celebration!",
     venueRequired:"Please choose Vinh or Ho Chi Minh City.",
     rsvpMaintenance:"RSVP is being updated. Please check back when the update is complete.",
     partySize:"How many are coming (including you)?",
@@ -323,6 +325,7 @@ const rsvpForm = document.getElementById("rsvpForm");
 const rsvpClosedPanel = document.getElementById("rsvpClosedPanel");
 const rsvpClosedMessage = document.getElementById("rsvpClosedMessage");
 const rsvpVenueSummary=document.getElementById("rsvpVenueSummary");
+const rsvpSeeYou=document.getElementById("rsvpSeeYou");
 const rsvpEditControls = document.getElementById("rsvpEditControls");
 const rsvpEditButton = document.getElementById("rsvpEditButton");
 const rsvpActionRow = document.getElementById("rsvpActionRow");
@@ -377,7 +380,9 @@ function refreshRsvpPanel() {
     .replace("{count}", String(rsvpView.partySize));
   const selectedVenue = rsvpView.venue === "Vinh" ? copy[lang].venueVinh :
     rsvpView.venue === "HCM" ? copy[lang].venueHCM : "";
-  rsvpVenueSummary.classList.toggle("hidden", !(confirmed && rsvpView.attending === "yes" && selectedVenue));
+  const showVenue = confirmed && rsvpView.attending === "yes" && Boolean(selectedVenue);
+  rsvpVenueSummary.classList.toggle("hidden", !showVenue);
+  rsvpSeeYou.classList.toggle("hidden", !showVenue);
   rsvpVenueSummary.textContent = selectedVenue ? copy[lang].venueSummary.replace("{venue}",selectedVenue) : "";
 }
 function closeRsvp(kind, attending, count, venue) {
