@@ -895,3 +895,36 @@ html .site-shell .invite-card .btn.primary *{
 }
 .hero .spotify-player-card .spotify-embed-slot{margin:0}
 .hero .spotify-player-card iframe{display:block;width:100%;height:80px;border:0;border-radius:10px}
+
+/* RSVP: navy section with white text and contrasting white form surfaces. */
+.rsvp-section{
+  --lt-text-dark:#ffffff;
+  --lt-text-light:#142d4e;
+  --button:#ffffff;
+  --button-dark:#f2f4f7;
+  background:var(--ink);
+}
+.rsvp-section :is(.rsvp-invitee,.rsvp-closed-panel,.decline-message),
+.rsvp-section .rsvp-form :is(input,textarea){
+  --lt-text-dark:#142d4e;
+  --lt-text-light:#ffffff;
+  background:#ffffff;
+  border-color:#ffffff;
+}
+.rsvp-section .rsvp-closed-panel{
+  --button:#142d4e;
+  --button-dark:#0b1e36;
+}
+.rsvp-section .choice span{
+  background:transparent;
+  border-color:rgba(255,255,255,.65);
+}
+.rsvp-section .choice input:not(:checked) + span:hover{
+  background:rgba(255,255,255,.1);
+}
+.rsvp-section .btn.primary{border-color:var(--button)}
+.rsvp-section .ghost{border-color:rgba(255,255,255,.7)}
+.rsvp-section .rsvp-closed-panel .ghost{border-color:var(--ink)}
+.rsvp-section .rsvp-form :is(input,textarea):focus-visible{
+  outline-color:#ffffff;
+}
