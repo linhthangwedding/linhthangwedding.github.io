@@ -871,9 +871,24 @@ html .site-shell .invite-card .btn.primary *{
   border-color:var(--invite-line);
 }
 .invite-card .fact{border-color:var(--invite-line)}
+/* Reference botanical shape, recoloured with the site's exact beige token. */
 .invite-card .botanical{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 220'%3E%3Cg fill='none' stroke='%23d7c7ba' stroke-width='1.6'%3E%3Cpath d='M26 215C34 165 47 112 86 26'/%3E%3Cpath d='M42 160c-24-9-31-28-31-43M52 137c26-5 39-19 46-36M61 112c-19-9-24-25-23-39M72 87c21-4 31-15 37-29'/%3E%3C/g%3E%3Cg fill='%23faf5f1' stroke='%23d7c7ba' stroke-width='1'%3E%3Cellipse cx='12' cy='114' rx='15' ry='8' transform='rotate(22 12 114)'/%3E%3Cellipse cx='101' cy='94' rx='16' ry='8' transform='rotate(-25 101 94)'/%3E%3Cellipse cx='35' cy='72' rx='14' ry='7' transform='rotate(28 35 72)'/%3E%3C/g%3E%3C/svg%3E");
+  width:160px;
+  height:235px;
+  opacity:.85;
+  background-image:none;
+  background-color:var(--invite-line);
+  -webkit-mask-image:url("assets/botanical-sprig-beige-20261103.png");
+  mask-image:url("assets/botanical-sprig-beige-20261103.png");
+  -webkit-mask-size:contain;
+  mask-size:contain;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-position:center;
+  mask-position:center;
 }
+.invite-card .branch-left{transform:scaleX(-1)}
+.invite-card .branch-right{transform:none}
 
 /* Keep Spotify connected to the record's play/pause control without a visible card. */
 .hero .spotify-playback-service{
