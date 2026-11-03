@@ -937,3 +937,73 @@ html .site-shell .invite-card .btn.primary *{
 }
 
 .rsvp-closed-panel .rsvp-see-you{margin:16px auto 0}
+
+/* Handwritten keepsakes around the story, using only the existing ink and beige. */
+.story-section{position:relative;isolation:isolate}
+.story-origin{
+  position:absolute;left:16px;top:52px;width:210px;height:210px;
+  margin:0;transform:rotate(-7deg);pointer-events:none;
+}
+.story-origin-art{
+  display:block;width:100%;height:100%;background:var(--ink);
+  -webkit-mask:url("assets/story-amsterdam-en-20261103.png") center/contain no-repeat;
+  mask:url("assets/story-amsterdam-en-20261103.png") center/contain no-repeat;
+}
+html[lang="vi"] .story-origin-art{
+  -webkit-mask-image:url("assets/story-amsterdam-vi-20261103.png");
+  mask-image:url("assets/story-amsterdam-vi-20261103.png");
+}
+.story-small-doodles{display:contents}
+.story-doodle{
+  position:absolute;width:150px;height:150px;pointer-events:none;
+  background:var(--ink);opacity:.7;
+  -webkit-mask-image:url("assets/story-doodles-20261103.png");
+  mask-image:url("assets/story-doodles-20261103.png");
+  -webkit-mask-size:300% 100%;mask-size:300% 100%;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+}
+.story-doodle-hearts{
+  right:28px;top:52px;transform:rotate(9deg);
+  -webkit-mask-position:left center;mask-position:left center;
+}
+.story-doodle-letter{
+  right:18px;bottom:52px;width:160px;height:160px;transform:rotate(-9deg);
+  -webkit-mask-position:center center;mask-position:center center;
+}
+.story-doodle-sparkles{
+  left:24px;bottom:70px;width:140px;height:140px;
+  background:#d7c7ba;opacity:1;
+  -webkit-mask-position:right center;mask-position:right center;
+}
+@media(max-width:1099px){
+  .story-origin{position:static;width:236px;height:236px;margin:22px auto 0;transform:rotate(-5deg)}
+  .story-small-doodles{display:flex;justify-content:center;gap:8px;margin:0 auto 6px}
+  .story-doodle{position:static;flex:0 0 92px;width:92px;height:92px}
+  .story-section .polaroid-gallery{margin-top:20px}
+}
+@media(max-width:360px){
+  .story-origin{width:220px;height:220px}
+  .story-small-doodles{gap:0}
+  .story-doodle{flex-basis:84px;width:84px;height:84px}
+}
+
+/* Soft ivory cloud banks frame the RSVP without covering its controls. */
+.rsvp-section{position:relative;isolation:isolate;overflow:hidden}
+.rsvp-section::before,.rsvp-section::after{
+  content:"";position:absolute;bottom:-32px;z-index:-1;
+  width:380px;height:240px;pointer-events:none;opacity:.58;
+  background:#faf5f1;
+  -webkit-mask-image:url("assets/rsvp-cloud-bank-20261103.png");
+  mask-image:url("assets/rsvp-cloud-bank-20261103.png");
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center bottom;mask-position:center bottom;
+  mask-mode:luminance;
+}
+.rsvp-section::before{left:-95px}
+.rsvp-section::after{right:-95px;transform:scaleX(-1)}
+@media(max-width:760px){
+  .rsvp-section::before,.rsvp-section::after{width:240px;height:160px;bottom:-28px;opacity:.4}
+  .rsvp-section::before{left:-88px}
+  .rsvp-section::after{right:-88px}
+}
