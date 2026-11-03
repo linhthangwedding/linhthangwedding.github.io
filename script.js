@@ -715,7 +715,7 @@ resolveInviteName();
     try {
       IFrameAPI.createController(
         container,
-        {uri:trackUri, width:"100%", height:80},
+        {uri:trackUri, width:"100%", height:80, theme:"dark"},
         (embedController) => {
           controller = embedController;
           button.disabled = false;

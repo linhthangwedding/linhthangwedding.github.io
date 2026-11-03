@@ -600,7 +600,7 @@ footer{
   width:min(100%,610px);
   margin:0 auto;
   padding:25px 28px 28px;
-  border:1px solid #c5dbe8;
+  border:1px solid #d7c7ba;
   border-radius:18px;
   background:#ffffff;
   box-shadow:0 12px 32px rgba(49,91,115,.07);
@@ -623,11 +623,11 @@ footer{
   background:transparent;
   padding:0;
   cursor:pointer;
-  box-shadow:0 14px 22px rgba(32,57,75,.19);
+  box-shadow:0 14px 22px rgba(89,68,50,.18);
 }
 .vinyl-play-button:disabled{cursor:default}
 .vinyl-play-button:focus-visible{
-  outline:3px solid #547e96;
+  outline:3px solid #8c6b51;
   outline-offset:7px;
 }
 .vinyl-disc{
@@ -659,8 +659,8 @@ footer{
   align-items:center;
   justify-content:center;
   border-radius:50%;
-  border:3px double rgba(49,91,115,.35);
-  background:radial-gradient(circle,#e7f0f6,#b5cddc);
+  border:3px double rgba(122,94,72,.30);
+  background:radial-gradient(circle,#faf5f1,#d7c7ba);
   color:#315b73;
   font-weight:600;
   letter-spacing:.04em;
@@ -675,9 +675,9 @@ footer{
   display:flex;
   align-items:center;
   justify-content:center;
-  border:1px solid #aac5d6;
+  border:1px solid #d7c7ba;
   border-radius:50%;
-  background:#f7fbfd;
+  background:#faf5f1;
   color:#315b73;
   box-shadow:0 3px 12px rgba(0,0,0,.17);
 }
@@ -693,9 +693,9 @@ footer{
   right:1px;
   width:8px;
   height:143px;
-  border:1px solid #8ca6b7;
+  border:1px solid #bfa996;
   border-radius:10px;
-  background:linear-gradient(90deg,#9eb6c5,#e8f0f5,#9ab1c1);
+  background:linear-gradient(90deg,#cbb7a4,#faf5f1,#c2ab96);
   transform:rotate(28deg);
   transform-origin:top center;
   pointer-events:none;
@@ -708,8 +708,8 @@ footer{
   width:26px;
   height:26px;
   border-radius:50%;
-  background:#b5cad8;
-  border:3px solid #edf5fa;
+  background:#d7c7ba;
+  border:3px solid #faf5f1;
 }
 .turntable-arm::after{
   content:"";
@@ -719,7 +719,7 @@ footer{
   width:16px;
   height:23px;
   border-radius:3px;
-  background:#607b8e;
+  background:#a28a74;
 }
 .vinyl-song-details{margin:6px auto 16px}
 .vinyl-song-name{
@@ -884,3 +884,14 @@ html .site-shell .invite-card .btn.primary *{
 .invite-card .botanical{
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 220'%3E%3Cg fill='none' stroke='%23d7c7ba' stroke-width='1.6'%3E%3Cpath d='M26 215C34 165 47 112 86 26'/%3E%3Cpath d='M42 160c-24-9-31-28-31-43M52 137c26-5 39-19 46-36M61 112c-19-9-24-25-23-39M72 87c21-4 31-15 37-29'/%3E%3C/g%3E%3Cg fill='%23faf5f1' stroke='%23d7c7ba' stroke-width='1'%3E%3Cellipse cx='12' cy='114' rx='15' ry='8' transform='rotate(22 12 114)'/%3E%3Cellipse cx='101' cy='94' rx='16' ry='8' transform='rotate(-25 101 94)'/%3E%3Cellipse cx='35' cy='72' rx='14' ry='7' transform='rotate(28 35 72)'/%3E%3C/g%3E%3C/svg%3E");
 }
+
+/* Keep the native Spotify dark theme inside the site's navy frame. */
+.hero .spotify-player-card{
+  width:100%;
+  margin:0 auto;
+  padding:8px;
+  border-radius:16px;
+  background:var(--ink);
+}
+.hero .spotify-player-card .spotify-embed-slot{margin:0}
+.hero .spotify-player-card iframe{display:block;width:100%;height:80px;border:0;border-radius:10px}
