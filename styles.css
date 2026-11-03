@@ -986,25 +986,31 @@ html[lang="vi"] .story-origin-art{
   .story-doodle{flex-basis:84px;width:84px;height:84px}
 }
 
-/* Soft ivory cloud banks frame the RSVP without covering its controls. */
+/* RSVP note doodles echo the story illustrations in warm beige. */
 .rsvp-section{position:relative;isolation:isolate;overflow:hidden}
 .rsvp-section::before,.rsvp-section::after{
-  content:"";position:absolute;bottom:-32px;z-index:-1;
-  width:380px;height:240px;pointer-events:none;opacity:.58;
-  background:#faf5f1;
-  -webkit-mask-image:url("assets/rsvp-cloud-bank-20261103.png");
-  mask-image:url("assets/rsvp-cloud-bank-20261103.png");
-  -webkit-mask-size:contain;mask-size:contain;
+  content:"";position:absolute;bottom:-20px;z-index:-1;
+  width:230px;height:230px;pointer-events:none;opacity:.85;
+  background:#d7c7ba;
+  -webkit-mask-image:url("assets/story-doodles-20261103.png");
+  mask-image:url("assets/story-doodles-20261103.png");
+  -webkit-mask-size:300% 100%;mask-size:300% 100%;
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-position:center bottom;mask-position:center bottom;
-  mask-mode:luminance;
+  mask-mode:alpha;
 }
-.rsvp-section::before{left:-95px}
-.rsvp-section::after{right:-95px;transform:scaleX(-1)}
-@media(max-width:760px){
-  .rsvp-section::before,.rsvp-section::after{width:240px;height:160px;bottom:-28px;opacity:.4}
-  .rsvp-section::before{left:-88px}
-  .rsvp-section::after{right:-88px}
+.rsvp-section::before{
+  left:-12px;transform:rotate(-12deg);
+  -webkit-mask-position:center center;mask-position:center center;
+}
+.rsvp-section::after{
+  right:-12px;transform:rotate(9deg);
+  -webkit-mask-position:left center;mask-position:left center;
+}
+@media(max-width:1000px){
+  .rsvp-section{padding-bottom:112px}
+  .rsvp-section::before,.rsvp-section::after{width:150px;height:150px;bottom:-20px;opacity:.75}
+  .rsvp-section::before{left:-28px}
+  .rsvp-section::after{right:-28px}
 }
 
 /* Handmade section edges: deckled paper for the invitation, softer curves for RSVP.
