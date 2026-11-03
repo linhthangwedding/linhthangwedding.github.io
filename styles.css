@@ -385,6 +385,14 @@ button,input,textarea{font:inherit}
   cursor:pointer;
 }
 .choice input:checked+span{background:#817b74;color:#fff;border-color:#817b74}
+ /* RSVP attendance options use the site's BODY tier (15px), not heading treatment. */
+#rsvpForm .choice input[name="attending"] + span{
+  font-family:"Noto Serif",Georgia,serif;
+  font-size:15px!important;
+  font-weight:400!important;
+  line-height:1.5;
+  letter-spacing:normal;
+}
 .branch{display:grid;gap:18px}
 #rsvpVenueFieldset{margin:0;padding:0;border:0}
 #rsvpVenueFieldset legend{margin-bottom:3px}
