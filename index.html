@@ -84,7 +84,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-watercolour-bouquet-20261103.png" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=76">
+  <link rel="stylesheet" href="styles.css?v=77">
 </head>
 <body>
 <main class="site-shell">
@@ -105,30 +105,26 @@
       <span class="photo-wash" aria-hidden="true"></span>
     </div>
     <div class="hero-copy">
+      <div class="vinyl-player" id="vinylPlayer">
+        <div class="turntable-deck">
+          <div class="turntable-arm" aria-hidden="true"></div>
+          <button class="vinyl-play-button" id="vinylPlayButton" type="button" disabled
+            aria-label="Play I Think They Call This Love (Cover)" data-i18n-aria-label="musicPlayLabel" aria-pressed="false">
+            <span class="vinyl-disc" aria-hidden="true"><span class="vinyl-disc-label">L&nbsp;&nbsp;T</span></span>
+            <span class="vinyl-control" aria-hidden="true">
+              <svg class="vinyl-icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m9 6 10 6-10 6z"/></svg>
+              <svg class="vinyl-icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></svg>
+            </span>
+          </button>
+        </div>
+        <p id="vinylStatus" class="vinyl-status sr-only" role="status" aria-live="polite" data-i18n="musicLoading">Loading music player…</p>
+        <div class="spotify-playback-service" aria-hidden="true" inert>
+          <div class="spotify-embed-slot" id="spotifyEmbedSlot" aria-label="Spotify player for I Think They Call This Love (Cover)"></div>
+        </div>
+      </div>
       <p class="eyebrow" data-i18n="weddingOf">WE'RE GETTING MARRIED</p>
       <h1>Linh <em>&amp;</em> Thang</h1>
       <div class="fine-rule" aria-hidden="true"></div>
-    <div class="vinyl-player" id="vinylPlayer">
-      <div class="turntable-deck">
-        <div class="turntable-arm" aria-hidden="true"></div>
-        <button class="vinyl-play-button" id="vinylPlayButton" type="button" disabled
-          aria-label="Play I Think They Call This Love (Cover)" data-i18n-aria-label="musicPlayLabel" aria-pressed="false">
-          <span class="vinyl-disc" aria-hidden="true"><span class="vinyl-disc-label">L&nbsp;&nbsp;T</span></span>
-          <span class="vinyl-control" aria-hidden="true">
-            <svg class="vinyl-icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m9 6 10 6-10 6z"/></svg>
-            <svg class="vinyl-icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></svg>
-          </span>
-        </button>
-      </div>
-      <div class="vinyl-song-details">
-        <p class="vinyl-song-name">I Think They Call This Love (Cover)</p>
-        <p class="vinyl-song-artist">Matthew Ifield</p>
-        <p id="vinylStatus" class="vinyl-status sr-only" role="status" aria-live="polite" data-i18n="musicLoading">Loading music player…</p>
-      </div>
-      <div class="spotify-player-card">
-        <div class="spotify-embed-slot" id="spotifyEmbedSlot" aria-label="Spotify player for I Think They Call This Love (Cover)"></div>
-      </div>
-    </div>
     </div>
   </section>
 
@@ -326,6 +322,6 @@ at 11:59 PM (VN time) or 5:59 PM (EU time).</p>
   </footer>
 </main>
 
-<script src="script.js?v=74"></script>
+<script src="script.js?v=77"></script>
 </body>
 </html>

@@ -40,7 +40,7 @@ const copy = {
     rsvpDeadline:"Hạn xác nhận: Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
     rsvpReceivedIntro:"Chúng mình đã nhận được lời xác nhận của bạn.",
     rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
-    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn).",
+    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn). Hẹn gặp bạn trong ngày vui của chúng mình!",
     rsvpClosedNo:"Cảm ơn {name} đã phản hồi! Chúng mình đã ghi nhận bạn không thể tham dự.",
     rsvpClosedDeadline:"Hạn xác nhận đã kết thúc vào ngày 10/02/2027. Nếu cần thay đổi kế hoạch, vui lòng liên hệ trực tiếp Linh & Thang.",
     rsvpClosedNotReady:"Thiệp này hiện chưa mở nhận phản hồi. Vui lòng liên hệ Linh & Thang.",
@@ -124,7 +124,7 @@ const copy = {
     rsvpDeadline:"Please RSVP by Wednesday, 10th Feb 2027,\nat 11:59 PM (VN time) or 5:59 PM (EU time).",
     rsvpReceivedIntro:"We've received your reply. Thank you for letting us know!",
     rsvpDeadlinePassedIntro:"RSVP is now closed.",
-    rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you.",
+    rsvpClosedYes:"Thank you, {name}! We've noted {count} attending, including you. See you there!",
     rsvpClosedNo:"Thank you, {name}! We've noted that you can't make it.",
     rsvpClosedDeadline:"RSVP closed on February 10, 2027. Please contact Linh & Thang directly if your plans change.",
     rsvpClosedNotReady:"RSVP isn't open for this invitation. Please contact Linh & Thang.",
@@ -329,6 +329,7 @@ const rsvpActionRow = document.getElementById("rsvpActionRow");
 const rsvpCalendarButton = document.getElementById("rsvpCalendarButton");
 const rsvpCancelEdit = document.getElementById("rsvpCancelEdit");
 const rsvpIntro = document.getElementById("rsvpIntro");
+const rsvpDeadline = document.querySelector(".rsvp-deadline");
 // The exact cutoff is February 10, 2027 at 23:59:59.999, Vietnam (UTC+7).
 const RSVP_DEADLINE_UTC = Date.parse("2027-02-10T23:59:59.999+07:00");
 const rsvpDeadlinePassed = () => Date.now() > RSVP_DEADLINE_UTC;
@@ -347,6 +348,7 @@ function refreshRsvpPanel() {
     rsvpView.kind === "deadline" ? "rsvpDeadlinePassedIntro" : "rsvpIntro"
   ];
   const confirmed = rsvpView.kind === "responded";
+  rsvpDeadline.classList.toggle("hidden", confirmed);
   const canChange = closed && confirmed && rsvpEditAllowed &&
     !rsvpDeadlinePassed() && !submissionUncertain;
   rsvpEditControls.classList.toggle("hidden", !canChange);
