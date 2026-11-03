@@ -2,12 +2,12 @@
   --bg:#ffffff;
   --paper:#ffffff;
   --paper2:#ffffff;
-  --ink:#315b73;
+  --ink:#142d4e;
   --muted:#587b90;
   --line:#bfd3df;
   --sage:#7e9fb3;
-  --button:#406b84;
-  --button-dark:#31576d;
+  --button:#142d4e;
+  --button-dark:#0b1e36;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -816,10 +816,10 @@ html .site-shell :is(
    Preserve the two-color text system: deep blue ink and white.
    Spotify's external iframe is provider-controlled and not styleable here. */
 :root {
-  --lt-text-dark:#315b73;
+  --lt-text-dark:#142d4e;
   --lt-text-light:#ffffff;
-  --button:#406b84;
-  --button-dark:#31576d;
+  --button:#142d4e;
+  --button-dark:#0b1e36;
 }
 html .site-shell,
 html .site-shell *,
