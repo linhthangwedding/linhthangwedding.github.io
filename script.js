@@ -83,7 +83,7 @@ const copy = {
     pageDescription:"Thiệp cưới của Linh và Thang",
     brandAria:"Linh và Thang",
     languageAria:"Chọn ngôn ngữ",
-    imageAlt:"Linh và Thang ở Paris"
+    imageAlt:"Tranh màu nước chân dung cưới của Linh và Thắng"
   },
   en:{
     weddingOf:"WE'RE GETTING MARRIED",
@@ -168,7 +168,7 @@ const copy = {
     pageDescription:"Come celebrate the wedding of Linh and Thang on February 28, 2027, in Ho Chi Minh City.",
     brandAria:"Linh and Thang",
     languageAria:"Choose a language",
-    imageAlt:"Linh and Thang in Paris",
+    imageAlt:"Watercolour wedding portrait of Linh and Thang",
   }
 };
 
