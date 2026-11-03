@@ -1,5 +1,5 @@
 :root{
-  --bg:#ffffff;
+  --bg:#e6eff5;
   --paper:#ffffff;
   --paper2:#ffffff;
   --ink:#142d4e;
@@ -13,7 +13,7 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;
-  background:#ffffff;
+  background:var(--bg);
   color:var(--ink);
   font-family:"Manrope",system-ui,sans-serif;
 }
