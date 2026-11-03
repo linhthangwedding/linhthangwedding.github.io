@@ -106,6 +106,9 @@ button,input,textarea{font:inherit}
 .hero-tagline{color:var(--muted);font-size:13px;line-height:1.7;max-width:360px;margin:0}
 
 .invite-card{
+  --invite-paper:#faf5f1;
+  --invite-line:#d7c7ba;
+  --lt-text-light:var(--invite-paper);
   position:relative;
   z-index:3;
   width:100%;
@@ -851,24 +854,33 @@ html .site-shell ::selection {
   background:var(--lt-text-dark);
 }
 
-/* Navy invitation section: light introductory text and an inverted RSVP button. */
+/* Beige accents on the navy invitation section. */
 html .site-shell .invite-card :is(
   .invite-kicker,.invite-guest-name,.invite-guest-notice,
   .invite-copy,.ornament,.ornament i
 ){
   color:var(--lt-text-light)!important;
 }
-.invite-card .ornament span{background:rgba(255,255,255,.55)}
+.invite-card .ornament span{background:rgba(250,245,241,.55)}
 html .site-shell .invite-card .btn.primary,
 html .site-shell .invite-card .btn.primary *{
   color:var(--lt-text-dark)!important;
 }
 .invite-card .primary{
-  background:#ffffff;
-  border-color:#ffffff;
+  background:var(--invite-paper);
+  border-color:var(--invite-paper);
 }
 .invite-card .primary:hover{
-  background:#e6eff5;
-  border-color:#e6eff5;
+  background:#eaded4;
+  border-color:#eaded4;
 }
-.invite-card .primary:focus-visible{outline-color:#ffffff}
+.invite-card .primary:focus-visible{outline-color:var(--invite-paper)}
+
+.invite-card .celebration-panel{
+  background:var(--invite-paper);
+  border-color:var(--invite-line);
+}
+.invite-card .fact{border-color:var(--invite-line)}
+.invite-card .botanical{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 220'%3E%3Cg fill='none' stroke='%23d7c7ba' stroke-width='1.6'%3E%3Cpath d='M26 215C34 165 47 112 86 26'/%3E%3Cpath d='M42 160c-24-9-31-28-31-43M52 137c26-5 39-19 46-36M61 112c-19-9-24-25-23-39M72 87c21-4 31-15 37-29'/%3E%3C/g%3E%3Cg fill='%23faf5f1' stroke='%23d7c7ba' stroke-width='1'%3E%3Cellipse cx='12' cy='114' rx='15' ry='8' transform='rotate(22 12 114)'/%3E%3Cellipse cx='101' cy='94' rx='16' ry='8' transform='rotate(-25 101 94)'/%3E%3Cellipse cx='35' cy='72' rx='14' ry='7' transform='rotate(28 35 72)'/%3E%3C/g%3E%3C/svg%3E");
+}
