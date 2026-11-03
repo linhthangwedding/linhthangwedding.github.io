@@ -107,7 +107,7 @@ button,input,textarea{font:inherit}
 .invite-card{
   position:relative;
   z-index:3;
-  width:calc(100% - 110px);
+  width:100%;
   margin:-34px auto 0;
   padding:46px 78px 42px;
   text-align:center;
@@ -420,7 +420,7 @@ footer{
   .hero-copy{padding:46px 22px 70px}
   .hero h1{font-size:60px}
   .hero-date{font-size:17px}
-  .invite-card{width:calc(100% - 26px);margin:-36px auto 0;padding:38px 20px 34px}
+  .invite-card{width:100%;margin:-36px auto 0;padding:38px 20px 34px}
   .invite-kicker{font-size:17px}
   .event-facts{grid-template-columns:1fr}
   .fact{border-right:0;border-bottom:1px solid #cfdee7;padding:15px 18px}
