@@ -888,7 +888,7 @@ html .site-shell .invite-card .btn.primary *{
   mask-position:center;
 }
 .invite-card .branch-left{transform:scaleX(-1)}
-.invite-card .branch-right{transform:none}
+.invite-card .branch-right{right:-44px;transform:none}
 
 /* Keep Spotify connected to the record's play/pause control without a visible card. */
 .hero .spotify-playback-service{
