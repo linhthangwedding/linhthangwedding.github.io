@@ -1,0 +1,19 @@
+/* Reactions fit inside the existing white Polaroid footer. */
+.polaroid{position:relative}
+.photo-heart{
+  position:absolute;left:50%;bottom:5px;transform:translateX(-50%);
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-width:72px;min-height:40px;padding:4px 12px;
+  border:0;border-radius:999px;background:transparent;color:var(--ink);
+  font:500 15px/1.4 "Noto Serif",Georgia,serif;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.photo-heart svg{display:block;width:22px;height:22px;flex:none;fill:transparent;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.photo-heart[aria-pressed="true"] svg{fill:currentColor}
+.photo-heart-count{min-width:1ch;font-size:15px;font-variant-numeric:tabular-nums}
+.photo-heart:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+.photo-heart:disabled{cursor:default;opacity:.55}
+@media(hover:hover){.photo-heart:not(:disabled):hover{background:#faf5f1}}
+@media(max-width:760px){.photo-heart{bottom:0;min-width:66px;gap:5px;padding:4px 9px}}
+@keyframes photo-heart-pop{0%,100%{transform:scale(1)}40%{transform:scale(1.25)}70%{transform:scale(.94)}}
+@media(prefers-reduced-motion:no-preference){.photo-heart.just-liked svg{animation:photo-heart-pop .38s ease-out}}

@@ -85,6 +85,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-watercolour-bouquet-20261103.png" fetchpriority="high">
   <link rel="stylesheet" href="styles.css?v=93">
+  <link rel="stylesheet" href="photo-hearts.css?v=1">
 </head>
 <body>
 <main class="site-shell">
@@ -247,14 +248,28 @@
     <div class="polaroid-gallery" role="group" aria-label="Three favorite moments of Linh and Thang">
       <figure class="polaroid polaroid--one">
         <div class="polaroid-photo"><img src="assets/polaroid-keukenhof-20261104.jpg" alt="Linh and Thang at Keukenhof" data-i18n-alt="storyPhotoKeukenhofAlt" width="1536" height="2048" loading="lazy" decoding="async"></div>
+        <button type="button" class="photo-heart" data-photo="keukenhof" disabled aria-pressed="false" aria-label="Loading likes">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+          <span class="photo-heart-count" aria-hidden="true">—</span>
+        </button>
       </figure>
       <figure class="polaroid polaroid--two">
         <div class="polaroid-photo"><img src="assets/polaroid-rotterdam.jpeg?v=20261102b" onerror="this.onerror=null;this.src='assets/louvre.jpeg'" alt="Linh and Thang in Rotterdam" loading="lazy" decoding="async"></div>
+        <button type="button" class="photo-heart" data-photo="rotterdam" disabled aria-pressed="false" aria-label="Loading likes">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+          <span class="photo-heart-count" aria-hidden="true">—</span>
+        </button>
       </figure>
       <figure class="polaroid polaroid--three">
         <div class="polaroid-photo"><img src="assets/polaroid-zaandam-20261104.jpg" alt="Linh and Thang in Zaandam" data-i18n-alt="storyPhotoZaandamAlt" width="2048" height="1536" loading="lazy" decoding="async"></div>
+        <button type="button" class="photo-heart" data-photo="zaandam" disabled aria-pressed="false" aria-label="Loading likes">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+          <span class="photo-heart-count" aria-hidden="true">—</span>
+        </button>
       </figure>
     </div>
+
+    <p id="photoHeartStatus" class="sr-only" role="status" aria-live="polite"></p>
 
     <div class="story-small-doodles" aria-hidden="true">
       <span class="story-doodle story-doodle-hearts"></span>
@@ -336,5 +351,6 @@ at 11:59 PM (VN time) or 5:59 PM (EU time).</p>
 </main>
 
 <script src="script.js?v=83"></script>
+<script src="photo-hearts.js?v=1"></script>
 </body>
 </html>

@@ -441,6 +441,7 @@ function doGet(e) {
     return ContentService.createTextOutput("/* Invalid callback */")
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
   }
+  if (q.action === "photoLikes") return js_(callback,photoHeartsRead_(q));
   if (q.action !== "guest" && q.action !== "status")
     return js_(callback,{saved:false,invalid:true});
   try {
@@ -494,6 +495,7 @@ function doGet(e) {
 }
 function doPost(e) {
   var p=(e&&e.parameter)||{};
+  if (p.action === "photoLike") return json_(photoHeartsWrite_(p));
   var invite=String(p.invite||"").trim();
   var attending=String(p.attending||"").trim();
   var venue=String(p.venue||"").trim();
