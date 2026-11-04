@@ -499,8 +499,8 @@ function doGet(e) {
 /**
  * Shared, anonymous polaroid hearts. Only random browser identifiers are used;
  * no invitation codes, names, emails or guest records are stored or returned.
- * A bucket is the single source of truth, so retrying a desired state cannot
- * double-count a vote. Script locks serialize simultaneous visitors safely.
+ * Cumulative per-browser totals make retries and out-of-order deliveries
+ * idempotent. Script locks serialize simultaneous visitors safely.
  * PropertiesService and Utilities require no extra Google data permissions.
  */
 var PHOTO_HEART_IDS_ = ["keukenhof","rotterdam","zaandam"];
@@ -518,31 +518,41 @@ function photoHeartBucket_(value) {
     throw new Error("Invalid photo-heart bucket");
   return data;
 }
+function photoHeartTotal_(value) {
+  // Preserve every heart saved by the original one-heart-per-browser version.
+  if(value===true) return 1;
+  return typeof value==="number" && Number.isSafeInteger(value) && value>0 ? value : 0;
+}
 function photoHeartSnapshot_(all,client) {
-  var counts={},liked={};
+  var counts={},liked={},mine={};
   PHOTO_HEART_IDS_.forEach(function(photo){
     var count=0;
+    mine[photo]=0;
     for(var i=0;i<16;i++){
       var key=PHOTO_HEART_PREFIX_+photo+":"+i.toString(16);
       var bucket=photoHeartBucket_(all[key]);
-      count+=Object.keys(bucket).filter(function(k){
-        return /^[a-f0-9]{23}$/.test(k) && bucket[k]===true;
-      }).length;
+      Object.keys(bucket).forEach(function(k){
+        if(/^[a-f0-9]{23}$/.test(k)) count+=photoHeartTotal_(bucket[k]);
+      });
       if(client && client.charAt(0)===i.toString(16))
-        liked[photo]=bucket[client.slice(1)]===true;
+        mine[photo]=photoHeartTotal_(bucket[client.slice(1)]);
     }
     counts[photo]=count;
-    if(!client) liked[photo]=false;
+    liked[photo]=mine[photo]>0;
   });
-  return {ok:true,heartsSupported:true,counts:counts,liked:liked};
+  return {ok:true,heartsSupported:true,heartsVersion:2,counts:counts,mine:mine,liked:liked};
 }
 function photoHearts_(q) {
   var writing=q.action==="photo-heart";
   var rawClient=String(q.client||"");
   var client=photoHeartClient_(rawClient);
   var photo=String(q.photo||"");
+  var cumulative=q.taps!==undefined;
+  var target=Number(q.taps);
   if((rawClient && !client) || (writing && (!client ||
-      PHOTO_HEART_IDS_.indexOf(photo)<0 || !/^[01]$/.test(String(q.liked)))))
+      PHOTO_HEART_IDS_.indexOf(photo)<0 || (cumulative ?
+        (!/^[1-9][0-9]{0,8}$/.test(String(q.taps)) || !Number.isSafeInteger(target)) :
+        !/^[01]$/.test(String(q.liked))))))
     return {ok:false,error:"invalid_parameters"};
   var lock=LockService.getScriptLock();
   if(!lock.tryLock(10000)) return {ok:false,error:"busy"};
@@ -552,9 +562,12 @@ function photoHearts_(q) {
     if(writing){
       var key=PHOTO_HEART_PREFIX_+photo+":"+client.charAt(0);
       var bucket=photoHeartBucket_(all[key]);
-      var member=client.slice(1),want=String(q.liked)==="1";
-      if((bucket[member]===true)!==want){
-        if(want) bucket[member]=true;
+      var member=client.slice(1),current=photoHeartTotal_(bucket[member]);
+      // An older cached toggle page must not remove cumulative hearts.
+      var want=cumulative ? Math.max(current,target) :
+        (typeof bucket[member]==="number" ? current : (String(q.liked)==="1" ? 1 : 0));
+      if(current!==want){
+        if(want) bucket[member]=cumulative ? want : true;
         else delete bucket[member];
         var serialized=JSON.stringify(bucket);
         if(serialized.length>8000) return {ok:false,error:"capacity"};
@@ -627,3 +640,4 @@ function doPost(e) {
     lock.releaseLock();
   }
 }
+

@@ -782,8 +782,10 @@ resolveInviteName();
   const buttons=[...document.querySelectorAll("[data-photo-heart]")];
   const status=document.getElementById("photoHeartStatus");
   if(!gallery || !buttons.length || !status) return;
+  const photos=buttons.map(button=>button.dataset.photoHeart);
   const storageKey="ltw:photo-heart-client:v1";
   const validClient=value=>/^[a-f0-9]{32}$/.test(value || "");
+  const validTotal=value=>Number.isSafeInteger(value) && value>=0 && value<=999999999;
   let client="";
   for(const kind of ["localStorage","sessionStorage"]){
     try{
@@ -799,25 +801,55 @@ resolveInviteName();
       try{window[kind].setItem(storageKey,client);}catch(_){}
     }
   }
-  let snapshot=null,ready=false,saving=false,inView=false;
-  let serial=0,appliedSerial=0,reading=null;
-  const pending=new Map();
+  const tapsKey=()=>"ltw:photo-heart-taps:v2:"+client;
+  const blankTotals=()=>Object.fromEntries(photos.map(photo=>[photo,0]));
+  function storedTotals(){
+    const totals=blankTotals();
+    for(const kind of ["localStorage","sessionStorage"]){
+      try{
+        const saved=JSON.parse(window[kind].getItem(tapsKey()) || "{}");
+        for(const photo of photos) if(validTotal(saved?.[photo]))
+          totals[photo]=Math.max(totals[photo],saved[photo]);
+      }catch(_){}
+    }
+    return totals;
+  }
+  let desired=storedTotals(),unallocated=blankTotals();
+  let snapshot=null,ready=false,saving=false,allocating=false,inView=false;
+  let serial=0,appliedSerial=0,reading=null,retryTimer=null,retryDelay=1500;
   const isVietnamese=()=>document.documentElement.lang==="vi";
+  const pending=()=>snapshot && photos.some(photo=>desired[photo]>snapshot.mine[photo]);
+  function persist(){
+    const saved=storedTotals();
+    for(const photo of photos) desired[photo]=Math.max(desired[photo],saved[photo]);
+    for(const kind of ["localStorage","sessionStorage"]){
+      try{window[kind].setItem(tapsKey(),JSON.stringify(desired));}catch(_){}
+    }
+  }
   function render(){
     buttons.forEach(button=>{
       const photo=button.dataset.photoHeart;
-      const confirmed=!!snapshot?.liked[photo];
-      const liked=pending.has(photo)?pending.get(photo):confirmed;
-      const count=snapshot ? Math.max(0,snapshot.counts[photo]+Number(liked)-Number(confirmed)) : null;
+      const extra=snapshot?Math.max(0,desired[photo]-snapshot.mine[photo])+unallocated[photo]:0;
+      const count=snapshot?snapshot.counts[photo]+extra:null;
       button.querySelector(".photo-heart-count").textContent=count===null?"—":String(count);
-      button.setAttribute("aria-pressed",String(liked));
-      button.setAttribute("aria-busy",String(pending.has(photo)));
-      const action=isVietnamese()?(liked?"Bỏ tim ảnh này":"Thả tim ảnh này"):
-        (liked?"Unlike this photo":"Like this photo");
-      const total=count===null?"":(isVietnamese()?`, ${count} lượt tim`:`; ${count} likes`);
+      button.setAttribute("data-hearted",String(!!snapshot && (desired[photo]>0 || unallocated[photo]>0)));
+      button.setAttribute("aria-busy",String(extra>0));
+      const action=isVietnamese()?"Thả thêm tim cho ảnh này":"Send another heart to this photo";
+      const total=count===null?"":(isVietnamese()?", "+count+" lượt tim":"; "+count+" hearts");
       button.setAttribute("aria-label",action+total);
       button.disabled=!ready;
     });
+  }
+  function floatHeart(button){
+    const heart=document.createElement("span");
+    heart.className="photo-heart-float";
+    heart.setAttribute("aria-hidden","true");
+    heart.style.setProperty("--heart-drift",(Math.random()*64-32).toFixed(1)+"px");
+    heart.style.setProperty("--heart-turn",(Math.random()*36-18).toFixed(1)+"deg");
+    heart.appendChild(button.querySelector("svg").cloneNode(true));
+    button.parentElement.appendChild(heart);
+    heart.addEventListener("animationend",()=>heart.remove(),{once:true});
+    setTimeout(()=>heart.remove(),1800);
   }
   function request(action,params={}){
     return new Promise((resolve,reject)=>{
@@ -840,11 +872,9 @@ resolveInviteName();
       };
       const timer=setTimeout(()=>finish(new Error("Photo hearts timed out")),20000);
       window[callback]=data=>{
-        const valid=data?.ok===true && data.heartsSupported===true && buttons.every(button=>{
-          const id=button.dataset.photoHeart;
-          return Number.isSafeInteger(data.counts?.[id]) && data.counts[id]>=0 &&
-            typeof data.liked?.[id]==="boolean";
-        });
+        const valid=data?.ok===true && data.heartsSupported===true && data.heartsVersion>=2 &&
+          photos.every(photo=>Number.isSafeInteger(data.counts?.[photo]) && data.counts[photo]>=0 &&
+            validTotal(data.mine?.[photo]) && data.counts[photo]>=data.mine[photo]);
         finish(valid?null:new Error("Photo hearts unavailable"),data);
       };
       script.onerror=()=>finish(new Error("Photo hearts unavailable"));
@@ -852,58 +882,103 @@ resolveInviteName();
       document.head.appendChild(script);
     });
   }
+  function accept(data){
+    // Another tab can finish a newer save before an older response arrives.
+    if(snapshot) for(const photo of photos){
+      if(data.mine[photo]<snapshot.mine[photo]){
+        data.mine[photo]=snapshot.mine[photo];
+        data.counts[photo]=snapshot.counts[photo];
+      }
+    }
+    snapshot=data;ready=true;
+    for(const photo of photos) desired[photo]=Math.max(desired[photo],data.mine[photo]);
+    persist();retryDelay=1500;
+    status.textContent="";
+    render();
+  }
+  function scheduleRetry(){
+    if(retryTimer!==null) return;
+    retryTimer=setTimeout(()=>{
+      retryTimer=null;
+      if(pending()) synchronize();else refresh();
+    },retryDelay);
+    retryDelay=Math.min(retryDelay*2,15000);
+  }
   function refresh(){
-    if(saving || pending.size) return Promise.resolve();
+    if(saving || pending()) return synchronize();
     if(reading) return reading;
-    const requestSerial=++serial;
+    const requestSerial=++serial,requestClient=client;
     reading=request("photo-hearts").then(data=>{
-      if(saving || pending.size || requestSerial<appliedSerial) return;
-      snapshot=data;ready=true;appliedSerial=requestSerial;
-      status.textContent="";
-      render();
+      if(client!==requestClient || saving || pending() || requestSerial<appliedSerial) return;
+      appliedSerial=requestSerial;
+      accept(data);
     }).catch(()=>{
-      if(!snapshot) ready=false;
-      render();
-    }).finally(()=>{reading=null;});
+      if(!snapshot) status.textContent=isVietnamese()?"Đang kết nối lượt tim.":"Connecting photo hearts.";
+      scheduleRetry();
+    }).finally(()=>{
+      reading=null;
+      if(pending()) synchronize();
+    });
     return reading;
   }
   async function synchronize(){
-    if(saving || !ready) return;
+    if(saving || !ready || !pending()) return;
     saving=true;
     const requestClient=client;
     try{
-      while(pending.size && ready && client===requestClient){
-        const [photo,want]=pending.entries().next().value;
-        // Quick repeated taps are coalesced into the latest desired state.
-        if(want===snapshot.liked[photo]){pending.delete(photo);continue;}
-        const data=await request("photo-heart",{photo,liked:want?"1":"0"});
+      while(pending() && client===requestClient){
+        const photo=photos.find(id=>desired[id]>snapshot.mine[id]);
+        const target=desired[photo];
+        const data=await request("photo-heart",{photo,taps:String(target)});
         if(client!==requestClient) break;
-        snapshot=data;
-        if(pending.get(photo)===want) pending.delete(photo);
-        status.textContent=isVietnamese()?"Đã cập nhật lượt tim.":"Photo like updated.";
-        render();
+        accept(data);
       }
+      if(client===requestClient)
+        status.textContent=isVietnamese()?"Đã lưu lượt tim.":"Hearts saved.";
     }catch(_){
-      // Restore confirmed totals, then read again: a response can be lost
-      // after a successful save. Never keep an unconfirmed extra heart.
-      pending.clear();
-      ready=false;
-      status.textContent=isVietnamese()?"Chưa xác nhận được lượt tim. Đang thử kết nối lại.":
-        "Could not confirm your like. Reconnecting.";
+      // Keep the visible count and persisted target. Retrying the same cumulative
+      // total is safe even when the server saved it but its response was lost.
+      status.textContent=isVietnamese()?"Lượt tim đang chờ kết nối để lưu.":
+        "Your hearts will save when the connection returns.";
+      scheduleRetry();
     }finally{
       saving=false;render();
-      if(!ready){if(reading) await reading;refresh();}
+      if(client!==requestClient) refresh();
+    }
+  }
+  function allocateTaps(){
+    if(allocating) return;
+    allocating=true;
+    const requestClient=client;
+    const allocate=()=>{
+      if(client!==requestClient) return;
+      const saved=storedTotals();
+      for(const photo of photos){
+        desired[photo]=Math.min(999999999,Math.max(desired[photo],saved[photo],
+          snapshot?.mine[photo] || 0)+unallocated[photo]);
+        unallocated[photo]=0;
+      }
+      persist();render();
+    };
+    // Serialize allocation between tabs without delaying this tap's animation
+    // or immediate count. Each tab still sends idempotent cumulative totals.
+    const locks=window.navigator?.locks;
+    if(locks){
+      locks.request(tapsKey(),allocate).catch(allocate).finally(()=>{
+        allocating=false;
+        if(photos.some(photo=>unallocated[photo])) allocateTaps();
+        synchronize();
+      });
+    }else{
+      allocate();allocating=false;synchronize();
     }
   }
   buttons.forEach(button=>button.addEventListener("click",()=>{
     if(!ready || !snapshot) return;
     const photo=button.dataset.photoHeart;
-    const liked=pending.has(photo)?pending.get(photo):snapshot.liked[photo];
-    pending.set(photo,!liked);
+    unallocated[photo]++;
     appliedSerial=++serial;
-    // Update the heart and count in this click's render, before network I/O.
-    render();
-    synchronize();
+    floatHeart(button);render();allocateTaps();
   }));
   new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
   if("IntersectionObserver" in window){
@@ -915,16 +990,26 @@ resolveInviteName();
   setInterval(()=>{
     if(inView && document.visibilityState==="visible") refresh();
   },15000);
-  window.addEventListener("focus",()=>{if(inView) refresh();});
-  window.addEventListener("online",refresh);
-  window.addEventListener("pageshow",event=>{if(event.persisted) refresh();});
+  const reconnect=()=>{
+    if(retryTimer!==null){clearTimeout(retryTimer);retryTimer=null;}
+    if(pending()) synchronize();else refresh();
+  };
+  window.addEventListener("focus",()=>{if(inView) reconnect();});
+  window.addEventListener("online",reconnect);
+  window.addEventListener("pageshow",event=>{if(event.persisted) reconnect();});
   document.addEventListener("visibilitychange",()=>{
-    if(inView && document.visibilityState==="visible") refresh();
+    if(inView && document.visibilityState==="visible") reconnect();
   });
   window.addEventListener("storage",event=>{
     if(event.key===storageKey && validClient(event.newValue) && event.newValue!==client){
-      client=event.newValue;pending.clear();ready=false;appliedSerial=++serial;render();refresh();
+      client=event.newValue;desired=storedTotals();unallocated=blankTotals();
+      snapshot=null;ready=false;appliedSerial=++serial;render();refresh();
+    }else if(event.key===tapsKey()){
+      const saved=storedTotals();
+      for(const photo of photos) desired[photo]=Math.max(desired[photo],saved[photo]);
+      render();synchronize();
     }
   });
   render();refresh();
 })();
+

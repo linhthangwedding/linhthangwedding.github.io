@@ -6,32 +6,36 @@ const {webcrypto}=require('node:crypto');
 const source=fs.readFileSync(path.join(__dirname,'../script.js'),'utf8');
 const ui=source.slice(source.indexOf('(function initPhotoHearts(){'));
 const ids=['keukenhof','rotterdam','zaandam'];
-const baseline=()=>({ok:true,heartsSupported:true,counts:{keukenhof:7,rotterdam:3,zaandam:5},liked:{keukenhof:false,rotterdam:false,zaandam:false}});
-const tick=async()=>{for(let i=0;i<12;i++) await Promise.resolve();};
-function fixture(){
-  const requests=[],events={},status={textContent:''};
+const baseline=()=>({ok:true,heartsSupported:true,heartsVersion:2,counts:{keukenhof:7,rotterdam:3,zaandam:5},mine:{keukenhof:0,rotterdam:0,zaandam:0}});
+const tick=async()=>{for(let i=0;i<25;i++) await Promise.resolve();};
+function fixture({storage=new Map(),locks}={}){
+  const requests=[],events={},timers=new Map(),floats=[],status={textContent:''};
+  let timerId=0;
   const buttons=ids.map(photo=>({
     dataset:{photoHeart:photo},attributes:{},count:{textContent:''},disabled:true,
+    parentElement:{appendChild:heart=>floats.push(heart)},
     setAttribute(key,value){this.attributes[key]=value;},
-    querySelector(){return this.count;},
+    querySelector(selector){return selector==='svg'?{cloneNode:()=>({})}:this.count;},
     addEventListener(_,handler){this.click=handler;}
   }));
-  const storage=new Map();
-  const window={crypto:webcrypto,
+  const window={crypto:webcrypto,navigator:{locks},
     localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
     sessionStorage:{getItem:()=>null,setItem(){}},
     addEventListener:(name,handler)=>{events[name]=handler;}
   };
   const document={documentElement:{lang:'vi'},visibilityState:'visible',
     querySelector:()=>({}),querySelectorAll:()=>buttons,getElementById:()=>status,
-    createElement:()=>({remove(){}}),
+    createElement:()=>({attributes:{},style:{setProperty(){}},setAttribute(k,v){this.attributes[k]=v;},
+      appendChild(){},addEventListener(){},remove(){this.removed=true;}}),
     head:{appendChild(script){
       const params=new URL(script.src).searchParams;
       requests.push({script,params,done:false});
     }},addEventListener(){}
   };
   vm.runInNewContext(ui,{window,document,URL,Uint8Array,RSVP_ENDPOINT:'https://example.test/exec',
-    MutationObserver:class{observe(){}},setTimeout:()=>1,clearTimeout(){},setInterval(){}
+    MutationObserver:class{observe(){}},
+    setTimeout:(callback,delay)=>{const id=++timerId;timers.set(id,{callback,delay});return id;},
+    clearTimeout:id=>timers.delete(id),setInterval(){}
   });
   const take=action=>{
     const request=requests.find(r=>!r.done&&r.params.get('action')===action);
@@ -39,58 +43,82 @@ function fixture(){
     return request;
   };
   const respond=(request,data)=>{
-    request.done=true;
-    window[request.params.get('callback')](structuredClone(data));
+    request.done=true;window[request.params.get('callback')](structuredClone(data));
   };
-  const state=i=>({count:buttons[i].count.textContent,pressed:buttons[i].attributes['aria-pressed'],disabled:buttons[i].disabled});
-  return {buttons,requests,events,status,take,respond,state,
-    async start(){respond(take('photo-hearts'),baseline());await tick();}
+  const state=i=>({count:buttons[i].count.textContent,hearted:buttons[i].attributes['data-hearted'],disabled:buttons[i].disabled});
+  return {buttons,requests,events,status,take,respond,state,storage,floats,timers,
+    fail(request){request.done=true;request.script.onerror();},
+    retry(){const entry=[...timers.values()].find(t=>t.delay===1500);assert.ok(entry);entry.callback();},
+    async start(data=baseline()){respond(take('photo-hearts'),data);await tick();}
   };
 }
+function saved(mine){
+  const data=baseline();
+  for(const photo of ids){data.mine[photo]=mine[photo] || 0;data.counts[photo]+=data.mine[photo];}
+  return data;
+}
 (async()=>{
-  // Hold every network response. Feedback must happen during the click itself.
   let f=fixture();await f.start();
-  f.buttons[0].click();
-  assert.deepEqual(f.state(0),{count:'8',pressed:'true',disabled:false});
-  const first=f.take('photo-heart');
-  f.buttons[1].click();
-  assert.deepEqual(f.state(1),{count:'4',pressed:'true',disabled:false});
-  assert.equal(f.requests.filter(r=>r.params.get('action')==='photo-heart').length,1);
-  const a=baseline();a.counts.keukenhof=8;a.liked.keukenhof=true;
-  f.respond(first,a);await tick();
-  assert.equal(f.state(1).count,'4','First response must not erase another pending photo');
-  const second=f.take('photo-heart');assert.equal(second.params.get('photo'),'rotterdam');
-  const ab=structuredClone(a);ab.counts.rotterdam=4;ab.liked.rotterdam=true;
-  f.respond(second,ab);await tick();
-  assert.equal(f.state(0).count,'8');assert.equal(f.state(1).count,'4');
+  for(let i=0;i<12;i++) f.buttons[0].click();
+  assert.deepEqual(f.state(0),{count:'19',hearted:'true',disabled:false});
+  assert.equal(f.floats.length,12,'Every tap emits its own heart immediately');
+  assert.equal(f.floats.every(h=>h.className==='photo-heart-float'&&h.attributes['aria-hidden']==='true'),true);
+  let first=f.take('photo-heart');assert.equal(first.params.get('taps'),'1');
+  f.buttons[1].click();f.buttons[1].click();f.buttons[2].click();
+  assert.equal(f.state(1).count,'5');assert.equal(f.state(2).count,'6');
+  f.respond(first,saved({keukenhof:1}));await tick();
+  assert.equal(f.state(0).count,'19','An acknowledgement must not erase taps made while saving');
+  let next=f.take('photo-heart');assert.equal(next.params.get('taps'),'12');
+  f.respond(next,saved({keukenhof:12}));await tick();
+  next=f.take('photo-heart');assert.equal(next.params.get('photo'),'rotterdam');
+  assert.equal(next.params.get('taps'),'2');
+  f.respond(next,saved({keukenhof:12,rotterdam:2}));await tick();
+  next=f.take('photo-heart');assert.equal(next.params.get('photo'),'zaandam');
+  f.respond(next,saved({keukenhof:12,rotterdam:2,zaandam:1}));await tick();
+  assert.deepEqual(ids.map((_,i)=>f.state(i).count),['19','5','6']);
+  for(const h of f.floats) assert.equal(h.removed,undefined);
+  for(const timer of f.timers.values()) if(timer.delay===1800) timer.callback();
+  assert.equal(f.floats.every(h=>h.removed),true,'Animation cleanup removes particles');
 
-  // Undo before the first response: keep the latest intent visible throughout.
-  f=fixture();await f.start();f.buttons[0].click();
-  const like=f.take('photo-heart');f.buttons[0].click();
-  assert.deepEqual(f.state(0),{count:'7',pressed:'false',disabled:false});
-  f.respond(like,a);await tick();
-  assert.equal(f.state(0).count,'7','Late like acknowledgement must not flash the old intent');
-  const unlike=f.take('photo-heart');assert.equal(unlike.params.get('liked'),'0');
-  f.respond(unlike,baseline());await tick();
-  f.buttons[0].click();const triple=f.take('photo-heart');f.buttons[0].click();f.buttons[0].click();
-  assert.equal(f.state(0).count,'8');f.respond(triple,a);await tick();
-  assert.equal(f.requests.filter(r=>!r.done&&r.params.get('action')==='photo-heart').length,0,'Coalesce repeated taps');
-
-  // A poll started before a click must not roll back the immediate update.
   f=fixture();await f.start();f.events.focus();const stale=f.take('photo-hearts');
-  f.buttons[0].click();const write=f.take('photo-heart');
+  f.buttons[0].click();first=f.take('photo-heart');
   f.respond(stale,baseline());await tick();assert.equal(f.state(0).count,'8');
-  f.respond(write,a);await tick();assert.equal(f.state(0).count,'8');
+  f.respond(first,saved({keukenhof:1}));await tick();assert.equal(f.state(0).count,'8');
 
-  // Failed delivery can mean either no save or a lost successful response.
-  for(const saved of [false,true]){
-    f=fixture();await f.start();f.buttons[0].click();const failed=f.take('photo-heart');
-    failed.done=true;failed.script.onerror();await tick();
-    assert.deepEqual(f.state(0),{count:'7',pressed:'false',disabled:true});
-    assert.ok(f.status.textContent.includes('Chưa xác nhận'));
-    f.respond(f.take('photo-hearts'),saved?a:baseline());await tick();
-    assert.deepEqual(f.state(0),{count:saved?'8':'7',pressed:String(saved),disabled:false});
-    assert.equal(f.requests.filter(r=>r.params.get('action')==='photo-heart').length,1,'Read back uncertain saves instead of double-submitting');
+  for(const alreadySaved of [false,true]){
+    f=fixture();await f.start();f.buttons[0].click();first=f.take('photo-heart');
+    f.fail(first);await tick();
+    assert.deepEqual(f.state(0),{count:'8',hearted:'true',disabled:false});
+    f.buttons[0].click();next=f.take('photo-heart');assert.equal(next.params.get('taps'),'2');
+    f.respond(next,saved({keukenhof:2}));await tick();assert.equal(f.state(0).count,'9');
+    // Reopening after a failed response must resend the persisted cumulative
+    // target; this is safe whether or not the earlier server save succeeded.
+    f=fixture();await f.start();f.buttons[2].click();first=f.take('photo-heart');
+    f.fail(first);await tick();
+    const returning=fixture({storage:f.storage});
+    await returning.start(alreadySaved?saved({zaandam:1}):baseline());
+    if(!alreadySaved){
+      const retry=returning.take('photo-heart');assert.equal(retry.params.get('taps'),'1');
+      returning.respond(retry,saved({zaandam:1}));await tick();
+    }
+    assert.equal(returning.state(2).count,'6');
   }
-  console.log('PASS: immediate counts before network response; independent photos; rapid undo/coalescing; stale polls; failure rollback and reconciliation.');
+
+  // Web Locks allocate simultaneous taps in separate tabs to distinct targets.
+  let chain=Promise.resolve();
+  const locks={request:(_name,run)=>{const p=chain.then(run);chain=p.catch(()=>{});return p;}};
+  const storage=new Map(),tabA=fixture({storage,locks});
+  await tabA.start();
+  const tabB=fixture({storage,locks});await tabB.start();
+  tabA.buttons[0].click();tabB.buttons[0].click();
+  assert.equal(tabA.state(0).count,'8');assert.equal(tabB.state(0).count,'8','Feedback does not wait for a lock');
+  await tick();
+  const a=tabA.take('photo-heart'),b=tabB.take('photo-heart');
+  assert.equal(a.params.get('taps'),'1');assert.equal(b.params.get('taps'),'2','Concurrent tabs do not lose a tap');
+  tabA.respond(a,saved({keukenhof:1}));tabB.respond(b,saved({keukenhof:2}));await tick();
+  const newer=tabA.requests.find(r=>!r.done&&r.params.get('action')==='photo-heart');
+  if(newer){assert.equal(newer.params.get('taps'),'2');tabA.respond(newer,saved({keukenhof:2}));await tick();}
+  assert.equal(tabA.state(0).count,'9');assert.equal(tabB.state(0).count,'9');
+  console.log('PASS: instant repeated taps and particles; independent photos; stale polls; offline retention and reload; idempotent retry; concurrent tabs; particle cleanup.');
 })().catch(error=>{console.error(error);process.exitCode=1;});
+
