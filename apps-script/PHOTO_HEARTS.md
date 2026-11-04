@@ -48,5 +48,12 @@ Live verification must check two independent browser profiles, then undo test li
 No real RSVP should be submitted. Guest List, PREP/LIVE, existing invitation
 lookups and RSVP data are untouched.
 
-Deploy status: source prepared and automated checks passed; Google Apps Script
-editor sign-in and deployment still required before this feature is live.
+Deploy status (2026-11-04): source prepared and five automated checks passed.
+The existing Wedding Invitation Apps Script editor is signed in, PhotoHearts.gs
+and the two routes are saved, and deployment reached Google's authorization gate.
+The deployment was not completed: automatic approval review blocked Authorize
+access because the exact scopes are not yet visible and explicit approval is
+missing. The production website is unchanged; no shared counts are live yet.
+Continue the existing deployment only after the user approves opening the
+Google authorization step, inspect the requested scopes, then verify the API
+before publishing the website. Never run activateWeddingInvitations.
