@@ -540,7 +540,7 @@ footer{
   object-position:center center;
 }
 .polaroid--two img{object-position:center 62%}
-.polaroid--three img{object-position:center 58%}
+.polaroid--three img{object-position:38% center}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){
   .polaroid:hover{
     transform:rotate(0deg) translateY(-5px);
