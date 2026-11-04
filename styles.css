@@ -566,6 +566,9 @@ footer{
   animation:photo-heart-float 1.5s cubic-bezier(.22,.61,.36,1) both;
 }
 .photo-heart-float svg{display:block;width:100%;height:100%;fill:currentColor;stroke:currentColor;stroke-width:1.2}
+/* Heart accents override the invitation-wide text palette, including SVG paths. */
+html .site-shell :is(.photo-heart,.photo-heart-float),
+html .site-shell :is(.photo-heart,.photo-heart-float) *{color:#d43f46!important}
 @keyframes photo-heart-float{
   0%{opacity:1;transform:translate(-50%,0) scale(.65)}
   14%{opacity:1}
