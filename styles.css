@@ -1061,8 +1061,8 @@ html[lang="vi"] .story-origin-art{
 @media(prefers-reduced-motion:no-preference){
   .invite-card .botanical,.story-origin-art,.story-doodle,
   .rsvp-section::before,.rsvp-section::after{
-    animation:invitation-doodle-sway var(--sway-duration,3.8s) ease-in-out infinite;
-    animation-delay:var(--sway-delay,0s);
+    animation:invitation-doodle-sway calc(var(--sway-duration,3.8s) / 3) ease-in-out infinite;
+    animation-delay:calc(var(--sway-delay,0s) / 3);
     transform-origin:50% 50%;
   }
   .invite-card .branch-left{
