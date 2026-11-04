@@ -12,6 +12,9 @@ const context=vm.createContext({
   ContentService:{MimeType:{JAVASCRIPT:'js',JSON:'json'},createTextOutput:value=>({value,setMimeType(){return this;}})}
 });
 vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../apps-script/Code.gs'),'utf8'),context);
+// Apps Script shares a global namespace across files. Loading the retained
+// legacy file after Code.gs must not replace the current snapshot handler.
+vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'../apps-script/PhotoHearts.gs'),'utf8'),context);
 const call=q=>JSON.parse(JSON.stringify(context.photoHearts_(q)));
 const read=client=>call({action:'photo-hearts',client});
 const vote=(client,photo,liked)=>call({action:'photo-heart',client,photo,liked});

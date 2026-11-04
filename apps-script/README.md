@@ -155,6 +155,8 @@ Lỗi này có thể xảy ra khi Web App vẫn chạy một bản Code.gs cũ h
 - Cần giữ PREP cho tới khi người dùng yêu cầu launch batch đầu tiên. Khi LIVE, những link đã gửi từ sau thời điểm launch được lưu lịch sử.
 # Nút tim ẩn danh cho ba ảnh polaroid — 04/11/2026
 
+**Bản sửa đã triển khai:** Web App Version 17 (04/11/2026). Dự án Google còn có file `PhotoHearts.gs` từ lần chuẩn bị trước. Hàm `photoHeartSnapshot_` trong file cũ đã được đổi thành `legacyPhotoHeartSnapshot_` cùng hai chỗ gọi của nó để tránh ghi đè hàm cùng tên trong `Code.gs`. Khi đồng bộ dự án hiện có, cần giữ bản `PhotoHearts.gs` đã sửa này. Kiểm thử hồi quy nạp cả hai file trong cùng môi trường để phát hiện lỗi trùng hàm.
+
 Mã trong `Code.gs` bổ sung bộ đếm chung cho Keukenhof, Rotterdam và Zaandam. API chỉ nhận mã ngẫu nhiên của trình duyệt; không nhận hoặc trả tên, email hay mã thiệp của khách. Mỗi trình duyệt bật/tắt một tim trên mỗi ảnh. Bấm lại hoặc gửi lại cùng yêu cầu không cộng trùng. Các khách đang xem ảnh được cập nhật tổng lượt tim khoảng mỗi 15 giây.
 
 Lượt tim được lưu trong Script Properties, tách khỏi Guest List và RSVP Online, không cần thêm quyền đọc dữ liệu Google. Xóa dữ liệu trình duyệt hoặc dùng trình duyệt khác sẽ tạo một mã ẩn danh mới.
