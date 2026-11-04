@@ -506,6 +506,7 @@ footer{
 }
 .polaroid{
   --tilt:0deg;
+  position:relative;
   box-sizing:border-box;
   width:min(100%,215px);
   min-width:0;
@@ -541,6 +542,25 @@ footer{
 }
 .polaroid--two img{object-position:center 62%}
 .polaroid--three img{object-position:38% center}
+.photo-heart{
+  position:absolute;left:50%;bottom:5px;transform:translateX(-50%);
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-width:76px;min-height:44px;padding:4px 12px;
+  border:0;border-radius:22px;background:transparent;color:var(--ink);
+  font:500 14px/1.2 var(--font-sans, sans-serif);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.photo-heart svg{width:22px;height:22px;fill:transparent;stroke:currentColor;stroke-width:1.7;transition:fill .18s,color .18s,transform .18s}
+.photo-heart[aria-pressed="true"]{color:#c84f67}
+.photo-heart[aria-pressed="true"] svg{fill:currentColor}
+.photo-heart:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+.photo-heart[aria-busy="true"]{opacity:.6;cursor:wait}
+.photo-heart:disabled{cursor:default;opacity:.55}
+.photo-heart-count{min-width:1ch;font-variant-numeric:tabular-nums}
+.photo-heart-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+@media(max-width:760px){.photo-heart{bottom:0;min-height:40px;gap:5px;font-size:13px}.photo-heart svg{width:20px;height:20px}}
+@media(hover:hover){.photo-heart:hover:not(:disabled){background:rgba(200,79,103,.07)}}
+@media(prefers-reduced-motion:no-preference){.photo-heart[aria-pressed="true"] svg{animation:photo-heart-pop .28s ease-out}@keyframes photo-heart-pop{50%{transform:scale(1.18)}}}
 @media(hover:hover) and (prefers-reduced-motion:no-preference){
   .polaroid:hover{
     transform:rotate(0deg) translateY(-5px);

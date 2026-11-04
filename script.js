@@ -774,3 +774,141 @@ resolveInviteName();
     });
   }
 })();
+
+// Shared polaroid hearts. The API receives only a random browser token;
+// invitation codes and guest names never accompany a photo-heart request.
+(function initPhotoHearts(){
+  const gallery=document.querySelector(".polaroid-gallery");
+  const buttons=[...document.querySelectorAll("[data-photo-heart]")];
+  const status=document.getElementById("photoHeartStatus");
+  if(!gallery || !buttons.length || !status) return;
+  const storageKey="ltw:photo-heart-client:v1";
+  const validClient=value=>/^[a-f0-9]{32}$/.test(value || "");
+  let client="";
+  for(const kind of ["localStorage","sessionStorage"]){
+    try{
+      const saved=window[kind].getItem(storageKey);
+      if(validClient(saved)){client=saved;break;}
+    }catch(_){}
+  }
+  if(!client){
+    const bytes=new Uint8Array(16);
+    window.crypto.getRandomValues(bytes);
+    client=Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+    for(const kind of ["localStorage","sessionStorage"]){
+      try{window[kind].setItem(storageKey,client);}catch(_){}
+    }
+  }
+  let snapshot=null,ready=false,saving=false,inView=false;
+  let serial=0,appliedSerial=0,reading=null;
+  const isVietnamese=()=>document.documentElement.lang==="vi";
+  function render(){
+    buttons.forEach(button=>{
+      const photo=button.dataset.photoHeart;
+      const liked=!!snapshot?.liked[photo];
+      const count=snapshot ? snapshot.counts[photo] : null;
+      button.querySelector(".photo-heart-count").textContent=count===null?"—":String(count);
+      button.setAttribute("aria-pressed",String(liked));
+      button.setAttribute("aria-busy",String(saving));
+      const action=isVietnamese()?(liked?"Bỏ tim ảnh này":"Thả tim ảnh này"):
+        (liked?"Unlike this photo":"Like this photo");
+      const total=count===null?"":(isVietnamese()?`, ${count} lượt tim`:`; ${count} likes`);
+      button.setAttribute("aria-label",action+total);
+      button.disabled=!ready || saving;
+    });
+  }
+  function request(action,params={}){
+    return new Promise((resolve,reject)=>{
+      const callback="ltPhotoHearts"+Math.random().toString(36).slice(2);
+      const script=document.createElement("script");
+      const endpoint=new URL(RSVP_ENDPOINT);
+      endpoint.searchParams.set("action",action);
+      endpoint.searchParams.set("client",client);
+      endpoint.searchParams.set("callback",callback);
+      endpoint.searchParams.set("nocache",String(Date.now()));
+      for(const [key,value] of Object.entries(params)) endpoint.searchParams.set(key,value);
+      let settled=false;
+      const finish=(error,data)=>{
+        if(settled) return;
+        settled=true;
+        clearTimeout(timer);
+        script.remove();
+        delete window[callback];
+        if(error) reject(error);else resolve(data);
+      };
+      const timer=setTimeout(()=>finish(new Error("Photo hearts timed out")),20000);
+      window[callback]=data=>{
+        const valid=data?.ok===true && data.heartsSupported===true && buttons.every(button=>{
+          const id=button.dataset.photoHeart;
+          return Number.isSafeInteger(data.counts?.[id]) && data.counts[id]>=0 &&
+            typeof data.liked?.[id]==="boolean";
+        });
+        finish(valid?null:new Error("Photo hearts unavailable"),data);
+      };
+      script.onerror=()=>finish(new Error("Photo hearts unavailable"));
+      script.src=endpoint.toString();
+      document.head.appendChild(script);
+    });
+  }
+  function refresh(){
+    if(saving) return Promise.resolve();
+    if(reading) return reading;
+    const requestSerial=++serial;
+    reading=request("photo-hearts").then(data=>{
+      if(saving || requestSerial<appliedSerial) return;
+      snapshot=data;ready=true;appliedSerial=requestSerial;
+      status.textContent="";
+      render();
+    }).catch(()=>{
+      if(!snapshot) ready=false;
+      render();
+    }).finally(()=>{reading=null;});
+    return reading;
+  }
+  buttons.forEach(button=>button.addEventListener("click",async()=>{
+    if(!ready || saving || !snapshot) return;
+    const photo=button.dataset.photoHeart;
+    const want=!snapshot.liked[photo];
+    saving=true;
+    const requestSerial=++serial;
+    appliedSerial=requestSerial;
+    render();
+    let confirmed=false;
+    try{
+      const data=await request("photo-heart",{photo,liked:want?"1":"0"});
+      snapshot=data;ready=true;confirmed=true;
+      status.textContent=isVietnamese()?"Đã cập nhật lượt tim.":"Photo like updated.";
+    }catch(_){
+      // A lost response can follow a successful save. Reconcile before
+      // allowing another click; retrying must never accidentally undo it.
+      ready=false;
+      status.textContent=isVietnamese()?"Chưa xác nhận được lượt tim. Đang thử kết nối lại.":
+        "Could not confirm your like. Reconnecting.";
+    }finally{
+      saving=false;render();
+      if(!confirmed){if(reading) await reading;refresh();}
+    }
+  }));
+  new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(entries=>{
+      inView=entries.some(entry=>entry.isIntersecting);
+      if(inView) refresh();
+    },{rootMargin:"160px"}).observe(gallery);
+  }else inView=true;
+  setInterval(()=>{
+    if(inView && document.visibilityState==="visible") refresh();
+  },15000);
+  window.addEventListener("focus",()=>{if(inView) refresh();});
+  window.addEventListener("online",refresh);
+  window.addEventListener("pageshow",event=>{if(event.persisted) refresh();});
+  document.addEventListener("visibilitychange",()=>{
+    if(inView && document.visibilityState==="visible") refresh();
+  });
+  window.addEventListener("storage",event=>{
+    if(event.key===storageKey && validClient(event.newValue) && event.newValue!==client){
+      client=event.newValue;ready=false;refresh();
+    }
+  });
+  render();refresh();
+})();

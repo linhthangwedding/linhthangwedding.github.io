@@ -153,3 +153,20 @@ Lỗi này có thể xảy ra khi Web App vẫn chạy một bản Code.gs cũ h
 - Tên khách sẽ được truy vấn từ backend, nên lần mở đầu tiên có thể phải chờ Apps Script; trong cùng tab, tên đã xác minh có thể hiện sớm từ cache 15 phút.
 - Backend vẫn chấp nhận link cũ từng có `&to=` (để tương thích), nhưng **không dùng tham số này làm căn cứ RSVP**. Nếu Code.gs trên Web App vẫn là bản trước v43, link sạch cũng có thể hoạt động: nó dùng mã `i` trong liên kết.
 - Cần giữ PREP cho tới khi người dùng yêu cầu launch batch đầu tiên. Khi LIVE, những link đã gửi từ sau thời điểm launch được lưu lịch sử.
+# Nút tim ẩn danh cho ba ảnh polaroid — 04/11/2026
+
+Mã trong `Code.gs` bổ sung bộ đếm chung cho Keukenhof, Rotterdam và Zaandam. API chỉ nhận mã ngẫu nhiên của trình duyệt; không nhận hoặc trả tên, email hay mã thiệp của khách. Mỗi trình duyệt bật/tắt một tim trên mỗi ảnh. Bấm lại hoặc gửi lại cùng yêu cầu không cộng trùng. Các khách đang xem ảnh được cập nhật tổng lượt tim khoảng mỗi 15 giây.
+
+Lượt tim được lưu trong Script Properties, tách khỏi Guest List và RSVP Online, không cần thêm quyền đọc dữ liệu Google. Xóa dữ liệu trình duyệt hoặc dùng trình duyệt khác sẽ tạo một mã ẩn danh mới.
+
+**Bước cần làm trong Google:**
+
+1. Mở Master Wedding Planner → **Extensions → Apps Script**.
+2. Trong dự án đang phục vụ URL Web App hiện tại, thay nội dung **file `Code.gs` hiện có** bằng toàn bộ `Code.gs` ở cùng nhánh này. Giữ nguyên các file `.gs` khác. Bấm **Save** và chờ lưu xong.
+3. Chọn **Deploy → Manage deployments → Edit** (biểu tượng bút chì ở Web App đang dùng).
+4. **Version → New version → Deploy**. Giữ nguyên URL `/exec` và thiết lập quyền truy cập của deployment hiện có; không tạo deployment mới.
+5. Báo đã Deploy để kiểm tra API `action=photo-hearts` trước khi xuất bản giao diện.
+
+**Không chạy `activateWeddingInvitations`** trong bước này. Không cần chạy hàm đếm tim thủ công; yêu cầu đầu tiên sẽ khởi tạo dữ liệu. Nếu Google hiện màn hình cấp quyền hoặc cảnh báo, gửi ảnh màn hình trước khi chấp nhận quyền chưa rõ.
+
+Kiểm thử: `node tests/photo-hearts.test.cjs` ở thư mục gốc repository. Kiểm thử gồm A → B → C, cả ba ảnh, bỏ tim, yêu cầu lặp, trạng thái khách quay lại, đầu vào sai, callback JSONP và cách ly dữ liệu riêng tư.

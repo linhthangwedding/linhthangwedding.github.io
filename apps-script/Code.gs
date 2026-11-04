@@ -441,6 +441,9 @@ function doGet(e) {
     return ContentService.createTextOutput("/* Invalid callback */")
       .setMimeType(ContentService.MimeType.JAVASCRIPT);
   }
+  // Anonymous photo hearts never open the wedding spreadsheet or guest registry.
+  if (q.action === "photo-hearts" || q.action === "photo-heart")
+    return js_(callback,photoHearts_(q));
   if (q.action !== "guest" && q.action !== "status")
     return js_(callback,{saved:false,invalid:true});
   try {
@@ -490,6 +493,81 @@ function doGet(e) {
     // RSVP receipt-shaped response when a guest name lookup has failed.
     console.error("Wedding RSVP read error",err);
     return js_(callback,{valid:false,saved:false,error:"backend_unavailable"});
+  }
+}
+
+/**
+ * Shared, anonymous polaroid hearts. Only random browser identifiers are used;
+ * no invitation codes, names, emails or guest records are stored or returned.
+ * A bucket is the single source of truth, so retrying a desired state cannot
+ * double-count a vote. Script locks serialize simultaneous visitors safely.
+ * PropertiesService and Utilities require no extra Google data permissions.
+ */
+var PHOTO_HEART_IDS_ = ["keukenhof","rotterdam","zaandam"];
+var PHOTO_HEART_PREFIX_ = "ltw:photo-hearts:v1:";
+function photoHeartClient_(client) {
+  if (!/^[a-f0-9]{32}$/.test(client)) return "";
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,client)
+    .map(function(b){return ("0"+((b+256)%256).toString(16)).slice(-2);})
+    .join("").slice(0,24);
+}
+function photoHeartBucket_(value) {
+  if (!value) return {};
+  var data=JSON.parse(value);
+  if (!data || typeof data !== "object" || Array.isArray(data))
+    throw new Error("Invalid photo-heart bucket");
+  return data;
+}
+function photoHeartSnapshot_(all,client) {
+  var counts={},liked={};
+  PHOTO_HEART_IDS_.forEach(function(photo){
+    var count=0;
+    for(var i=0;i<16;i++){
+      var key=PHOTO_HEART_PREFIX_+photo+":"+i.toString(16);
+      var bucket=photoHeartBucket_(all[key]);
+      count+=Object.keys(bucket).filter(function(k){
+        return /^[a-f0-9]{23}$/.test(k) && bucket[k]===true;
+      }).length;
+      if(client && client.charAt(0)===i.toString(16))
+        liked[photo]=bucket[client.slice(1)]===true;
+    }
+    counts[photo]=count;
+    if(!client) liked[photo]=false;
+  });
+  return {ok:true,heartsSupported:true,counts:counts,liked:liked};
+}
+function photoHearts_(q) {
+  var writing=q.action==="photo-heart";
+  var rawClient=String(q.client||"");
+  var client=photoHeartClient_(rawClient);
+  var photo=String(q.photo||"");
+  if((rawClient && !client) || (writing && (!client ||
+      PHOTO_HEART_IDS_.indexOf(photo)<0 || !/^[01]$/.test(String(q.liked)))))
+    return {ok:false,error:"invalid_parameters"};
+  var lock=LockService.getScriptLock();
+  if(!lock.tryLock(10000)) return {ok:false,error:"busy"};
+  try{
+    var store=PropertiesService.getScriptProperties();
+    var all=store.getProperties();
+    if(writing){
+      var key=PHOTO_HEART_PREFIX_+photo+":"+client.charAt(0);
+      var bucket=photoHeartBucket_(all[key]);
+      var member=client.slice(1),want=String(q.liked)==="1";
+      if((bucket[member]===true)!==want){
+        if(want) bucket[member]=true;
+        else delete bucket[member];
+        var serialized=JSON.stringify(bucket);
+        if(serialized.length>8000) return {ok:false,error:"capacity"};
+        store.setProperty(key,serialized);
+        all[key]=serialized;
+      }
+    }
+    return photoHeartSnapshot_(all,client);
+  }catch(err){
+    console.error("Photo-heart request failed",err);
+    return {ok:false,error:"hearts_unavailable"};
+  }finally{
+    lock.releaseLock();
   }
 }
 function doPost(e) {
