@@ -801,20 +801,22 @@ resolveInviteName();
   }
   let snapshot=null,ready=false,saving=false,inView=false;
   let serial=0,appliedSerial=0,reading=null;
+  const pending=new Map();
   const isVietnamese=()=>document.documentElement.lang==="vi";
   function render(){
     buttons.forEach(button=>{
       const photo=button.dataset.photoHeart;
-      const liked=!!snapshot?.liked[photo];
-      const count=snapshot ? snapshot.counts[photo] : null;
+      const confirmed=!!snapshot?.liked[photo];
+      const liked=pending.has(photo)?pending.get(photo):confirmed;
+      const count=snapshot ? Math.max(0,snapshot.counts[photo]+Number(liked)-Number(confirmed)) : null;
       button.querySelector(".photo-heart-count").textContent=count===null?"—":String(count);
       button.setAttribute("aria-pressed",String(liked));
-      button.setAttribute("aria-busy",String(saving));
+      button.setAttribute("aria-busy",String(pending.has(photo)));
       const action=isVietnamese()?(liked?"Bỏ tim ảnh này":"Thả tim ảnh này"):
         (liked?"Unlike this photo":"Like this photo");
       const total=count===null?"":(isVietnamese()?`, ${count} lượt tim`:`; ${count} likes`);
       button.setAttribute("aria-label",action+total);
-      button.disabled=!ready || saving;
+      button.disabled=!ready;
     });
   }
   function request(action,params={}){
@@ -851,11 +853,11 @@ resolveInviteName();
     });
   }
   function refresh(){
-    if(saving) return Promise.resolve();
+    if(saving || pending.size) return Promise.resolve();
     if(reading) return reading;
     const requestSerial=++serial;
     reading=request("photo-hearts").then(data=>{
-      if(saving || requestSerial<appliedSerial) return;
+      if(saving || pending.size || requestSerial<appliedSerial) return;
       snapshot=data;ready=true;appliedSerial=requestSerial;
       status.textContent="";
       render();
@@ -865,29 +867,43 @@ resolveInviteName();
     }).finally(()=>{reading=null;});
     return reading;
   }
-  buttons.forEach(button=>button.addEventListener("click",async()=>{
-    if(!ready || saving || !snapshot) return;
-    const photo=button.dataset.photoHeart;
-    const want=!snapshot.liked[photo];
+  async function synchronize(){
+    if(saving || !ready) return;
     saving=true;
-    const requestSerial=++serial;
-    appliedSerial=requestSerial;
-    render();
-    let confirmed=false;
+    const requestClient=client;
     try{
-      const data=await request("photo-heart",{photo,liked:want?"1":"0"});
-      snapshot=data;ready=true;confirmed=true;
-      status.textContent=isVietnamese()?"Đã cập nhật lượt tim.":"Photo like updated.";
+      while(pending.size && ready && client===requestClient){
+        const [photo,want]=pending.entries().next().value;
+        // Quick repeated taps are coalesced into the latest desired state.
+        if(want===snapshot.liked[photo]){pending.delete(photo);continue;}
+        const data=await request("photo-heart",{photo,liked:want?"1":"0"});
+        if(client!==requestClient) break;
+        snapshot=data;
+        if(pending.get(photo)===want) pending.delete(photo);
+        status.textContent=isVietnamese()?"Đã cập nhật lượt tim.":"Photo like updated.";
+        render();
+      }
     }catch(_){
-      // A lost response can follow a successful save. Reconcile before
-      // allowing another click; retrying must never accidentally undo it.
+      // Restore confirmed totals, then read again: a response can be lost
+      // after a successful save. Never keep an unconfirmed extra heart.
+      pending.clear();
       ready=false;
       status.textContent=isVietnamese()?"Chưa xác nhận được lượt tim. Đang thử kết nối lại.":
         "Could not confirm your like. Reconnecting.";
     }finally{
       saving=false;render();
-      if(!confirmed){if(reading) await reading;refresh();}
+      if(!ready){if(reading) await reading;refresh();}
     }
+  }
+  buttons.forEach(button=>button.addEventListener("click",()=>{
+    if(!ready || !snapshot) return;
+    const photo=button.dataset.photoHeart;
+    const liked=pending.has(photo)?pending.get(photo):snapshot.liked[photo];
+    pending.set(photo,!liked);
+    appliedSerial=++serial;
+    // Update the heart and count in this click's render, before network I/O.
+    render();
+    synchronize();
   }));
   new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
   if("IntersectionObserver" in window){
@@ -907,7 +923,7 @@ resolveInviteName();
   });
   window.addEventListener("storage",event=>{
     if(event.key===storageKey && validClient(event.newValue) && event.newValue!==client){
-      client=event.newValue;ready=false;refresh();
+      client=event.newValue;pending.clear();ready=false;appliedSerial=++serial;render();refresh();
     }
   });
   render();refresh();
