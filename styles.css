@@ -546,12 +546,12 @@ footer{
   position:absolute;left:50%;bottom:5px;transform:translateX(-50%);
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
   min-width:76px;min-height:44px;padding:4px 12px;
-  border:0;border-radius:22px;background:transparent;color:var(--ink);
+  border:0;border-radius:22px;background:transparent;color:#d43f46;
   font:500 14px/1.2 var(--font-sans, sans-serif);cursor:pointer;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 .photo-heart svg{width:22px;height:22px;fill:transparent;stroke:currentColor;stroke-width:1.7;transition:fill .18s,color .18s,transform .18s}
-.photo-heart[data-hearted="true"]{color:#b69a79}
+.photo-heart[data-hearted="true"]{color:#d43f46}
 .photo-heart[data-hearted="true"] svg{fill:currentColor}
 .photo-heart:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 .photo-heart[aria-busy="true"]{cursor:pointer}
@@ -559,13 +559,13 @@ footer{
 .photo-heart-count{min-width:1ch;font-variant-numeric:tabular-nums}
 .photo-heart-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 @media(max-width:760px){.photo-heart{bottom:0;min-height:40px;gap:5px;font-size:13px}.photo-heart svg{width:20px;height:20px}}
-@media(hover:hover){.photo-heart:hover:not(:disabled){background:rgba(200,173,141,.12)}}
+@media(hover:hover){.photo-heart:hover:not(:disabled){background:rgba(212,63,70,.12)}}
 .photo-heart-float{
   position:absolute;left:50%;bottom:34px;width:25px;height:25px;
-  color:#c8ad8d;pointer-events:none;z-index:4;
+  color:#d43f46;pointer-events:none;z-index:4;
   animation:photo-heart-float 1.5s cubic-bezier(.22,.61,.36,1) both;
 }
-.photo-heart-float svg{display:block;width:100%;height:100%;fill:#c8ad8d;stroke:#c8ad8d;stroke-width:1.2}
+.photo-heart-float svg{display:block;width:100%;height:100%;fill:currentColor;stroke:currentColor;stroke-width:1.2}
 @keyframes photo-heart-float{
   0%{opacity:1;transform:translate(-50%,0) scale(.65)}
   14%{opacity:1}
