@@ -565,9 +565,9 @@ footer{
   color:#c8ad8d;pointer-events:none;z-index:4;
   animation:photo-heart-float 1.5s cubic-bezier(.22,.61,.36,1) both;
 }
-.photo-heart-float svg{display:block;width:100%;height:100%;fill:currentColor;stroke:currentColor;stroke-width:1.2}
+.photo-heart-float svg{display:block;width:100%;height:100%;fill:#c8ad8d;stroke:#c8ad8d;stroke-width:1.2}
 @keyframes photo-heart-float{
-  0%{opacity:0;transform:translate(-50%,0) scale(.65)}
+  0%{opacity:1;transform:translate(-50%,0) scale(.65)}
   14%{opacity:1}
   65%{opacity:.9}
   100%{opacity:0;transform:translate(calc(-50% + var(--heart-drift)), -145px) rotate(var(--heart-turn)) scale(1.1)}
