@@ -303,7 +303,7 @@ if (inviteCode) {
     window.history.replaceState(
       window.history.state,
       "",
-      cleanUrl.pathname + cleanUrl.search + cleanUrl.hash
+      cleanUrl.pathname + cleanUrl.search.replace(/([?&])(vn|en)=(?=&|$)/g, "$1$2") + cleanUrl.hash
     );
   }
 }
