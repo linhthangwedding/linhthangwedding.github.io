@@ -36,7 +36,7 @@ const copy = {
     musicPaused:"Nhạc đã tạm dừng",
     musicUnavailable:"Không tải được trình phát. Bạn có thể mở bài hát bằng liên kết Spotify bên dưới.",
     musicOpenSpotify:"Mở bằng Spotify ↗",
-    storyCopy:"Cùng nhau đi qua những hành trình, những thành phố và những mùa hoa. Giờ đây, chúng mình sẵn sàng bắt đầu một chương mới.",
+    storyCopy:"Chúng mình gặp nhau lần đầu trên sân cầu lông ở Amsterdam. Thắng vẫn hay nói: “Có ngày nắng thì cũng có những ngày mưa.” Chúng mình tin rằng một ngày mưa không thể nói thay cho cả một cuộc đời. Và giờ đây, chúng mình chọn xây dựng một gia đình: cùng trưởng thành, cùng đón những ngày nắng và ở bên nhau qua những ngày mưa.",
     storySignoff:"Thương mến,\nLinh & Thắng ♡",
     rsvpTitle:"HẸN BẠN TRONG NGÀY VUI",
     rsvpIntro:"Chúng mình rất mong được gặp bạn. Bạn nhắn lại để chúng mình chuẩn bị đón tiếp thật chu đáo nhé.",
