@@ -4,8 +4,8 @@ const copy = {
   vi:{
     weddingOf:"LỄ THÀNH HÔN CỦA",
     heroTagline:"Hai gia đình · Một hành trình · Một đời bên nhau",
-    formalInvite:"TRÂN TRỌNG KÍNH MỜI",
-    inviteCopy:"Đến chung vui trong ngày cưới của chúng mình cùng hai bên gia đình",
+    formalInvite:"THÂN MẾN MỜI",
+    inviteCopy:"Đến chung vui cùng chúng mình và hai bên gia đình trong ngày cưới nhé. Có bạn ở đó, ngày vui sẽ thêm trọn vẹn.",
     wedding:"ĐÁM CƯỚI",
     celebrationsTitle:"HAI BUỔI TIỆC CỦA CHÚNG MÌNH",
     vinhCelebration:"TIỆC TẠI VINH",
@@ -38,50 +38,50 @@ const copy = {
     musicOpenSpotify:"Mở bằng Spotify ↗",
     storyCopy:"Cùng nhau đi qua những hành trình, những thành phố và những mùa hoa. Giờ đây, chúng mình sẵn sàng bắt đầu một chương mới.",
     storySignoff:"Thương mến,\nLinh & Thắng ♡",
-    rsvpTitle:"XÁC NHẬN THAM DỰ",
-    rsvpIntro:"Rất mong được đón tiếp bạn trong ngày đặc biệt của chúng mình.",
+    rsvpTitle:"HẸN BẠN TRONG NGÀY VUI",
+    rsvpIntro:"Chúng mình rất mong được gặp bạn. Bạn nhắn lại để chúng mình chuẩn bị đón tiếp thật chu đáo nhé.",
     rsvpDeadline:"Hạn xác nhận: Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
-    rsvpReceivedIntro:"Chúng mình đã nhận được lời xác nhận của bạn.",
+    rsvpReceivedIntro:"Chúng mình đã nhận được phản hồi của bạn rồi.",
     rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
-    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã ghi nhận {count} người tham dự (bao gồm bạn).",
-    rsvpClosedNo:"Cảm ơn {name} đã phản hồi! Chúng mình đã ghi nhận bạn không thể tham dự.",
-    rsvpClosedDeadline:"Hạn xác nhận đã kết thúc vào ngày 10/02/2027. Nếu cần thay đổi kế hoạch, vui lòng liên hệ trực tiếp Linh & Thang.",
-    rsvpClosedNotReady:"Thiệp này hiện chưa mở nhận phản hồi. Vui lòng liên hệ Linh & Thang.",
-    rsvpEditHint:"Có thay đổi kế hoạch? Bạn có thể cập nhật phản hồi đến 23:59 ngày 10/02/2027 (giờ Việt Nam) / 17:59 (CET).",
-    rsvpEditButton:"Chỉnh sửa xác nhận",
-    rsvpEditingIntro:"Bạn có thể thay đổi câu trả lời bên dưới rồi lưu lại.",
+    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã nhận được xác nhận cho {count} người, bao gồm bạn. Hẹn gặp bạn trong ngày vui nhé!",
+    rsvpClosedNo:"Cảm ơn {name} đã nhắn lại. Tiếc là không được đón bạn trong ngày cưới, mong sớm có dịp gặp nhau nhé.",
+    rsvpClosedDeadline:"Thời gian xác nhận đã kết thúc vào ngày 10/02/2027. Nếu cần thay đổi kế hoạch, bạn nhắn trực tiếp cho Linh & Thắng nhé.",
+    rsvpClosedNotReady:"Thiệp này chưa mở phần xác nhận. Bạn nhắn Linh & Thắng để chúng mình hỗ trợ nhé.",
+    rsvpEditHint:"Kế hoạch có thay đổi? Bạn có thể nhắn lại đến 23:59 ngày 10/02/2027 (giờ Việt Nam) / 17:59 (CET).",
+    rsvpEditButton:"Cập nhật xác nhận",
+    rsvpEditingIntro:"Bạn cập nhật câu trả lời bên dưới rồi lưu lại nhé.",
     rsvpCancelEdit:"Quay lại xác nhận",
     submitUpdate:"Lưu thay đổi",
-    rsvpCalendarButton:"Thêm vào lịch của tôi",
+    rsvpCalendarButton:"Lưu ngày vui vào lịch",
     guestSummaryLabel:"Phản hồi dành cho",
-    attendingQ:"Bạn có thể tham dự không?",
-    yes:"Có",no:"Không",
-    venueQuestion:"Bạn sẽ tham dự tiệc ở đâu?",
+    attendingQ:"Bạn có thể đến chung vui cùng chúng mình không?",
+    yes:"Mình sẽ đến chung vui",no:"Tiếc quá, mình không đến được",
+    venueQuestion:"Chúng mình sẽ được đón bạn ở đâu?",
     venueVinh:"Nghệ An",
     venueHCM:"TP. Hồ Chí Minh",
     rsvpSeeYou:"Hẹn gặp bạn tại",
     venueSummary:"tiệc cưới ở {venue}!",
-    venueRequired:"Vui lòng chọn Vinh hoặc TP. Hồ Chí Minh.",
+    venueRequired:"Bạn chọn giúp chúng mình tiệc tại Vinh hoặc TP. Hồ Chí Minh nhé.",
     rsvpMaintenance:"Phần xác nhận đang được cập nhật. Vui lòng thử lại khi hệ thống hoàn tất.",
     partySize:"Số người tham dự (bao gồm bạn)",
     partySizeHelp:"Vui lòng tính cả bạn trong tổng số người.",
-    partySummary:"Bạn sẽ xác nhận: {count} người tham dự.",
+    partySummary:"Chúng mình sẽ đón {count} người, bao gồm bạn.",
     partySizeInvalid:"Vui lòng nhập số người từ 1 đến 10.",
-    successYes:"Cảm ơn bạn! Chúng mình đã ghi nhận {count} người tham dự.",
-    successNo:"Cảm ơn bạn! Chúng mình đã ghi nhận bạn không thể tham dự.",
-    declineMessage:"💗 Cảm ơn {name} vì đã là một phần thật đẹp trong thanh xuân của chúng mình. Chúng mình thật tiếc vì không thể có bạn bên cạnh trong ngày cưới. Dù vậy, những kỷ niệm đã có cùng nhau luôn rất đáng quý. Nếu bạn muốn gửi đôi lời chúc phúc, chúng mình sẽ rất vui khi được đọc và giữ lại như một món quà của ngày đặc biệt này. 💌",
-    wishes:"Lời chúc phúc dành cho Linh & Thắng",
-    wishesPlaceholder:"Gửi chúng mình đôi lời chúc nhé...",
-    submit:"Gửi xác nhận",
+    successYes:"Cảm ơn bạn! Chúng mình đã nhận được xác nhận cho {count} người. Hẹn gặp bạn nhé!",
+    successNo:"Cảm ơn bạn đã nhắn lại. Mong sớm có dịp gặp nhau nhé.",
+    declineMessage:"💗 Cảm ơn {name} đã nhắn lại. Chúng mình tiếc vì không được đón bạn trong ngày cưới. Nếu muốn gửi đôi lời chúc, bạn để lại bên dưới nhé. Chúng mình sẽ trân quý những lời chúc ấy. 💌",
+    wishes:"Đôi lời chúc dành cho Linh & Thắng",
+    wishesPlaceholder:"Bạn gửi chúng mình một lời chúc nhé…",
+    submit:"Gửi lời xác nhận",
     preview:"Phần xác nhận tham dự đang được kết nối. Vui lòng chưa gửi phản hồi tại đây.",
-    missingInvite:"Vui lòng mở đường dẫn thiệp riêng mà Linh & Thang gửi cho bạn để xác nhận tham dự.",
-    guestLoading:"Đang tải tên khách mời từ danh sách thiệp...",
-    guestInvalid:"Không tìm thấy thiệp tương ứng với đường dẫn này. Vui lòng kiểm tra link được gửi.",
-    guestUnavailable:"Chưa tải được tên khách mời. Vui lòng thử lại sau khi hệ thống được cập nhật.",
-    guestNotReady:"Thiệp của bạn đang chờ xác nhận sự kiện. Vui lòng liên hệ Linh & Thang.",
-    pending:"Đang kiểm tra phản hồi của bạn...",
-    success:"Cảm ơn bạn! Chúng mình đã nhận được xác nhận của bạn.",
-    error:"Chưa gửi được xác nhận. Vui lòng thử lại.",
+    missingInvite:"Bạn mở lại link thiệp riêng mà Linh & Thắng đã gửi để xác nhận tham dự nhé.",
+    guestLoading:"Đang mở lời mời dành riêng cho bạn…",
+    guestInvalid:"Link thiệp này chưa đúng. Bạn kiểm tra lại link hoặc nhắn Linh & Thắng để chúng mình gửi lại nhé.",
+    guestUnavailable:"Chưa tải được tên khách mời. Bạn thử tải lại trang hoặc nhắn Linh & Thắng nhé.",
+    guestNotReady:"Thiệp của bạn đang chờ xác nhận sự kiện. Bạn nhắn Linh & Thắng để chúng mình hỗ trợ nhé.",
+    pending:"Đang gửi lời xác nhận của bạn…",
+    success:"Cảm ơn bạn! Chúng mình đã nhận được lời xác nhận rồi.",
+    error:"Lời xác nhận chưa gửi được. Bạn thử lại nhé.",
     uncertain:"Chưa thể xác nhận phản hồi đã được lưu hay chưa. Vui lòng tải lại trang để kiểm tra, không gửi nhiều lần.",
     pageTitle:"Thiệp cưới Linh & Thang",
     pageDescription:"Thiệp cưới của Linh và Thang",
@@ -180,11 +180,9 @@ const copy = {
   }
 };
 
-// Compact public language flags: &vn or &en. Accept older lang= links too.
+// Only &vn and &en select a language; English is the default.
 const languageParams = new URLSearchParams(window.location.search);
-const requestedLang = languageParams.has("vn") ? "vi" :
-  languageParams.has("en") ? "en" : languageParams.get("lang");
-let lang = requestedLang === "vi" ? "vi" : "en";
+let lang = languageParams.has("vn") ? "vi" : "en";
 
 function replaceLanguageInUrl(next) {
   const url = new URL(window.location.href);
@@ -197,8 +195,15 @@ function replaceLanguageInUrl(next) {
     window.history.state, "", url.pathname + url.search + url.hash
   );
 }
-if (languageParams.has("lang") || languageParams.has("vn") || languageParams.has("en")) {
+if (languageParams.has("vn") || languageParams.has("en")) {
   replaceLanguageInUrl(lang);
+} else if (languageParams.has("lang")) {
+  // Discard the retired parameter without using its value.
+  const url = new URL(window.location.href);
+  url.searchParams.delete("lang");
+  window.history.replaceState(
+    window.history.state, "", url.pathname + url.search + url.hash
+  );
 }
 
 function setLang(next){
