@@ -682,7 +682,7 @@ resolveInviteName();
   const audio = new Audio("assets/i-do-911.m4a");
   audio.preload = "auto";
   audio.loop = true;
-  audio.volume = 0.15;
+  audio.volume = 0.2;
 
   function message(key) {
     status.dataset.i18n = key;
@@ -703,7 +703,7 @@ resolveInviteName();
   async function play() {
     const attempt = ++playAttempt;
     try {
-      audio.volume = 0.15;
+      audio.volume = 0.2;
       await audio.play();
     } catch (error) {
       if (attempt !== playAttempt) return;
