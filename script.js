@@ -668,19 +668,21 @@ resolveInviteName();
     musicPlayLabel: "Phát I Do – 911",
     musicPauseLabel: "Tạm dừng I Do – 911",
     musicPlaying: "Đang phát I Do – 911",
+    musicAutoplayBlocked: "Chạm vào trang để bắt đầu nghe nhạc",
     musicUnavailable: "Không tải được nhạc. Bạn thử tải lại trang nhé."
   });
   Object.assign(copy.en, {
     musicPlayLabel: "Play I Do – 911",
     musicPauseLabel: "Pause I Do – 911",
     musicPlaying: "Playing I Do – 911",
+    musicAutoplayBlocked: "Tap the page to start the music",
     musicUnavailable: "Music unavailable. Please reload the page."
   });
 
   const audio = new Audio("assets/i-do-911.m4a");
   audio.preload = "auto";
   audio.loop = true;
-  audio.volume = 0.6;
+  audio.volume = 0.3;
 
   function message(key) {
     status.dataset.i18n = key;
@@ -697,15 +699,35 @@ resolveInviteName();
     message(playing ? "musicPlaying" : "musicPaused");
   }
 
+  let playAttempt = 0;
   async function play() {
+    const attempt = ++playAttempt;
     try {
-      audio.volume = 0.6;
+      audio.volume = 0.3;
       await audio.play();
     } catch (error) {
+      if (attempt !== playAttempt) return;
       message(error.name === "NotAllowedError"
         ? "musicAutoplayBlocked" : "musicUnavailable");
     }
   }
+
+  // If opening the page cannot start sound, use the first ordinary interaction.
+  // The record keeps its own play/pause behavior, including keyboard activation.
+  function startOnInteraction(event) {
+    if (button.contains(event.target)) return;
+    if (event.type === "keydown" &&
+        (event.ctrlKey || event.metaKey || event.altKey ||
+         ["Tab", "Escape", "Shift", "Control", "Alt", "Meta"].includes(event.key))) return;
+    if (audio.paused) play();
+  }
+  function stopInteractionFallback() {
+    document.removeEventListener("click", startOnInteraction);
+    document.removeEventListener("keydown", startOnInteraction);
+  }
+  document.addEventListener("click", startOnInteraction);
+  document.addEventListener("keydown", startOnInteraction);
+  audio.addEventListener("playing", stopInteractionFallback);
 
   button.disabled = false;
   button.addEventListener("click", () => {
