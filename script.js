@@ -180,8 +180,26 @@ const copy = {
   }
 };
 
-const requestedLang = new URLSearchParams(window.location.search).get("lang");
+// Compact public language flags: &vn or &en. Accept older lang= links too.
+const languageParams = new URLSearchParams(window.location.search);
+const requestedLang = languageParams.has("vn") ? "vi" :
+  languageParams.has("en") ? "en" : languageParams.get("lang");
 let lang = requestedLang === "vi" ? "vi" : "en";
+
+function replaceLanguageInUrl(next) {
+  const url = new URL(window.location.href);
+  for (const key of ["lang", "vn", "en"]) url.searchParams.delete(key);
+  url.searchParams.append(next === "vi" ? "vn" : "en", "");
+  // Keep the flag bare (&vn), rather than URLSearchParams' default &vn=.
+  url.search = url.searchParams.toString()
+    .replace(/(^|&)(vn|en)=(?=&|$)/g, "$1$2");
+  window.history.replaceState(
+    window.history.state, "", url.pathname + url.search + url.hash
+  );
+}
+if (languageParams.has("lang") || languageParams.has("vn") || languageParams.has("en")) {
+  replaceLanguageInUrl(lang);
+}
 
 function setLang(next){
   lang=next;
@@ -222,9 +240,7 @@ function setLang(next){
 }
 document.querySelectorAll(".lang-btn").forEach(b=>b.addEventListener("click",()=>{
   setLang(b.dataset.lang);
-  const url=new URL(window.location.href);
-  url.searchParams.set("lang",b.dataset.lang);
-  window.history.replaceState(null,"",url.toString());
+  replaceLanguageInUrl(b.dataset.lang);
 }));
 
 const yesBranch=document.getElementById("yesBranch");
