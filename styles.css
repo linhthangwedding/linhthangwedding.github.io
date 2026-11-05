@@ -798,7 +798,7 @@ html .site-shell *::after{
 html .site-shell :is(
   .hero h1,.hero h1 em
 ){
-  font-size:48px!important;
+  font-size:52px!important;
 }
 html .site-shell :is(
   .monogram,.invite-guest-name,.invite-kicker,.event-title,
@@ -808,6 +808,7 @@ html .site-shell :is(
 ){
   font-size:20px!important;
 }
+html .site-shell .hero .eyebrow{font-size:16px!important}
 /* Three font sizes also apply to input fields, buttons and responsive layouts.
    Visual hierarchy below the heading tier comes from weight and spacing. */
 
@@ -825,22 +826,22 @@ html .site-shell :is(
   background:transparent;
   box-shadow:none;
 }
-.hero .turntable-deck{width:186px;height:164px}
-.hero .vinyl-play-button{width:152px;height:152px}
-.hero .vinyl-disc-label{width:62px;height:62px}
-.hero .turntable-arm{top:4px;right:0;height:83px;width:6px}
-.hero .turntable-arm::before{top:-10px;left:-7px;width:20px;height:20px}
-.hero .turntable-arm::after{bottom:-6px;left:-4px;width:14px;height:18px}
-.hero .vinyl-control{right:6px;bottom:6px;width:36px;height:36px}
-.hero .vinyl-control svg{width:19px;height:19px}
+.hero .turntable-deck{width:206px;height:182px}
+.hero .vinyl-play-button{width:168px;height:168px}
+.hero .vinyl-disc-label{width:68px;height:68px;font-size:16px!important}
+.hero .turntable-arm{top:4px;right:0;height:92px;width:7px}
+.hero .turntable-arm::before{top:-11px;left:-8px;width:22px;height:22px}
+.hero .turntable-arm::after{bottom:-7px;left:-4px;width:15px;height:20px}
+.hero .vinyl-control{right:7px;bottom:7px;width:40px;height:40px}
+.hero .vinyl-control svg{width:21px;height:21px}
 .hero .vinyl-status{margin:5px 0 0;min-height:17px}
 .hero .spotify-embed-slot iframe{height:80px}
 @media(max-width:760px){
   .hero-copy{padding:42px 22px 52px}
   .hero .vinyl-player{max-width:340px}
-  .hero .turntable-deck{height:166px}
-  .hero .vinyl-play-button{width:152px;height:152px}
-  .hero .turntable-arm{top:4px;right:0;height:83px}
+  .hero .turntable-deck{height:184px}
+  .hero .vinyl-play-button{width:168px;height:168px}
+  .hero .turntable-arm{top:4px;right:0;height:92px}
 }
 
 
@@ -1157,3 +1158,12 @@ html[lang="vi"] .story-origin-art{
   }
 }
 
+
+/* Keep the slightly larger hero lettering within narrow screens and split columns. */
+@media(max-width:380px){
+  html .site-shell .hero :is(h1,h1 em){font-size:clamp(42px,13.8vw,52px)!important}
+  html .site-shell .hero .eyebrow{font-size:clamp(13px,4.2vw,16px)!important}
+}
+@media(min-width:761px) and (max-width:950px){
+  html .site-shell .hero :is(h1,h1 em){font-size:48px!important}
+}
