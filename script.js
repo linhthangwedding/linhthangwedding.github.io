@@ -657,124 +657,69 @@ setLang(lang);
 if (!inviteCode) showRSVPStatus("missingInvite");
 resolveInviteName();
 
-
-// Licensed Spotify Embed: attempt to start promptly, with a one-tap fallback.
-// Browser autoplay and Spotify permissions always decide whether sound is allowed.
+// Play the uploaded full song through the vinyl control.
 (function initWeddingVinylPlayer() {
   const player = document.getElementById("vinylPlayer");
   const button = document.getElementById("vinylPlayButton");
   const status = document.getElementById("vinylStatus");
-  const container = document.getElementById("spotifyEmbedSlot");
-  if (!player || !button || !status || !container) return;
+  if (!player || !button || !status) return;
 
-  // Placeholder song until a verified Spotify URI for the requested track is supplied.
-  const trackUri = "spotify:track:14mT8BCOXiUUcGlb7KujkT";
-  let controller = null;
-  let playing = false;
-  let userStarted = false;
-  let autoplayAttempted = false;
-  let autoplayFallback = null;
+  Object.assign(copy.vi, {
+    musicPlayLabel: "Phát I Do – 911",
+    musicPauseLabel: "Tạm dừng I Do – 911",
+    musicPlaying: "Đang phát I Do – 911",
+    musicUnavailable: "Không tải được nhạc. Bạn thử tải lại trang nhé."
+  });
+  Object.assign(copy.en, {
+    musicPlayLabel: "Play I Do – 911",
+    musicPauseLabel: "Pause I Do – 911",
+    musicPlaying: "Playing I Do – 911",
+    musicUnavailable: "Music unavailable. Please reload the page."
+  });
 
-  function setMessage(key) {
+  const audio = new Audio("assets/i-do-911.m4a");
+  audio.preload = "auto";
+  audio.loop = true;
+  audio.volume = 0.6;
+
+  function message(key) {
     status.dataset.i18n = key;
     status.textContent = copy[lang][key] || "";
   }
-  function setState(isPlaying) {
-    playing = Boolean(isPlaying);
-    if (playing && autoplayFallback) {
-      clearTimeout(autoplayFallback);
-      autoplayFallback = null;
-    }
+
+  function update() {
+    const playing = !audio.paused && !audio.ended;
     player.classList.toggle("is-playing", playing);
     button.setAttribute("aria-pressed", String(playing));
-    button.dataset.i18nAriaLabel = playing ? "musicPauseLabel" : "musicPlayLabel";
-    button.setAttribute("aria-label", copy[lang][button.dataset.i18nAriaLabel]);
-    setMessage(playing ? "musicPlaying" : "musicPaused");
+    const key = playing ? "musicPauseLabel" : "musicPlayLabel";
+    button.dataset.i18nAriaLabel = key;
+    button.setAttribute("aria-label", copy[lang][key]);
+    message(playing ? "musicPlaying" : "musicPaused");
   }
-  function startAutomatically() {
-    if (autoplayAttempted || userStarted || playing || !controller) return;
-    autoplayAttempted = true;
-    setMessage("musicTryingAutoplay");
+
+  async function play() {
     try {
-      // Spotify officially supports play(), but browsers may silently reject it.
-      const attempt = controller.play();
-      if (attempt && typeof attempt.catch === "function") {
-        attempt.catch(() => {
-          if (!playing && !userStarted) setMessage("musicAutoplayBlocked");
-        });
-      }
-    } catch (_) {
-      setMessage("musicAutoplayBlocked");
+      audio.volume = 0.6;
+      await audio.play();
+    } catch (error) {
+      message(error.name === "NotAllowedError"
+        ? "musicAutoplayBlocked" : "musicUnavailable");
     }
-    autoplayFallback = setTimeout(() => {
-      if (!playing && !userStarted) setMessage("musicAutoplayBlocked");
-      autoplayFallback = null;
-    }, 2200);
   }
+
+  button.disabled = false;
   button.addEventListener("click", () => {
-    if (!controller) return;
-    userStarted = true;
-    if (autoplayFallback) clearTimeout(autoplayFallback);
-    autoplayFallback = null;
-    setMessage("musicLoading");
-    try {
-      controller.togglePlay();
-    } catch (_) {
-      setMessage("musicUnavailable");
-    }
+    if (audio.paused) play();
+    else audio.pause();
   });
+  audio.addEventListener("playing", update);
+  audio.addEventListener("pause", update);
+  audio.addEventListener("error", () => message("musicUnavailable"));
 
-  const createSpotifyController = (IFrameAPI) => {
-    try {
-      IFrameAPI.createController(
-        container,
-        {uri:trackUri, width:"100%", height:80, theme:"dark"},
-        (embedController) => {
-          controller = embedController;
-          button.disabled = false;
-          setMessage("musicReady");
-          controller.addListener("playback_started", () => setState(true));
-          controller.addListener("playback_update", (event) => {
-            if (event && event.data && typeof event.data.isPaused === "boolean") {
-              // Do not claim that a blocked autoplay attempt succeeded.
-              if (!event.data.isPaused) setState(true);
-              else if (playing || userStarted) setState(false);
-            }
-          });
-          // "ready" signals that the embed is able to stream.
-          controller.addListener("ready", () => {
-            if (document.visibilityState === "visible") startAutomatically();
-            else {
-              document.addEventListener("visibilitychange", function onVisible() {
-                if (document.visibilityState !== "visible") return;
-                document.removeEventListener("visibilitychange", onVisible);
-                startAutomatically();
-              });
-            }
-          });
-        }
-      );
-    } catch (_) {
-      button.disabled = true;
-      setMessage("musicUnavailable");
-    }
-  };
-
-  // The API is downloaded asynchronously in <head>, even before this JS.
-  // Its callback stores the object until the DOM is ready; no duplicate request.
-  window.__ltwSpotifyReady = createSpotifyController;
-  if (window.__ltwSpotifyIframeApi) {
-    createSpotifyController(window.__ltwSpotifyIframeApi);
-  }
-  const loader = document.getElementById("ltwSpotifyApiLoader");
-  if (loader) {
-    loader.addEventListener("error", () => {
-      button.disabled = true;
-      setMessage("musicUnavailable");
-    });
-  }
+  update();
+  message("musicTryingAutoplay");
+  play();
 })();
-
 // Shared polaroid hearts. The API receives only a random browser token;
 // invitation codes and guest names never accompany a photo-heart request.
 (function initPhotoHearts(){
