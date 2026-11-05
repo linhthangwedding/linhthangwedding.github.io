@@ -71,15 +71,6 @@
     });
   })();
   </script>
-  <!-- Start the Spotify API download early, preserving the callback until the footer code runs. -->
-  <link rel="preconnect" href="https://open.spotify.com" crossorigin>
-  <script>
-    window.onSpotifyIframeApiReady = function (api) {
-      window.__ltwSpotifyIframeApi = api;
-      if (typeof window.__ltwSpotifyReady === "function") window.__ltwSpotifyReady(api);
-    };
-  </script>
-  <script id="ltwSpotifyApiLoader" src="https://open.spotify.com/embed/iframe-api/v1" async></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
@@ -338,8 +329,7 @@ at 11:59 PM (VN time) or 5:59 PM (EU time).</p>
     <p>Linh &amp; Thang · 2027</p>
   </footer>
 </main>
-
-<script src="script.js?v=repeat-hearts-20261104"></script>
+<script src="script.js?v=i-do-911-20261105"></script>
 </body>
 </html>
 
