@@ -679,7 +679,7 @@ html .site-shell :is(.photo-heart,.photo-heart-float) *{color:#d43f46!important}
   background:
     repeating-radial-gradient(circle at center,transparent 0px,transparent 4px,rgba(255,255,255,.13) 4.4px,transparent 5px),
     radial-gradient(circle at 37% 28%,#66615c 0%,#262423 32%,#191818 75%,#2d2b29 100%);
-  animation:vinyl-rotate 3.7s linear infinite paused;
+  animation:vinyl-rotate 3.7s linear infinite;
 }
 .vinyl-disc::after{
   content:"";
