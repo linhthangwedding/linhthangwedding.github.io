@@ -1097,7 +1097,7 @@ html[lang="vi"] .story-origin-art{
   .rsvp-section{padding-top:80px}
 }
 
-/* Fast, small sways pivot at each illustration's painted lower tip.
+/* Fast, small sways pivot around each illustration's painted center.
    Constant offsets preserve the original tilt, mirrored layout, and position. */
 @keyframes invitation-doodle-sway{
   0%,100%{
@@ -1112,58 +1112,58 @@ html[lang="vi"] .story-origin-art{
   .rsvp-section::before,.rsvp-section::after{
     animation:invitation-doodle-sway calc(var(--sway-duration,3.8s) / 4.5) ease-in-out infinite;
     animation-delay:calc(var(--sway-delay,0s) / 4.5);
-    transform-origin:var(--sway-anchor,50% 100%);
+    transform-origin:var(--sway-anchor,50% 50%);
   }
   .invite-card .branch-left{
-    --sway-anchor:84.6499% 89.971%;
-    --sway-offset-x:-69.2998%;--sway-offset-y:0%;
+    --sway-anchor:53.2765% 50.275%;
+    --sway-offset-x:-6.553%;--sway-offset-y:0%;
     --sway-flip:-1;--sway-rest:0deg;--sway-range:4deg;
     --sway-duration:4.2s;--sway-delay:-1.9s;
   }
   .invite-card .branch-right{
-    --sway-anchor:84.6499% 89.971%;
+    --sway-anchor:53.2765% 50.275%;
     --sway-offset-x:0%;--sway-offset-y:0%;
     --sway-flip:1;--sway-rest:0deg;--sway-range:4deg;
     --sway-duration:3.8s;--sway-delay:-4.2s;
   }
   .story-origin-art{
-    --sway-anchor:58.2137% 93.2217%;
+    --sway-anchor:50.9569% 49.681%;
     --sway-offset-x:0%;--sway-offset-y:0%;
     --sway-flip:1;--sway-rest:0deg;--sway-range:2.5deg;
     --sway-duration:4.6s;--sway-delay:-2.7s;
   }
   .story-doodle-hearts{
-    --sway-anchor:62.7072% 76.105%;
-    --sway-offset-x:-4.2402%;--sway-offset-y:1.6664%;
+    --sway-anchor:52.0718% 52.3481%;
+    --sway-offset-x:-0.3928%;--sway-offset-y:0.2952%;
     --sway-flip:1;--sway-rest:9deg;--sway-range:5deg;
     --sway-duration:3.2s;--sway-delay:-1.1s;
   }
   .story-doodle-letter{
-    --sway-anchor:31.2845% 75.4144%;
-    --sway-offset-x:4.2061%;--sway-offset-y:2.6149%;
+    --sway-anchor:50.2072% 49.6547%;
+    --sway-offset-x:-0.0566%;--sway-offset-y:-0.0282%;
     --sway-flip:1;--sway-rest:-9deg;--sway-range:4.5deg;
     --sway-duration:3.6s;--sway-delay:-3.6s;
   }
   .story-doodle-sparkles{
-    --sway-anchor:32.1133% 72.6519%;
+    --sway-anchor:50.0691% 49.5856%;
     --sway-offset-x:0%;--sway-offset-y:0%;
     --sway-flip:1;--sway-rest:0deg;--sway-range:5.5deg;
     --sway-duration:3s;--sway-delay:-2.1s;
   }
   .rsvp-section::before{
-    --sway-anchor:31.2845% 75.4144%;
-    --sway-offset-x:5.6929%;--sway-offset-y:3.3358%;
+    --sway-anchor:50.2072% 49.6547%;
+    --sway-offset-x:-0.0763%;--sway-offset-y:-0.0355%;
     --sway-flip:1;--sway-rest:-12deg;--sway-range:4.5deg;
     --sway-duration:3.9s;--sway-delay:-0.8s;
   }
   .rsvp-section::after{
-    --sway-anchor:62.7072% 76.105%;
-    --sway-offset-x:-4.2402%;--sway-offset-y:1.6664%;
+    --sway-anchor:52.0718% 52.3481%;
+    --sway-offset-x:-0.3928%;--sway-offset-y:0.2952%;
     --sway-flip:1;--sway-rest:9deg;--sway-range:5deg;
     --sway-duration:3.5s;--sway-delay:-3.2s;
   }
   html[lang="vi"] .story-origin-art{
-    --sway-anchor:58.5327% 90.4306%;
+    --sway-anchor:49.0032% 50.2392%;
   }
 }
 
@@ -1176,3 +1176,6 @@ html[lang="vi"] .story-origin-art{
 @media(min-width:761px) and (max-width:950px){
   html .site-shell .hero :is(h1,h1 em){font-size:48px!important}
 }
+
+/* SVG icons use the centre of their visible drawing, not the viewport edge. */
+.site-shell svg{transform-box:fill-box;transform-origin:50% 50%}
