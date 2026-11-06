@@ -269,8 +269,7 @@ button,input,textarea{font:inherit}
   line-height:1.9;
   color:#315b73;
 }
-.story-quote--reply{margin-top:24px}
-.story-signoff{
+.rsvp-signoff{
   margin:28px 0 0;
   white-space:pre-line;
   line-height:1.5;
@@ -307,6 +306,7 @@ button,input,textarea{font:inherit}
   line-height:1.8;
 }
 .rsvp-closed-panel p{margin:0}
+.rsvp-closed-panel .rsvp-signoff{margin:22px auto 0;color:inherit}
 .rsvp-closed-panel .rsvp-venue-summary{
   margin:8px auto 0;
   font:600 13px/1.6 "Manrope",system-ui,sans-serif;
@@ -436,7 +436,7 @@ footer{
   .btn{width:100%}
   .story-section,.rsvp-section{padding:62px 22px}
   .story-copy{font-size:16px}
-  .story-signoff{font-size:25px}
+  .rsvp-signoff{font-size:25px}
 }
 
 
@@ -486,8 +486,10 @@ footer{
   font-weight:400;
   line-height:1.85;
   color:#315b73;
-  white-space:pre-line;
+  white-space:normal;
 }
+.decline-message > p:first-child{margin:0;white-space:pre-line}
+.decline-message .rsvp-signoff{margin:18px auto 0;color:inherit;text-align:center}
 @media(max-width:760px){.decline-message{padding:17px 18px;font-size:15px;line-height:1.75}}
 
 /* During the English-only invitation review, keep the VN/EN switch hidden. */
@@ -616,7 +618,7 @@ html .site-shell :is(.photo-heart,.photo-heart-float) *{color:#d43f46!important}
     justify-self:center;
     width:min(100%,150px);
   }
-  .story-signoff{
+  .rsvp-signoff{
     max-width:100%;
     margin:26px auto 0;
     padding:0 4px;
@@ -805,7 +807,7 @@ html .site-shell :is(
 html .site-shell :is(
   .monogram,.invite-guest-name,.invite-kicker,.event-title,
   .section-kicker,.celebration-heading,.fact strong,
-  .story-signoff,.rsvp-invitee strong,
+  .rsvp-signoff,.rsvp-invitee strong,
   .rsvp-closed-panel .rsvp-venue-summary
 ){
   font-size:20px!important;
