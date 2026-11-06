@@ -37,9 +37,7 @@ const copy = {
     musicPaused:"Nhạc đã tạm dừng",
     musicUnavailable:"Không tải được trình phát. Bạn có thể mở bài hát bằng liên kết Spotify bên dưới.",
     musicOpenSpotify:"Mở bằng Spotify ↗",
-    storyCopy:"“Đường đời còn dài, chẳng ai biết phía trước sẽ có bao nhiêu ngày nắng, bao nhiêu ngày mưa. Anh chỉ mong, mỗi lần ngoảnh lại, người ở cạnh anh vẫn là em.”",
-    storyQuoteReply:"“Phần lớn cuộc sống là những ngày bình thường nối tiếp nhau. Và nếu được chọn, em vẫn muốn có anh trong những ngày bình thường nhất của đời mình.”",
-    storySignoff:"Thương mến,\nLinh & Thắng ♡",
+    rsvpSignoff:"Thương mến,\nLinh & Thắng ♡",
     rsvpTitle:"HẸN BẠN TRONG NGÀY VUI",
     rsvpIntro:"Chúng mình rất mong được gặp bạn. Bạn nhắn lại để chúng mình chuẩn bị đón tiếp thật chu đáo nhé.",
     rsvpDeadline:"Hạn xác nhận: Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
@@ -127,9 +125,7 @@ const copy = {
     musicPaused:"Music paused",
     musicUnavailable:"Player unavailable. You can open the song in Spotify below.",
     musicOpenSpotify:"Open in Spotify ↗",
-    storyCopy:"“There is a long road ahead, and no one knows how many sunny days or rainy ones it will bring. I only hope that whenever I look back, you'll still be by my side.”",
-    storyQuoteReply:"“Most of life is made up of ordinary days, one after another. And if I had the choice, I would still choose you for the most ordinary days of my life.”",
-    storySignoff:"With love,\nLinh & Thang ♡",
+    rsvpSignoff:"With love,\nLinh & Thang ♡",
     rsvpTitle:"CAN YOU MAKE IT?",
     rsvpIntro:"We really hope you can join us! Let us know below so we can plan for you.",
     rsvpDeadline:"Please RSVP by Wednesday, 10th Feb 2027,\nat 11:59 PM (VN time) or 5:59 PM (EU time).",
@@ -357,6 +353,7 @@ const rsvpClosedPanel = document.getElementById("rsvpClosedPanel");
 const rsvpClosedMessage = document.getElementById("rsvpClosedMessage");
 const rsvpVenueSummary=document.getElementById("rsvpVenueSummary");
 const rsvpSeeYou=document.getElementById("rsvpSeeYou");
+const rsvpSignoff=document.getElementById("rsvpSignoff");
 const rsvpEditControls = document.getElementById("rsvpEditControls");
 const rsvpEditButton = document.getElementById("rsvpEditButton");
 const rsvpActionRow = document.getElementById("rsvpActionRow");
@@ -382,6 +379,7 @@ function refreshRsvpPanel() {
     rsvpView.kind === "deadline" ? "rsvpDeadlinePassedIntro" : "rsvpIntro"
   ];
   const confirmed = rsvpView.kind === "responded";
+  rsvpSignoff.classList.toggle("hidden", !confirmed);
   rsvpDeadline.classList.toggle("hidden", confirmed);
   const canChange = closed && confirmed && rsvpEditAllowed &&
     !rsvpDeadlinePassed() && !submissionUncertain;
