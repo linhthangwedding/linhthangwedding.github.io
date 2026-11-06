@@ -43,7 +43,7 @@ const copy = {
     rsvpDeadline:"Hạn xác nhận: Thứ Tư, 10/02/2027, 23:59 (giờ Việt Nam) / 17:59 (giờ Trung Âu, CET).",
     rsvpReceivedIntro:"Chúng mình đã nhận được phản hồi của bạn rồi.",
     rsvpDeadlinePassedIntro:"Thời hạn xác nhận tham dự đã kết thúc.",
-    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã nhận được xác nhận cho {count} người, bao gồm bạn. Hẹn gặp bạn trong ngày vui nhé!",
+    rsvpClosedYes:"Cảm ơn {name}! Chúng mình đã nhận được xác nhận cho {count} người, bao gồm bạn.",
     rsvpClosedNo:"Cảm ơn {name} đã nhắn lại. Tiếc là không được đón bạn trong ngày cưới, mong sớm có dịp gặp nhau nhé.",
     rsvpClosedDeadline:"Thời gian xác nhận đã kết thúc vào ngày 10/02/2027. Nếu cần thay đổi kế hoạch, bạn nhắn trực tiếp cho Linh & Thắng nhé.",
     rsvpClosedNotReady:"Thiệp này chưa mở phần xác nhận. Bạn nhắn Linh & Thắng để chúng mình hỗ trợ nhé.",
