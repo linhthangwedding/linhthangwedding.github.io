@@ -1,5 +1,14 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
+## Sửa lỗi lưu RSVP khi tiêu đề Guest List không còn ở dòng 1 (06/11/2026)
+
+- Tiêu đề hai bảng khách hiện ở dòng 4, sau các dòng ghi chú. Hàm ghi RSVP trước đây chỉ dò dòng 1 nên không tìm được cột tên, link và RSVP.
+- `readGuestHeader_` tìm hàng tiêu đề thực tế trong 50 dòng đầu và yêu cầu đủ hai bộ cột tên, Event, RSVP và Link. Tra cứu ghi RSVP bắt đầu sau hàng tiêu đề; các luồng onEdit và tra tên cũng dùng cùng cách dò.
+- Giữ kiểm tra link duy nhất, địa điểm Vinh/HCM, hạn phản hồi và mã biên nhận. Không thay đổi dữ liệu khách hoặc cách phân quyền.
+- Kiểm tra mô phỏng đã tái hiện lỗi cũ và xác nhận bản sửa với tiêu đề ở dòng 1/4/6, hai bảng khách, link trùng, phản hồi Có/Không và vị trí ghi dữ liệu.
+- Mã đã lưu trong trình biên tập; cập nhật deployment hiện tại cần hoàn tất bước xác minh Google. Chưa xác nhận triển khai thành công hoặc gửi RSVP thử thực tế.
+
+
 ## Cột lựa chọn tiệc trên Guest List (02/11/2026)
 
 - Trong Guest List, **H** và **T** có nhãn chính xác `tiệc tham dự (khách chọn)`; dữ liệu là công thức tham chiếu từ `RSVP Online!Y` (chỉ hiện Vinh/HCM sau RSVP **Có**). Cột link giờ là **I/U**, số người **G/S**, RSVP **F/R**.
