@@ -269,6 +269,7 @@ button,input,textarea{font:inherit}
   line-height:1.9;
   color:#315b73;
 }
+.story-quote--reply{margin-top:24px}
 .story-signoff{
   margin:28px 0 0;
   white-space:pre-line;
