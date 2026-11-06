@@ -1,13 +1,14 @@
 # Kết nối RSVP Google Sheets với thiệp Linh & Thắng
 
-## Sửa lỗi lưu RSVP khi tiêu đề Guest List không còn ở dòng 1 (06/11/2026)
+## Khôi phục lưu RSVP, xác nhận song song và tâm icon (06/11/2026)
 
-- Tiêu đề hai bảng khách hiện ở dòng 4, sau các dòng ghi chú. Hàm ghi RSVP trước đây chỉ dò dòng 1 nên không tìm được cột tên, link và RSVP.
-- `readGuestHeader_` tìm hàng tiêu đề thực tế trong 50 dòng đầu và yêu cầu đủ hai bộ cột tên, Event, RSVP và Link. Tra cứu ghi RSVP bắt đầu sau hàng tiêu đề; các luồng onEdit và tra tên cũng dùng cùng cách dò.
-- Giữ kiểm tra link duy nhất, địa điểm Vinh/HCM, hạn phản hồi và mã biên nhận. Không thay đổi dữ liệu khách hoặc cách phân quyền.
-- Kiểm tra mô phỏng đã tái hiện lỗi cũ và xác nhận bản sửa với tiêu đề ở dòng 1/4/6, hai bảng khách, link trùng, phản hồi Có/Không và vị trí ghi dữ liệu.
-- Mã đã lưu trong trình biên tập; cập nhật deployment hiện tại cần hoàn tất bước xác minh Google. Chưa xác nhận triển khai thành công hoặc gửi RSVP thử thực tế.
-
+- Backend đang phục vụ vẫn dò nhãn cột tại dòng 1. Các dòng ghi chú từng đẩy nhãn bảng khách xuống dòng 4, làm toàn bộ 160 link không tìm được dòng ghi RSVP.
+- Đã thêm **một dòng tiêu đề kỹ thuật ẩn ở dòng 1 của Guest List**, sao chép đúng nhãn cột và giữ hai bảng khách hiển thị bên dưới. Tiêu đề hiển thị hiện ở dòng 5; giữ dòng kỹ thuật ở vị trí 1 cho đến khi backend dò tiêu đề động được triển khai. Không xóa dòng này khi thêm ghi chú.
+- Đã kiểm tra 160/160 link, tên, vị trí ghi và tính duy nhất. Ba native table giữ nguyên ID, màu, dropdown và cấu trúc cột; các công thức tự điều chỉnh khi chèn dòng.
+- Gửi thử backend trên Test 1 (HCM, 1 người) và Test 2 (Vinh, 2 người) đã lưu và xác minh đúng mã biên nhận. Dữ liệu thử được khôi phục về mặc định trong finally sau mỗi lượt.
+- Frontend bắt đầu kiểm tra biên nhận song song với POST, thay vì đợi toàn bộ phản hồi opaque rồi mới kiểm tra. Chỉ xác nhận khi biên nhận, Có/Không, địa điểm và số người khớp; mỗi lượt vẫn chỉ gửi một POST.
+- Tâm xoay icon lấy theo tâm khung phần hình có alpha thực, gồm nhánh lá, chữ Amsterdam EN/VN, tim, phong thư và tia sáng. Offset được tính lại để giữ vị trí nghỉ cũ; SVG dùng tâm phần nét vẽ.
+- `Code.gs` trong repo và editor có thêm `readGuestHeader_` để hỗ trợ các dòng ghi chú, nhưng bản code đó **chưa được triển khai** vì chưa hoàn tất cấp quyền Google. Bản sửa tương thích bằng dòng ẩn đã khôi phục luồng lưu đang chạy mà không cấp quyền OAuth mới.
 
 ## Cột lựa chọn tiệc trên Guest List (02/11/2026)
 
