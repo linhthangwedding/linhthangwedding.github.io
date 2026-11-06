@@ -633,23 +633,27 @@ document.getElementById("rsvpForm").addEventListener("submit", async event => {
   rsvpCancelEdit.disabled = true;
   showRSVPStatus("pending");
   try {
-    // Opaque responses do not count as confirmation.
-    await fetch(RSVP_ENDPOINT, {
+    // Send once and verify the receipt while the opaque POST is in flight.
+    // Only a matching saved receipt confirms success.
+    let postSettled = false;
+    fetch(RSVP_ENDPOINT, {
       method: "POST", mode: "no-cors", body, cache: "no-store"
-    });
-    // The POST request has completed. Check its receipt immediately; no
-    // mandatory 1.1-second delay before the first check. Retry if needed.
+    }).then(
+      () => { postSettled = true; },
+      () => { postSettled = true; }
+    );
     let stored = false;
     let previousReply = null;
-    for (const delay of [0,300,550,850,1250,1800]) {
+    for (const delay of [0,250,600,1000]) {
       if (delay) await wait(delay);
       try {
         const check = await readRSVPReceipt(receipt);
-        if (check?.saved === true && (data.attending==="no" || check.venue===venue)) {
+        if (check?.saved === true && check.attending === data.attending &&
+            (data.attending === "no" || (check.venue === venue && Number(check.partySize) === people))) {
           stored = true;
           break;
         }
-        if (check?.responded === true && !editingRsvp) {
+        if (check?.saved !== true && check?.responded === true && !editingRsvp && postSettled) {
           previousReply = check;
           break;
         }
