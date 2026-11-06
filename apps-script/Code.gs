@@ -131,11 +131,34 @@ function syncAliasesWithLock_(book) {
  * Bound-sheet name edits. Detect columns by "Tên khách mời" headers rather
  * than hard-coding B/J (the right-hand table may shift when columns are added).
  */
+/**
+ * Find the real table headings below any notes or title rows.
+ * Both guest tables must be present before RSVP can write to a guest row.
+ */
+function readGuestHeader_(sheet) {
+  var width=sheet.getLastColumn();
+  var height=Math.min(50,sheet.getLastRow());
+  if (!width || !height) throw new Error("Guest List is empty");
+  var rows=sheet.getRange(1,1,height,width).getDisplayValues();
+  for (var r=0;r<rows.length;r++) {
+    var headers=rows[r].map(function(value){return String(value || "").trim();});
+    var count=function(test){return headers.filter(test).length;};
+    if (count(function(h){return h === "Tên khách mời" || h === "Name";}) >= 2 &&
+        count(function(h){return h === "Link";}) >= 2 &&
+        count(function(h){return h === "RSVP";}) >= 2 &&
+        count(function(h){return h === "Event";}) >= 2)
+      return {rowNumber:r+1,values:headers};
+  }
+  throw new Error("Guest List header row not found");
+}
+
 function onEdit(e) {
   if (!e || !e.range || e.range.getSheet().getName() !== GUEST_TAB) return;
   if (e.range.getLastRow() < 2) return;
   var sheet=e.range.getSheet();
-  var headers=sheet.getRange(1,1,1,sheet.getLastColumn()).getDisplayValues()[0];
+  var header=readGuestHeader_(sheet);
+  if (e.range.getLastRow() <= header.rowNumber) return;
+  var headers=header.values;
   var first=e.range.getColumn(), last=e.range.getLastColumn();
   var editedNameColumn=false;
   for (var i=0;i<headers.length;i++) {
@@ -243,8 +266,8 @@ function cacheGuest_(record, guest) {
 /**
  * Read one precise Guest List row from the stable registry source pointer,
  * rather than TextFinder-scanning all guest links on every first visit.
- * Column positions still come from the actual header row and are cached only
- * briefly. If the pointer is stale or columns differ, use strict legacy search.
+ * Column positions come from the actual header row below any notes or titles.
+ * If the pointer is stale or columns differ, use strict legacy search.
  *
  * This is used ONLY by the read-only guest endpoint, never RSVP submission.
  * RSVP submissions continue to use locateGuest_ duplicate-link checks.
@@ -262,27 +285,12 @@ function locateGuestForDisplay_(book, record) {
       (side === "LEFT" || side === "RIGHT") &&
       /^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) {
     try {
-      var schema=null, schemaKey="ltw:columns:v3";
-      try {
-        var saved=CacheService.getScriptCache().get(schemaKey);
-        if (saved) schema=JSON.parse(saved);
-      } catch (_) {}
-      if (!schema || schema.width !== sheet.getLastColumn()) {
-        var width=sheet.getLastColumn();
-        var headers=sheet.getRange(1,1,1,width).getDisplayValues()[0];
-        var names=[], links=[];
-        headers.forEach(function(h,i) {
-          if (h === "Tên khách mời" || h === "Name") names.push(i);
-          if (h === "Link") links.push(i);
-        });
-        schema={
-          width:width,
-          nameCols:names,
-          linkCols:links
-        };
-        try { CacheService.getScriptCache().put(schemaKey,JSON.stringify(schema),300); }
-        catch (_) {}
-      }
+      var header=readGuestHeader_(sheet);
+      var schema={width:sheet.getLastColumn(),nameCols:[],linkCols:[]};
+      header.values.forEach(function(h,i) {
+        if (h === "Tên khách mời" || h === "Name") schema.nameCols.push(i);
+        if (h === "Link") schema.linkCols.push(i);
+      });
       var which=side === "LEFT" ? 0 : 1;
       if (schema.nameCols.length > which && schema.linkCols.length > which) {
         var nameCol=schema.nameCols[which], linkCol=schema.linkCols[which];
@@ -338,7 +346,8 @@ function locateGuest_(book, record) {
   // Determine columns by the real headers, not fixed positions. This also
   // supports changes to the table layout such as adding a column.
   var width = sheet.getLastColumn();
-  var headers = sheet.getRange(1,1,1,width).getDisplayValues()[0];
+  var header = readGuestHeader_(sheet);
+  var headers = header.values;
   var isGuestName = function(h){return h === "Tên khách mời" || h === "Name";};
   var getIndices = function(pred){
     var out=[]; for (var i=0;i<headers.length;i++) if(pred(headers[i])) out.push(i);
@@ -364,7 +373,9 @@ function locateGuest_(book, record) {
   // It is only a display hint, NOT an invitation ID or RSVP authorization.
   // Keep matching legacy slug-only links and LIVE aliases by immutable ID.
   var expectedLink="https://linhthangwedding.github.io/?i="+slug;
-  var hits=sheet.getRange(2,linkCol+1,sheet.getLastRow()-1,1)
+  var firstGuestRow=header.rowNumber+1;
+  if (sheet.getLastRow()<firstGuestRow) return null;
+  var hits=sheet.getRange(firstGuestRow,linkCol+1,sheet.getLastRow()-header.rowNumber,1)
     .createTextFinder(expectedLink).matchCase(true).findAll();
   var match=null;
   for(var k=0;k<hits.length;k++){
