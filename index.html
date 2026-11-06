@@ -75,7 +75,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-watercolour-bouquet-20261103.png" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=two-love-quotes-20261106">
+  <link rel="stylesheet" href="styles.css?v=rsvp-signoff-20261106">
 </head>
 <body>
 <main class="site-shell">
@@ -228,7 +228,6 @@
   <section class="story-section" id="story">
     <p class="section-kicker" data-i18n="storyTitle">A LITTLE ABOUT US</p>
     <div class="ornament dark"><span></span><i>♥</i><span></span></div>
-    <blockquote class="story-copy story-quote" data-i18n="storyCopy">“There is a long road ahead, and no one knows how many sunny days or rainy ones it will bring. I only hope that whenever I look back, you'll still be by my side.”</blockquote>
 
     <figure class="story-origin">
       <span class="story-origin-art" aria-hidden="true"></span>
@@ -253,7 +252,6 @@
     </div>
     <p id="photoHeartStatus" class="photo-heart-status" role="status" aria-live="polite"></p>
 
-    <blockquote class="story-copy story-quote story-quote--reply" data-i18n="storyQuoteReply">“Most of life is made up of ordinary days, one after another. And if I had the choice, I would still choose you for the most ordinary days of my life.”</blockquote>
 
     <div class="story-small-doodles" aria-hidden="true">
       <span class="story-doodle story-doodle-hearts"></span>
@@ -261,8 +259,7 @@
       <span class="story-doodle story-doodle-sparkles"></span>
     </div>
 
-    <p class="story-signoff" data-i18n="storySignoff">With love,
-Linh &amp; Thang ♡</p>
+
   </section>
 
   <section class="rsvp-section" id="rsvp">
@@ -277,6 +274,8 @@ at 11:59 PM (VN time) or 5:59 PM (EU time).</p>
       <p id="rsvpClosedMessage"></p>
       <p id="rsvpSeeYou" class="rsvp-see-you hidden" data-i18n="rsvpSeeYou">See you at our</p>
       <p id="rsvpVenueSummary" class="rsvp-venue-summary hidden"></p>
+      <p id="rsvpSignoff" class="rsvp-signoff hidden" data-i18n="rsvpSignoff">With love,
+Linh &amp; Thang ♡</p>
       <div id="rsvpEditControls" class="rsvp-edit-controls hidden">
         <p data-i18n="rsvpEditHint">Plans changed? You can update your RSVP until February 10, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (CET).</p>
       </div>
@@ -319,7 +318,11 @@ at 11:59 PM (VN time) or 5:59 PM (EU time).</p>
       </div>
 
       <div id="noBranch" class="branch hidden">
-        <p id="declineMessage" class="decline-message" aria-live="polite"></p>
+        <div class="decline-message">
+          <p id="declineMessage" aria-live="polite"></p>
+          <p class="rsvp-signoff" data-i18n="rsvpSignoff">With love,
+Linh &amp; Thang ♡</p>
+        </div>
         <textarea name="wishes" rows="4" aria-label="A little note or wish for Linh & Thang" data-i18n-aria-label="wishes" data-i18n-placeholder="wishesPlaceholder" placeholder="Leave us a little wish, if you'd like..."></textarea>
       </div>
 
@@ -333,7 +336,7 @@ at 11:59 PM (VN time) or 5:59 PM (EU time).</p>
     <p>Linh &amp; Thang · 2027</p>
   </footer>
 </main>
-<script src="script.js?v=two-love-quotes-20261106"></script>
+<script src="script.js?v=rsvp-signoff-20261106"></script>
 </body>
 </html>
 
