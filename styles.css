@@ -272,11 +272,8 @@ button,input,textarea{font:inherit}
 .rsvp-signoff{
   margin:28px 0 0;
   white-space:pre-line;
-  line-height:1.5;
-  font-family:"Noto Serif",serif;
-  font-style:italic;
-  font-size:29px;
-  color:#547e96;
+  font:inherit;
+  color:inherit;
 }
 
 .rsvp-section{
@@ -436,7 +433,6 @@ footer{
   .btn{width:100%}
   .story-section,.rsvp-section{padding:62px 22px}
   .story-copy{font-size:16px}
-  .rsvp-signoff{font-size:25px}
 }
 
 
@@ -622,8 +618,6 @@ html .site-shell :is(.photo-heart,.photo-heart-float) *{color:#d43f46!important}
     max-width:100%;
     margin:26px auto 0;
     padding:0 4px;
-    font-size:clamp(21px,6.4vw,25px);
-    line-height:1.55;
     white-space:pre-line;
     overflow-wrap:break-word;
   }
@@ -807,7 +801,7 @@ html .site-shell :is(
 html .site-shell :is(
   .monogram,.invite-guest-name,.invite-kicker,.event-title,
   .section-kicker,.celebration-heading,.fact strong,
-  .rsvp-signoff,.rsvp-invitee strong,
+  .rsvp-invitee strong,
   .rsvp-closed-panel .rsvp-venue-summary
 ){
   font-size:20px!important;
