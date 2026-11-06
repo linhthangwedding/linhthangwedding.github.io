@@ -123,6 +123,7 @@ button,input,textarea{font:inherit}
 .invite-kicker{font-size:20px;margin:0 0 14px}
 .invite-copy{margin:5px auto;font-family:"Noto Serif",serif;font-size:17px}
 .invite-copy.italic{font-style:italic;color:#587b90}
+.celebration-note{max-width:780px;margin:0 auto 26px}
 .ornament{display:flex;align-items:center;justify-content:center;gap:14px;margin:24px auto 26px;color:#7e9fb3}
 .ornament span{width:72px;height:1px;background:#bfd3df}
 .ornament i{font-style:normal;font-size:12px}
