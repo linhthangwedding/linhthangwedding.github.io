@@ -22,6 +22,7 @@ const copy = {
     rsvpButton:"Xác nhận tham dự",
     direction:"Chỉ đường ↗",
     saveDate:"Lưu ngày vào lịch",
+    calendarDownloadNote:"Nếu không tải được lịch trong Messenger, bạn mở thiệp bằng Safari hoặc Chrome rồi thử lại nhé.",
     storyOrigin:"Amsterdam — nơi chúng mình gặp nhau",
     storyPhotoCoupleAlt:"Linh và Thắng bên nhau",
     storyPhotoZaandamAlt:"Linh và Thắng tại Zaandam",
@@ -110,6 +111,7 @@ const copy = {
     rsvpButton:"Let us know",
     direction:"Get directions ↗",
     saveDate:"Add to calendar",
+    calendarDownloadNote:"If the calendar won't download in Messenger, open this invitation in Safari or Chrome and try again.",
     storyOrigin:"Amsterdam — where we met",
     storyPhotoCoupleAlt:"Linh and Thang together",
     storyPhotoZaandamAlt:"Linh and Thang in Zaandam",
@@ -358,6 +360,7 @@ const rsvpEditControls = document.getElementById("rsvpEditControls");
 const rsvpEditButton = document.getElementById("rsvpEditButton");
 const rsvpActionRow = document.getElementById("rsvpActionRow");
 const rsvpCalendarButton = document.getElementById("rsvpCalendarButton");
+const rsvpCalendarNote = document.getElementById("rsvpCalendarNote");
 const rsvpCancelEdit = document.getElementById("rsvpCancelEdit");
 const rsvpIntro = document.getElementById("rsvpIntro");
 const rsvpDeadline = document.querySelector(".rsvp-deadline");
@@ -396,6 +399,7 @@ function refreshRsvpPanel() {
   }
   rsvpEditButton.classList.toggle("hidden", !canChange);
   rsvpCalendarButton.classList.toggle("hidden", !showCalendar);
+  rsvpCalendarNote?.classList.toggle("hidden", !showCalendar);
   rsvpActionRow.classList.toggle("hidden", !(canChange || showCalendar));
   rsvpCancelEdit.classList.toggle("hidden", !editingRsvp);
   submitButton.textContent = copy[lang][editingRsvp ? "submitUpdate" : "submit"];
