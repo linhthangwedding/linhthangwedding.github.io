@@ -153,6 +153,7 @@ button,input,textarea{font:inherit}
 }
 .celebration-links{display:flex;align-items:baseline;justify-content:center;gap:4px 20px;flex-wrap:wrap}
 .celebration-links .text-link{width:auto;margin:0;line-height:1.6}
+.calendar-download-note{flex:0 0 100%;width:100%;margin:4px 0 0;line-height:1.6;text-align:center;opacity:.8}
 .celebration-rsvp-action{margin-top:20px}
 @media(max-width:760px){
   .celebration-panel{padding:25px 15px 17px}
@@ -323,7 +324,7 @@ button,input,textarea{font:inherit}
 }
 .rsvp-action-row{
   display:flex;
-  flex-wrap:nowrap;
+  flex-wrap:wrap;
   justify-content:center;
   align-items:stretch;
   gap:12px;
