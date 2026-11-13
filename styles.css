@@ -151,9 +151,12 @@ button,input,textarea{font:inherit}
   white-space:normal;
   overflow-wrap:break-word;
 }
-.celebration-links{display:flex;align-items:baseline;justify-content:center;gap:4px 20px;flex-wrap:wrap}
+.celebration-links{display:flex;align-items:flex-start;justify-content:center;gap:4px 20px;flex-wrap:wrap}
 .celebration-links .text-link{width:auto;margin:0;line-height:1.6}
-.calendar-download-note{flex:0 0 100%;width:100%;margin:4px 0 0;line-height:1.6;text-align:center;opacity:.8}
+.calendar-action{display:inline-flex;flex-direction:column;align-items:center;gap:4px;max-width:17rem}
+.calendar-download-note{display:block;max-width:100%;margin:0;font-weight:400;line-height:1.4;text-align:center;opacity:.75}
+.rsvp-calendar-action{flex:1 1 0;min-width:0;max-width:245px}
+.rsvp-action-row .rsvp-calendar-action .btn{flex:none;align-self:stretch;width:100%;max-width:none}
 .celebration-rsvp-action{margin-top:20px}
 @media(max-width:760px){
   .celebration-panel{padding:25px 15px 17px}
@@ -324,9 +327,9 @@ button,input,textarea{font:inherit}
 }
 .rsvp-action-row{
   display:flex;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
   justify-content:center;
-  align-items:stretch;
+  align-items:flex-start;
   gap:12px;
   margin:18px auto 0;
   width:100%;
