@@ -21,8 +21,7 @@ const copy = {
     city:"Thành phố Hồ Chí Minh",
     rsvpButton:"Xác nhận tham dự",
     direction:"Chỉ đường ↗",
-    saveDate:"Lưu ngày vào lịch",
-    calendarDownloadNote:"Mở bằng Safari/Chrome",
+    saveDate:"Lưu ngày vào lịch (mở bằng Safari/Chrome)",
     storyOrigin:"Amsterdam — nơi chúng mình gặp nhau",
     storyPhotoCoupleAlt:"Linh và Thắng bên nhau",
     storyPhotoZaandamAlt:"Linh và Thắng tại Zaandam",
@@ -53,7 +52,7 @@ const copy = {
     rsvpEditingIntro:"Bạn cập nhật câu trả lời bên dưới rồi lưu lại nhé.",
     rsvpCancelEdit:"Quay lại xác nhận",
     submitUpdate:"Lưu thay đổi",
-    rsvpCalendarButton:"Lưu ngày vui vào lịch",
+    rsvpCalendarButton:"Lưu ngày vào lịch (mở bằng Safari/Chrome)",
     guestSummaryLabel:"Phản hồi dành cho",
     attendingQ:"Bạn có thể đến chung vui cùng chúng mình không?",
     yes:"Mình sẽ đến chung vui",no:"Tiếc quá, mình không đến được",
@@ -110,8 +109,7 @@ const copy = {
     city:"Ho Chi Minh City, Vietnam",
     rsvpButton:"Let us know",
     direction:"Get directions ↗",
-    saveDate:"Add to calendar",
-    calendarDownloadNote:"Open in Safari/Chrome",
+    saveDate:"Add to calendar (open in Safari/Chrome)",
     storyOrigin:"Amsterdam — where we met",
     storyPhotoCoupleAlt:"Linh and Thang together",
     storyPhotoZaandamAlt:"Linh and Thang in Zaandam",
@@ -142,7 +140,7 @@ const copy = {
     rsvpEditingIntro:"Need to make a change? Update your reply below and save your changes.",
     rsvpCancelEdit:"Back to my RSVP",
     submitUpdate:"Save changes",
-    rsvpCalendarButton:"Add to my calendar",
+    rsvpCalendarButton:"Add to calendar (open in Safari/Chrome)",
     guestSummaryLabel:"Replying for",
     attendingQ:"Will you be joining us?",
     yes:"Yes, I'll be there!",
@@ -360,7 +358,6 @@ const rsvpEditControls = document.getElementById("rsvpEditControls");
 const rsvpEditButton = document.getElementById("rsvpEditButton");
 const rsvpActionRow = document.getElementById("rsvpActionRow");
 const rsvpCalendarButton = document.getElementById("rsvpCalendarButton");
-const rsvpCalendarNote = document.getElementById("rsvpCalendarNote");
 const rsvpCalendarAction = document.getElementById("rsvpCalendarAction");
 const rsvpCancelEdit = document.getElementById("rsvpCancelEdit");
 const rsvpIntro = document.getElementById("rsvpIntro");
@@ -400,7 +397,6 @@ function refreshRsvpPanel() {
   }
   rsvpEditButton.classList.toggle("hidden", !canChange);
   rsvpCalendarButton.classList.toggle("hidden", !showCalendar);
-  rsvpCalendarNote?.classList.toggle("hidden", !showCalendar);
   rsvpCalendarAction?.classList.toggle("hidden", !showCalendar);
   rsvpActionRow.classList.toggle("hidden", !(canChange || showCalendar));
   rsvpCancelEdit.classList.toggle("hidden", !editingRsvp);
