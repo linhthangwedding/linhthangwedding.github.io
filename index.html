@@ -95,6 +95,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/hero-watercolour-bouquet-20261103.png" fetchpriority="high">
   <link rel="stylesheet" href="styles.css?v=inline-calendar-hint-20261116">
+  <link rel="stylesheet" href="guestbook.css?v=20261116a">
 </head>
 <body>
 <main class="site-shell">
@@ -274,6 +275,23 @@
     </div>
     <p id="photoHeartStatus" class="photo-heart-status" role="status" aria-live="polite"></p>
 
+    <section class="guestbook" id="guestbook" aria-labelledby="guestbookTitle">
+      <h2 class="guestbook-title" id="guestbookTitle" data-gb-copy="title">OUR GUESTBOOK</h2>
+      <p class="guestbook-intro" data-gb-copy="intro">A wish, a memory, or a few words for our next chapter.</p>
+      <div class="guestbook-divider" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
+      <p class="guestbook-state" id="guestbookState" role="status">Opening our guestbook…</p>
+      <div class="guestbook-list" id="guestbookList" role="region" tabindex="0" aria-label="Wishes for Linh and Thang"></div>
+      <p class="guestbook-scroll-hint" id="guestbookScrollHint" data-gb-copy="scroll" hidden>Scroll inside the guestbook to read more</p>
+      <div class="guestbook-actions">
+        <button type="button" class="guestbook-retry" id="guestbookRetry" data-gb-copy="retry" hidden>Try again</button>
+        <button type="button" class="guestbook-more" id="guestbookMore" data-gb-copy="more" hidden>Read more wishes</button>
+        <button type="button" class="btn primary guestbook-open" id="guestbookOpen" aria-haspopup="dialog" aria-controls="guestbookDialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 3l5 5M9 15l4-1L22 5l-4-4-9 9-1 5Z"/></svg>
+          <span data-gb-copy="open">Leave a wish</span>
+        </button>
+      </div>
+    </section>
+
 
     <div class="story-small-doodles" aria-hidden="true">
       <span class="story-doodle story-doodle-hearts"></span>
@@ -361,7 +379,27 @@ Linh &amp; Thang ♡</p>
     <p>Linh &amp; Thang · 2027</p>
   </footer>
 </main>
+
+<dialog class="guestbook-dialog" id="guestbookDialog" aria-labelledby="guestbookModalTitle" aria-describedby="guestbookModalIntro">
+  <button class="guestbook-close" type="button" id="guestbookClose" aria-label="Close the wish form"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button>
+  <h2 id="guestbookModalTitle" data-gb-copy="modalTitle">A little note for Linh &amp; Thang</h2>
+  <p class="guestbook-dialog-intro" id="guestbookModalIntro" data-gb-copy="modalIntro">We’d love to read a few words from you.</p>
+  <form class="guestbook-form" id="guestbookForm">
+    <p id="guestbookFeedback" class="guestbook-feedback" role="status" aria-live="polite" hidden></p>
+    <label class="guestbook-field" for="guestbookName"><span data-gb-copy="name">Your name</span>
+      <input id="guestbookName" name="display_name" type="text" autocomplete="name" maxlength="80" required>
+    </label>
+    <label class="guestbook-field" for="guestbookMessage"><span data-gb-copy="message">Your wish</span>
+      <textarea id="guestbookMessage" name="message" rows="4" maxlength="1000" required aria-describedby="guestbookPublicNote"></textarea>
+    </label>
+    <div class="guestbook-field-footer"><output class="guestbook-counter" id="guestbookCounter" for="guestbookMessage" aria-hidden="true">0 / 1000</output></div>
+    <label class="guestbook-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    <p class="guestbook-public-note" id="guestbookPublicNote" data-gb-copy="publicNote">Your name and wish will appear in the guestbook for everyone to read.</p>
+    <button class="btn primary" id="guestbookSend" type="submit" data-gb-copy="send">Send my wish</button>
+  </form>
+</dialog>
 <script src="script.js?v=compact-calendar-hint-20261113b"></script>
+<script src="guestbook.js?v=20261116a"></script>
 </body>
 </html>
 
