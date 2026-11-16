@@ -154,6 +154,8 @@ button,input,textarea{font:inherit}
 .celebration-links{display:flex;align-items:flex-start;justify-content:center;gap:4px 20px;flex-wrap:wrap}
 .celebration-links .text-link{width:auto;margin:0;line-height:1.6}
 .calendar-action{display:inline-flex;flex-direction:column;align-items:center;gap:4px;max-width:17rem}
+.celebration-links .calendar-action{flex-direction:row;align-items:baseline;justify-content:center;gap:8px;max-width:100%;flex-wrap:wrap}
+.celebration-links .calendar-action>.text-link,.celebration-links .calendar-action>.calendar-download-note{white-space:nowrap}
 .calendar-download-note{display:block;max-width:100%;margin:0;font-weight:400;line-height:1.4;text-align:center;opacity:.75}
 .rsvp-calendar-action{flex:1 1 0;min-width:0;max-width:245px}
 .rsvp-action-row .rsvp-calendar-action .btn{flex:none;align-self:stretch;width:100%;max-width:none}
