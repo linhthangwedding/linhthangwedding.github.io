@@ -993,8 +993,8 @@ html .site-shell .invite-card .btn.primary *{
   mask:url("assets/story-amsterdam-met-en-20261104.png") center/contain no-repeat;
 }
 html[lang="vi"] .story-origin-art{
-  -webkit-mask-image:url("assets/story-amsterdam-met-vi-20261104.png");
-  mask-image:url("assets/story-amsterdam-met-vi-20261104.png");
+  -webkit-mask-image:url("assets/story-amsterdam-met-vi-20261116.png");
+  mask-image:url("assets/story-amsterdam-met-vi-20261116.png");
 }
 .story-small-doodles{display:contents}
 .story-doodle{

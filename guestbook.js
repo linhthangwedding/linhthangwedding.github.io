@@ -6,9 +6,9 @@
   if (!root || !dialog) return;
   const ui = {
     vi:{
-      title:"SỔ LƯU BÚT",intro:"Một lời chúc, một kỷ niệm, hay đôi dòng bạn muốn gửi đến chúng mình.",
-      open:"Gửi lời chúc",modalTitle:"Đôi lời cho Linh & Thắng",modalIntro:"Chúng mình rất mong được đọc những lời nhắn của bạn.",
-      name:"Tên của bạn",namePlaceholder:"Bạn muốn ký tên là gì?",message:"Lời chúc của bạn",messagePlaceholder:"Viết đôi dòng cho chúng mình nhé…",
+      title:"SỔ LƯU BÚT",intro:"Một lời chúc, một kỷ niệm, hay đôi dòng bạn muốn gửi đến chúng mình/em.",
+      open:"Gửi lời chúc",modalTitle:"Đôi lời cho Linh & Thắng",modalIntro:"Chúng mình/em rất mong được đọc những lời nhắn của bạn.",
+      name:"Tên của bạn",namePlaceholder:"Bạn muốn ký tên là gì?",message:"Lời chúc của bạn",messagePlaceholder:"Viết đôi dòng cho chúng mình/em nhé…",
       publicNote:"Tên và lời chúc của bạn sẽ hiển thị trong sổ lưu bút để mọi người cùng đọc.",
       send:"Gửi lời chúc",sending:"Đang gửi lời chúc…",success:"Cảm ơn bạn! Lời chúc đã được lưu vào sổ lưu bút rồi ♡",
       empty:"Chưa có lời chúc nào. Bạn viết đôi dòng đầu tiên nhé.",loading:"Đang mở sổ lưu bút…",
