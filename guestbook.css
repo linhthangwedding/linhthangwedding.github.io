@@ -1,0 +1,50 @@
+/* Shared guestbook. Existing RSVP, photos and invitation styles stay independent. */
+.guestbook{position:relative;z-index:1;width:min(100%,720px);margin:68px auto 0;padding-top:42px;border-top:1px solid #c8d8e2;text-align:center;color:var(--ink,#152f50)}
+.guestbook-title{margin:0 0 18px;font-size:20px;line-height:1.5;letter-spacing:.14em;text-transform:uppercase}
+.guestbook-intro{margin:0 auto;max-width:530px;line-height:1.8}
+.guestbook-divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto 30px}
+.guestbook-divider:before,.guestbook-divider:after{content:"";width:64px;height:1px;background:#b9cfdc}
+.guestbook-divider svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.4;transform-origin:center}
+.guestbook-list{max-height:440px;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#b5c8d5 transparent;display:grid;gap:14px;padding:2px 10px 4px 2px;text-align:left;scroll-margin-top:30px}
+.guestbook-list:empty{display:none}
+.guestbook-entry{padding:22px 24px;background:#fff;border:1px solid #d6e1e8;border-radius:12px;box-shadow:0 3px 10px rgba(21,47,80,.035)}
+.guestbook-entry blockquote{margin:0 0 18px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.85}
+.guestbook-entry footer{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;padding:0;background:none;color:inherit;border:0}
+.guestbook-entry cite{font-style:normal;font-weight:600;overflow-wrap:anywhere}
+.guestbook-entry time{font-size:12px!important;color:#64788e;white-space:nowrap}
+.guestbook-state{min-height:90px;display:grid;place-content:center;margin:0 0 16px;padding:24px;border:1px dashed #c8d8e2;border-radius:12px;line-height:1.8}
+.guestbook-actions{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:28px}
+.guestbook .guestbook-open{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:200px;margin:0}
+.guestbook-open svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.guestbook-more,.guestbook-retry{border:0;border-bottom:1px solid currentColor;background:none;color:inherit;padding:4px 0;cursor:pointer;font:inherit}
+.guestbook-more:disabled{opacity:.55}
+.guestbook-scroll-hint{margin:14px 0 0;opacity:.7;font-size:12px!important}
+.guestbook-dialog{box-sizing:border-box;position:fixed;width:min(520px,calc(100vw - 32px));max-width:520px;max-height:calc(100dvh - 40px);margin:auto;padding:40px 32px 32px;border:1px solid #d6e1e8;border-radius:18px;background:#faf5f1;color:#152f50;box-shadow:0 20px 90px rgba(15,35,59,.24);overflow-y:auto;overscroll-behavior:contain;font-family:"Noto Serif",serif;text-align:left}
+.guestbook-dialog::backdrop{background:rgba(15,30,45,.5);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.guestbook-dialog h2{margin:0 30px 14px;text-align:center;font-size:20px;line-height:1.6}
+.guestbook-dialog-intro{margin:0 0 26px;text-align:center;line-height:1.8}
+.guestbook-close{position:absolute;right:14px;top:14px;display:grid;place-items:center;width:36px;height:36px;padding:0;background:#e9eef1;border:0;border-radius:50%;color:inherit;cursor:pointer}
+.guestbook-close svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.5;fill:none}
+.guestbook-form{display:grid;gap:18px}
+.guestbook-field{display:grid;gap:9px;margin:0}
+.guestbook-form input,.guestbook-form textarea{box-sizing:border-box;width:100%;margin:0;border:1px solid #bfcfdb;border-radius:9px;background:#fff;color:#152f50;padding:13px 15px;font-family:inherit;font-size:16px!important;line-height:1.7}
+.guestbook-form textarea{min-height:155px;resize:vertical}
+.guestbook-form input:focus,.guestbook-form textarea:focus{outline:2px solid #8caec5;outline-offset:2px}
+.guestbook-field-footer{display:flex;justify-content:flex-end;margin-top:-5px}
+.guestbook-counter{font-size:12px!important;opacity:.65}
+.guestbook-public-note{margin:0;line-height:1.7;color:#536b82;font-size:13px!important}
+.guestbook-form .btn{width:100%;max-width:none;margin:0}
+.guestbook-feedback{margin:0;padding:12px 14px;border-radius:8px;line-height:1.7;background:#e8eff5;color:#234662}
+.guestbook-feedback[data-kind="success"]{background:#e9f2ec;color:#326149}
+.guestbook-feedback[data-kind="error"]{background:#f7e9e5;color:#884b40}
+.guestbook-honeypot{display:none!important}
+.guestbook [hidden],.guestbook-dialog [hidden]{display:none!important}
+html.guestbook-is-open,html.guestbook-is-open body{overflow:hidden}
+@media(max-width:640px){
+  .guestbook{margin-top:46px;padding-top:34px}
+  .guestbook-list{max-height:390px;gap:12px;padding-right:6px}
+  .guestbook-entry{padding:18px}
+  .guestbook-entry footer{align-items:flex-start}
+  .guestbook-dialog{padding:44px 22px 26px;max-height:calc(100dvh - 24px)}
+  .guestbook-title{letter-spacing:.1em}
+}
