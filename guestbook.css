@@ -1,6 +1,7 @@
 /* Shared guestbook. Existing RSVP, photos and invitation styles stay independent. */
 .guestbook{position:relative;z-index:1;width:min(100%,720px);margin:68px auto 0;padding-top:42px;border-top:1px solid #c8d8e2;text-align:center;color:var(--ink,#152f50)}
 .guestbook-title{margin:0 0 18px;font-size:20px;line-height:1.5;letter-spacing:.14em;text-transform:uppercase}
+html .site-shell .guestbook-title{font-size:20px!important}
 .guestbook-intro{margin:0 auto;max-width:530px;line-height:1.8}
 .guestbook-divider{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto 30px}
 .guestbook-divider:before,.guestbook-divider:after{content:"";width:64px;height:1px;background:#b9cfdc}
@@ -9,7 +10,7 @@
 .guestbook-list:empty{display:none}
 .guestbook-entry{padding:22px 24px;background:#fff;border:1px solid #d6e1e8;border-radius:12px;box-shadow:0 3px 10px rgba(21,47,80,.035)}
 .guestbook-entry blockquote{margin:0 0 18px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.85}
-.guestbook-entry footer{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;padding:0;background:none;color:inherit;border:0}
+.guestbook-entry footer{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;padding:0;background:none;color:inherit;border:0;letter-spacing:normal}
 .guestbook-entry cite{font-style:normal;font-weight:600;overflow-wrap:anywhere}
 .guestbook-entry time{font-size:12px!important;color:#64788e;white-space:nowrap}
 .guestbook-state{min-height:90px;display:grid;place-content:center;margin:0 0 16px;padding:24px;border:1px dashed #c8d8e2;border-radius:12px;line-height:1.8}
