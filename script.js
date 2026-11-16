@@ -22,7 +22,7 @@ const copy = {
     rsvpButton:"Xác nhận tham dự",
     direction:"Chỉ đường ↗",
     saveDate:"Lưu ngày vào lịch (mở bằng Safari/Chrome)",
-    storyOrigin:"Amsterdam — nơi chúng mình/em gặp nhau",
+    storyOrigin:"Amsterdam — nơi tình yêu bắt đầu",
     storyPhotoCoupleAlt:"Linh và Thắng bên nhau",
     storyPhotoZaandamAlt:"Linh và Thắng tại Zaandam",
     storyTitle:"CÂU CHUYỆN CỦA CHÚNG MÌNH/EM",
