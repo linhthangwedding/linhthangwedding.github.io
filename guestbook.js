@@ -6,15 +6,15 @@
   if (!root || !dialog) return;
   const ui = {
     vi:{
-      title:"SỔ LƯU BÚT",intro:"Một lời chúc, một kỷ niệm, hay đôi dòng bạn muốn gửi đến chúng mình/em.",
-      open:"Gửi lời chúc",modalTitle:"Đôi lời cho Linh & Thắng",modalIntro:"Chúng mình/em rất mong được đọc những lời nhắn của bạn.",
-      name:"Tên của bạn",namePlaceholder:"Bạn muốn ký tên là gì?",message:"Lời chúc của bạn",messagePlaceholder:"Viết đôi dòng cho chúng mình/em nhé…",
-      publicNote:"Tên và lời chúc của bạn sẽ hiển thị trong sổ lưu bút để mọi người cùng đọc.",
-      send:"Gửi lời chúc",sending:"Đang gửi lời chúc…",success:"Cảm ơn bạn! Lời chúc đã được lưu vào sổ lưu bút rồi ♡",
-      empty:"Chưa có lời chúc nào. Bạn viết đôi dòng đầu tiên nhé.",loading:"Đang mở sổ lưu bút…",
-      loadError:"Chưa tải được lời chúc. Bạn thử lại nhé.",error:"Chưa xác nhận được lời chúc đã lưu. Bạn thử gửi lại nhé; cùng một lời chúc sẽ không bị lưu hai lần.",
-      rateLimit:"Bạn vừa gửi lời chúc rồi. Chờ một phút trước khi gửi thêm nhé.",
-      invalid:"Bạn điền tên và lời chúc trước khi gửi nhé.",retry:"Thử lại",more:"Xem thêm lời chúc",scroll:"Cuộn trong khung để đọc thêm lời chúc",close:"Đóng form lời chúc",list:"Những lời chúc dành cho Linh và Thắng"
+      title:"SỔ LƯU BÚT",intro:"Một lời chúc, một kỷ niệm, hay đôi dòng anh/chị/bạn muốn gửi đến chúng mình/chúng em.",
+      open:"Gửi lời chúc",modalTitle:"Đôi lời cho Linh & Thắng",modalIntro:"Chúng mình/chúng em rất mong được đọc những lời nhắn của anh/chị/bạn.",
+      name:"Tên của anh/chị/bạn",namePlaceholder:"Anh/chị/bạn muốn ký tên là gì?",message:"Lời chúc của anh/chị/bạn",messagePlaceholder:"Viết đôi dòng cho chúng mình/chúng em nhé…",
+      publicNote:"Tên và lời chúc của anh/chị/bạn sẽ hiển thị trong sổ lưu bút để mọi người cùng đọc.",
+      send:"Gửi lời chúc",sending:"Đang gửi lời chúc…",success:"Cảm ơn anh/chị/bạn! Lời chúc đã được lưu vào sổ lưu bút rồi ♡",
+      empty:"Chưa có lời chúc nào. Anh/chị/bạn viết đôi dòng đầu tiên nhé.",loading:"Đang mở sổ lưu bút…",
+      loadError:"Chưa tải được lời chúc. Anh/chị/bạn thử lại nhé.",error:"Chưa xác nhận được lời chúc đã lưu. Anh/chị/bạn thử gửi lại nhé; cùng một lời chúc sẽ không bị lưu hai lần.",
+      rateLimit:"Anh/chị/bạn vừa gửi lời chúc rồi. Chờ một phút trước khi gửi thêm nhé.",
+      invalid:"Anh/chị/bạn điền tên và lời chúc trước khi gửi nhé.",retry:"Thử lại",more:"Xem thêm lời chúc",scroll:"Cuộn trong khung để đọc thêm lời chúc",close:"Đóng form lời chúc",list:"Những lời chúc dành cho Linh và Thắng"
     },
     en:{
       title:"OUR GUESTBOOK",intro:"A wish, a memory, or a few words for our next chapter.",
