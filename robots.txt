@@ -1,0 +1,6 @@
+# Allow Meta's link-preview crawlers to read public invitation pages and images.
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Facebot
+Allow: /
