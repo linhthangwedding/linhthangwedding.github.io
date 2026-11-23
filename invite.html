@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#e6eff5">
+  <meta name="description" content="Thân mến mời anh/chị/bạn đến chung vui trong ngày cưới của Linh &amp; Thắng. Nghệ An · 16.02.2027 | TP. Hồ Chí Minh · 28.02.2027.">
+  <title>Linh & Thang | We're getting married!</title>
+  <!-- Static sharing metadata is readable before JavaScript or the private guest lookup.
+       Keep og:url and canonical unset: invitation query parameters identify the recipient. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Linh &amp; Thắng">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="Linh &amp; Thắng | Thiệp cưới">
+  <meta property="og:description" content="Thân mến mời anh/chị/bạn đến chung vui trong ngày cưới của Linh &amp; Thắng. Nghệ An · 16.02.2027 | TP. Hồ Chí Minh · 28.02.2027.">
+  <meta property="og:image" content="https://linhthangwedding.github.io/assets/polaroid-couple-20261106.jpg">
+  <meta property="og:image:secure_url" content="https://linhthangwedding.github.io/assets/polaroid-couple-20261106.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1436">
+  <meta property="og:image:height" content="2048">
+  <meta property="og:image:alt" content="Linh và Thắng bên nhau trên một con phố ở Hà Lan.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Linh &amp; Thắng | Thiệp cưới">
+  <meta name="twitter:description" content="Thân mến mời anh/chị/bạn đến chung vui trong ngày cưới của Linh &amp; Thắng. Nghệ An · 16.02.2027 | TP. Hồ Chí Minh · 28.02.2027.">
+  <meta name="twitter:image" content="https://linhthangwedding.github.io/assets/polaroid-couple-20261106.jpg">
+  <meta name="twitter:image:alt" content="Linh và Thắng bên nhau trên một con phố ở Hà Lan.">
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="dns-prefetch" href="//script.googleusercontent.com">
+  <!-- Begin the private guest lookup as soon as the HTML head is parsed.
+       The response is held for script.js?v=repeat-hearts-20261104; no names are embedded in public files. -->
+  <script>
+  (() => {
+    const slug = new URLSearchParams(location.search).get("i") ||
+                 new URLSearchParams(location.search).get("invite") || "";
+    if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) return;
+    const endpoint = new URL("https://script.google.com/macros/s/AKfycbwDA6HVjo0JZUM0dCiPjVwNB2Whzjgsr4IiuTxulmd2LDijhpfQ3SR_c34VVJ6mXHNRxQ/exec");
+    const callback = "ltEarlyGuest" + Math.random().toString(36).slice(2);
+    endpoint.searchParams.set("action", "guest");
+    endpoint.searchParams.set("invite", slug);
+    endpoint.searchParams.set("callback", callback);
+    endpoint.searchParams.set("nocache", String(Date.now()));
+    window.__ltwEarlyGuestLookup = new Promise((resolve, reject) => {
+      const tag = document.createElement("script");
+      let complete = false;
+      const timer = setTimeout(() => finish(new Error("Guest lookup timed out")), 20000);
+      function finish(error, data) {
+        if (complete) return;
+        complete = true;
+        clearTimeout(timer);
+        tag.remove();
+        delete window[callback];
+        if (error) reject(error);
+        else resolve(data);
+      }
+      // Paint the verified guest name as soon as the early lookup returns.
+      // Do not wait for the main JavaScript bundle or trust a guessed slug.
+      window[callback] = data => {
+        if (data && data.valid === true && typeof data.name === "string" && data.name.trim()) {
+          const name = data.name.trim().slice(0, 120);
+          const cacheEntry = JSON.stringify({
+            name,
+            expires: Date.now() + 3 * 24 * 60 * 60 * 1000
+          });
+          for (const kind of ["localStorage", "sessionStorage"]) {
+            try { window[kind].setItem("ltw:verifiedGuest:" + slug, cacheEntry); }
+            catch (_) { /* Private browsing may block storage. */ }
+          }
+          const paint = () => {
+            const label = document.getElementById("inviteGuestName");
+            if (!label) return false;
+            label.textContent = name;
+            label.classList.remove("hidden");
+            const notice = document.getElementById("inviteGuestNotice");
+            if (notice && notice.dataset.messageKey === "guestLoading") {
+              notice.dataset.messageKey = "";
+              notice.textContent = "";
+              notice.classList.add("hidden");
+            }
+            return true;
+          };
+          if (!paint()) document.addEventListener("DOMContentLoaded", paint, {once:true});
+        }
+        finish(null, data);
+      };
+      tag.onerror = () => finish(new Error("Guest lookup failed"));
+      tag.src = endpoint.toString();
+      tag.async = true;
+      document.head.appendChild(tag);
+    });
+  })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/hero-watercolour-bouquet-20261103.png" fetchpriority="high">
+  <link rel="stylesheet" href="styles.css?v=amsterdam-love-20261116">
+  <link rel="stylesheet" href="guestbook.css?v=20261116b">
+</head>
+<body>
+<main class="site-shell">
+
+  <header class="topbar">
+    <a class="monogram" href="#top" aria-label="Linh and Thang" data-i18n-aria-label="brandAria">L <span>/</span> T</a>
+    <!-- Switch between fully localized Vietnamese and English invitations. -->
+    <div class="lang-switch" aria-label="Choose a language" data-i18n-aria-label="languageAria">
+      <button class="lang-btn" data-lang="vi" type="button">VN</button>
+      <span>|</span>
+      <button class="lang-btn active" data-lang="en" type="button">EN</button>
+    </div>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-photo">
+      <img src="assets/hero-watercolour-bouquet-20261103.png" alt="Watercolour wedding portrait of Linh and Thang" data-i18n-alt="imageAlt" width="1117" height="1408" loading="eager" fetchpriority="high">
+      <span class="photo-wash" aria-hidden="true"></span>
+    </div>
+    <div class="hero-copy">
+      <div class="vinyl-player" id="vinylPlayer">
+        <div class="turntable-deck">
+          <div class="turntable-arm" aria-hidden="true"></div>
+          <button class="vinyl-play-button" id="vinylPlayButton" type="button" disabled
+            aria-label="Play I Think They Call This Love (Cover)" data-i18n-aria-label="musicPlayLabel" aria-pressed="false">
+            <span class="vinyl-disc" aria-hidden="true"><span class="vinyl-disc-label">L&nbsp;&nbsp;T</span></span>
+            <span class="vinyl-control" aria-hidden="true">
+              <svg class="vinyl-icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="m9 6 10 6-10 6z"/></svg>
+              <svg class="vinyl-icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M9 6v12M15 6v12"/></svg>
+            </span>
+          </button>
+        </div>
+        <p id="vinylStatus" class="vinyl-status sr-only" role="status" aria-live="polite" data-i18n="musicLoading">Loading music player…</p>
+        <div class="spotify-playback-service" aria-hidden="true" inert>
+          <div class="spotify-embed-slot" id="spotifyEmbedSlot" aria-label="Spotify player for I Think They Call This Love (Cover)"></div>
+        </div>
+      </div>
+      <p class="eyebrow" data-i18n="weddingOf">WE'RE GETTING MARRIED</p>
+      <h1>Linh <em>&amp;</em> Thang</h1>
+      <div class="fine-rule" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="invite-card botanical-card">
+    <span class="botanical branch-left" aria-hidden="true"></span>
+    <span class="botanical branch-right" aria-hidden="true"></span>
+
+    <p class="invite-kicker" data-i18n="formalInvite">WE'D LOVE TO CELEBRATE WITH YOU</p>
+    <p id="inviteGuestName" class="invite-guest-name hidden" aria-live="polite"></p>
+    <!-- Paint the name from the personal URL immediately; backend verifies it before RSVP. -->
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const slug = (params.get("i") || params.get("invite") || "").trim();
+        let name = (params.get("to") || "").trim().slice(0, 120);
+        if (!name && /^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) {
+          // Only a name previously verified by our backend is saved locally.
+          // Show it before the rest of the page finishes parsing.
+          try {
+            const key = "ltw:verifiedGuest:" + slug;
+            const cached = JSON.parse(localStorage.getItem(key) || sessionStorage.getItem(key) || "null");
+            if (cached && typeof cached.name === "string" && cached.expires > Date.now()) {
+              name = cached.name.trim().slice(0, 120);
+            }
+          } catch (_) { /* Private browsing may disable local storage. */ }
+        }
+        if (slug && name && /^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) {
+          const label = document.getElementById("inviteGuestName");
+          label.textContent = name;
+          label.classList.remove("hidden");
+        }
+      })();
+    </script>
+    <p id="inviteGuestNotice" class="invite-guest-notice hidden" role="status"></p>
+    <p class="invite-copy" data-i18n="inviteCopy">Come celebrate our wedding day with us and our families. It wouldn't be the same without you.</p>
+
+    <div class="ornament"><span></span><i>♥</i><span></span></div>
+
+    <p class="invite-copy celebration-note" data-i18n="celebrationNote">We're sending this invitation from afar, as we can't give it to you in person. We'd love to have you with us on our wedding day.</p>
+
+    <div class="celebration-panel celebration-panel--vinh">
+      <p class="celebration-heading" data-i18n="vinhCelebration">VINH CELEBRATION</p>
+      <div class="event-facts">
+        <div class="fact">
+          <div class="fact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg></div>
+          <div>
+            <span class="fact-label" data-i18n="dateLabel">Date</span>
+            <strong>16.02.2027</strong>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+          <div>
+            <span class="fact-label" data-i18n="timeLabel">Time</span>
+            <strong>11:00</strong>
+          </div>
+        </div>
+        <div class="fact location-fact">
+          <div class="fact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <div>
+            <span class="fact-label" data-i18n="locationLabel">Venue</span>
+            <strong data-i18n="vinhVenue">Diamond Palace</strong>
+            <small data-i18n="vinhCity">Nghe An Province, Vietnam</small>
+          </div>
+        </div>
+      </div>
+      <div class="celebration-links">
+        <a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Diamond+Palace+9+Ho+Tung+Mau+Vinh+Nghe+An+Vietnam&amp;query_place_id=ChIJ3fLn3-zPOTERuhiOadFgFDk" target="_blank" rel="noopener" data-i18n="vinhDirections">🚙💨 Directions to Diamond Palace</a>
+        <div class="calendar-action">
+          <a class="text-link" href="https://linhthangwedding.github.io/assets/linh-thang-wedding-vinh.ics" download="Linh-Thang-Wedding-Vinh.ics" data-i18n="saveDate">Add to calendar (open in Safari/Chrome)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="celebration-panel celebration-panel--hcm">
+      <p class="celebration-heading" data-i18n="hcmCelebration">HO CHI MINH CITY CELEBRATION</p>
+      <div class="event-facts">
+        <div class="fact">
+          <div class="fact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg></div>
+          <div>
+            <span class="fact-label" data-i18n="dateLabel">Date</span>
+            <strong>28.02.2027</strong>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+          <div>
+            <span class="fact-label" data-i18n="timeLabel">Time</span>
+            <strong>11:00</strong>
+          </div>
+        </div>
+        <div class="fact location-fact">
+          <div class="fact-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+          <div>
+            <span class="fact-label" data-i18n="locationLabel">Venue</span>
+            <strong>Capella Parkview</strong>
+            <small data-i18n="city">Ho Chi Minh City, Vietnam</small>
+          </div>
+        </div>
+      </div>
+      <div class="celebration-links">
+        <a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Capella+Parkview+Ho+Chi+Minh+City" target="_blank" rel="noopener" data-i18n="hcmDirections">🚙💨 Directions to Capella Parkview</a>
+        <div class="calendar-action">
+          <a class="text-link" href="https://linhthangwedding.github.io/assets/linh-thang-wedding.ics" download="Linh-Thang-Wedding.ics" data-i18n="saveDate">Add to calendar (open in Safari/Chrome)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="invite-actions celebration-rsvp-action">
+      <a class="btn primary" href="#rsvp" data-i18n="rsvpButton">Let us know</a>
+    </div>
+  </section>
+
+  <section class="story-section" id="story">
+    <figure class="story-origin">
+      <span class="story-origin-art" aria-hidden="true"></span>
+      <figcaption class="sr-only" data-i18n="storyOrigin">Amsterdam — where we met</figcaption>
+    </figure>
+
+
+    <!-- Caption-free demo: replace the three src values after layout approval. -->
+    <div class="polaroid-gallery" role="group" aria-label="Three favorite moments of Linh and Thang">
+      <figure class="polaroid polaroid--one">
+        <div class="polaroid-photo"><img src="assets/polaroid-couple-20261106.jpg" alt="Linh and Thang together" data-i18n-alt="storyPhotoCoupleAlt" width="1436" height="2048" loading="lazy" decoding="async"></div>
+        <button class="photo-heart" type="button" data-photo-heart="keukenhof" aria-label="Like this photo" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><span class="photo-heart-count">—</span></button>
+      </figure>
+      <figure class="polaroid polaroid--two">
+        <div class="polaroid-photo"><img src="assets/polaroid-rotterdam.jpeg?v=20261102b" onerror="this.onerror=null;this.src='assets/louvre.jpeg'" alt="Linh and Thang in Rotterdam" loading="lazy" decoding="async"></div>
+        <button class="photo-heart" type="button" data-photo-heart="rotterdam" aria-label="Like this photo" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><span class="photo-heart-count">—</span></button>
+      </figure>
+      <figure class="polaroid polaroid--three">
+        <div class="polaroid-photo"><img src="assets/polaroid-zaandam-20261104.jpg" alt="Linh and Thang in Zaandam" data-i18n-alt="storyPhotoZaandamAlt" width="2048" height="1536" loading="lazy" decoding="async"></div>
+        <button class="photo-heart" type="button" data-photo-heart="zaandam" aria-label="Like this photo" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><span class="photo-heart-count">—</span></button>
+      </figure>
+    </div>
+    <p id="photoHeartStatus" class="photo-heart-status" role="status" aria-live="polite"></p>
+
+    <section class="guestbook" id="guestbook" aria-labelledby="guestbookTitle">
+      <h2 class="guestbook-title" id="guestbookTitle" data-gb-copy="title">OUR GUESTBOOK</h2>
+      <p class="guestbook-intro" data-gb-copy="intro">A wish, a memory, or a few words for our next chapter.</p>
+      <div class="guestbook-divider" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
+      <p class="guestbook-state" id="guestbookState" role="status">Opening our guestbook…</p>
+      <div class="guestbook-list" id="guestbookList" role="region" tabindex="0" aria-label="Wishes for Linh and Thang"></div>
+      <p class="guestbook-scroll-hint" id="guestbookScrollHint" data-gb-copy="scroll" hidden>Scroll inside the guestbook to read more</p>
+      <div class="guestbook-actions">
+        <button type="button" class="guestbook-retry" id="guestbookRetry" data-gb-copy="retry" hidden>Try again</button>
+        <button type="button" class="guestbook-more" id="guestbookMore" data-gb-copy="more" hidden>Read more wishes</button>
+        <button type="button" class="btn primary guestbook-open" id="guestbookOpen" aria-haspopup="dialog" aria-controls="guestbookDialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 3l5 5M9 15l4-1L22 5l-4-4-9 9-1 5Z"/></svg>
+          <span data-gb-copy="open">Leave a wish</span>
+        </button>
+      </div>
+    </section>
+
+
+    <div class="story-small-doodles" aria-hidden="true">
+      <span class="story-doodle story-doodle-hearts"></span>
+      <span class="story-doodle story-doodle-letter"></span>
+      <span class="story-doodle story-doodle-sparkles"></span>
+    </div>
+
+
+  </section>
+
+  <section class="rsvp-section" id="rsvp">
+    <div class="rsvp-head">
+      <p class="section-kicker" data-i18n="rsvpTitle">CAN YOU MAKE IT?</p>
+      <p id="rsvpIntro" data-i18n="rsvpIntro">We really hope you can join us! Let us know below so we can plan for you.</p>
+      <p class="rsvp-deadline" data-i18n="rsvpDeadline">Please RSVP by Wednesday, 10th Feb 2027,
+at 11:59 PM (VN time) or 5:59 PM (EU time).</p>
+    </div>
+
+    <div id="rsvpClosedPanel" class="rsvp-closed-panel hidden" role="status" aria-live="polite">
+      <p id="rsvpClosedMessage"></p>
+      <p id="rsvpSeeYou" class="rsvp-see-you hidden" data-i18n="rsvpSeeYou">See you at our</p>
+      <p id="rsvpVenueSummary" class="rsvp-venue-summary hidden"></p>
+      <p id="rsvpSignoff" class="rsvp-signoff hidden" data-i18n="rsvpSignoff">With love,
+Linh &amp; Thang ♡</p>
+      <div id="rsvpEditControls" class="rsvp-edit-controls hidden">
+        <p data-i18n="rsvpEditHint">Plans changed? You can update your RSVP until February 10, 2027, at 11:59 PM (Vietnam time) / 5:59 PM (CET).</p>
+      </div>
+      <div id="rsvpActionRow" class="rsvp-action-row hidden">
+        <button type="button" id="rsvpEditButton" class="btn ghost hidden" data-i18n="rsvpEditButton">Update my RSVP</button>
+        <div id="rsvpCalendarAction" class="calendar-action rsvp-calendar-action hidden">
+          <a id="rsvpCalendarButton" class="btn primary rsvp-calendar-button hidden" href="https://linhthangwedding.github.io/assets/linh-thang-wedding.ics" download="Linh-Thang-Wedding.ics" data-i18n="rsvpCalendarButton">Add to calendar (open in Safari/Chrome)</a>
+        </div>
+      </div>
+    </div>
+
+    <form id="rsvpForm" class="rsvp-form">
+      <input type="hidden" name="event" value="hcm">
+      <input type="hidden" name="invite" id="rsvpInvite" value="">
+      <p id="rsvpGuestSummary" class="rsvp-invitee hidden" aria-live="polite">
+        <span data-i18n="guestSummaryLabel">Replying for</span>
+        <strong id="rsvpGuestName"></strong>
+      </p>
+
+      <fieldset>
+        <legend data-i18n="attendingQ">Will you be joining us?</legend>
+        <div class="choice-row">
+          <label class="choice"><input type="radio" name="attending" value="yes" required><span data-i18n="yes">Yes, I'll be there!</span></label>
+          <label class="choice"><input type="radio" name="attending" value="no" required><span data-i18n="no">Sorry, I can't</span></label>
+        </div>
+      </fieldset>
+
+      <div id="yesBranch" class="branch hidden">
+        <fieldset id="rsvpVenueFieldset" disabled>
+          <legend data-i18n="venueQuestion">Which celebration will you be joining?</legend>
+          <div class="choice-row">
+            <label class="choice"><input type="radio" name="venue" value="Vinh" required disabled><span data-i18n="venueVinh">Nghe An</span></label>
+            <label class="choice"><input type="radio" name="venue" value="HCM" required disabled><span data-i18n="venueHCM">Ho Chi Minh City</span></label>
+          </div>
+        </fieldset>
+        <label>
+          <span data-i18n="partySize">How many are coming (including you)?</span>
+          <input type="number" name="party_size" min="1" max="10" step="1" value="1" inputmode="numeric" disabled>
+          <small class="party-help" data-i18n="partySizeHelp">Please include yourself in the total.</small>
+          <span class="party-summary" id="partyConfirmation" aria-live="polite"></span>
+        </label>
+      </div>
+
+      <div id="noBranch" class="branch hidden">
+        <div class="decline-message">
+          <p id="declineMessage" aria-live="polite"></p>
+          <p class="rsvp-signoff" data-i18n="rsvpSignoff">With love,
+Linh &amp; Thang ♡</p>
+        </div>
+        <textarea name="wishes" rows="4" aria-label="A little note or wish for Linh & Thang" data-i18n-aria-label="wishes" data-i18n-placeholder="wishesPlaceholder" placeholder="Leave us a little wish, if you'd like..."></textarea>
+      </div>
+
+      <button class="btn primary full" type="submit" data-i18n="submit">Send my RSVP</button>
+      <button id="rsvpCancelEdit" class="btn ghost rsvp-cancel-edit hidden" type="button" data-i18n="rsvpCancelEdit">Back to my RSVP</button>
+      <p id="formStatus" class="form-status" role="status"></p>
+    </form>
+  </section>
+
+  <footer>
+    <p>Linh &amp; Thang · 2027</p>
+  </footer>
+</main>
+
+<dialog class="guestbook-dialog" id="guestbookDialog" aria-labelledby="guestbookModalTitle" aria-describedby="guestbookModalIntro">
+  <button class="guestbook-close" type="button" id="guestbookClose" aria-label="Close the wish form"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button>
+  <h2 id="guestbookModalTitle" data-gb-copy="modalTitle">A little note for Linh &amp; Thang</h2>
+  <p class="guestbook-dialog-intro" id="guestbookModalIntro" data-gb-copy="modalIntro">We’d love to read a few words from you.</p>
+  <form class="guestbook-form" id="guestbookForm">
+    <p id="guestbookFeedback" class="guestbook-feedback" role="status" aria-live="polite" hidden></p>
+    <label class="guestbook-field" for="guestbookName"><span data-gb-copy="name">Your name</span>
+      <input id="guestbookName" name="display_name" type="text" autocomplete="name" maxlength="80" required>
+    </label>
+    <label class="guestbook-field" for="guestbookMessage"><span data-gb-copy="message">Your wish</span>
+      <textarea id="guestbookMessage" name="message" rows="4" maxlength="1000" required aria-describedby="guestbookPublicNote"></textarea>
+    </label>
+    <div class="guestbook-field-footer"><output class="guestbook-counter" id="guestbookCounter" for="guestbookMessage" aria-hidden="true">0 / 1000</output></div>
+    <label class="guestbook-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    <p class="guestbook-public-note" id="guestbookPublicNote" data-gb-copy="publicNote">Your name and wish will appear in the guestbook for everyone to read.</p>
+    <button class="btn primary" id="guestbookSend" type="submit" data-gb-copy="send">Send my wish</button>
+  </form>
+</dialog>
+<script src="script.js?v=addressing-copy-20261117"></script>
+<script src="guestbook.js?v=addressing-copy-20261117"></script>
+</body>
+</html>
+
