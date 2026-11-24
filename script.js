@@ -463,6 +463,14 @@ function applyGuestName(value){
 if (inviteCode && (inviteDisplayName || cachedInviteName)) {
   applyGuestName(inviteDisplayName || cachedInviteName);
 }
+// The snapshot can display a name, but never sets inviteReady or enables RSVP.
+if (window.__ltwFastGuestLookup) {
+  window.__ltwFastGuestLookup.then(name => {
+    if (!name || window.__ltwAuthoritativeGuestSettled) return;
+    applyGuestName(name);
+    showInviteNotice(null);
+  });
+}
 function showInviteNotice(key) {
   inviteNotice.dataset.messageKey = key || "";
   inviteNotice.classList.toggle("hidden", !key);
@@ -541,6 +549,7 @@ async function resolveInviteName() {
         ? await window.__ltwEarlyGuestLookup
         : await readRSVPData("guest");
       if (guest && guest.valid === true && typeof guest.name === "string" && guest.name.trim()) {
+        window.__ltwAuthoritativeGuestSettled = true;
         applyGuestName(guest.name);
         cacheVerifiedInviteName(inviteDisplayName);
         const venueBackendReady = guest.venueSupported === true;
@@ -562,6 +571,7 @@ async function resolveInviteName() {
         return;
       }
       if (guest && guest.invalid === true) {
+        window.__ltwAuthoritativeGuestSettled = true;
         clearCachedInviteName();
         // Do not leave an unverified URL-provided name visible on an invalid link.
         inviteDisplayName="";

@@ -27,6 +27,55 @@
   <meta name="twitter:image:alt" content="Linh and Thang's wedding invitation, featuring a watercolour bride and groom on a blue and beige background.">
   <link rel="preconnect" href="https://script.google.com">
   <link rel="dns-prefetch" href="//script.googleusercontent.com">
+  <!-- Load the exact display label from this site's small encrypted snapshot.
+       This is a display hint only. Live guest verification still controls RSVP.
+       The snapshot contains no RSVP responses or plain-text guest directory. -->
+  <script>
+  (() => {
+    const params = new URLSearchParams(location.search);
+    const slug = (params.get("i") || params.get("invite") || "").trim();
+    if (!/^[a-z0-9][a-z0-9-]{1,75}$/.test(slug) || !window.crypto?.subtle) return;
+    window.__ltwFastGuestLookup = (async () => {
+      try {
+        const encoder = new TextEncoder();
+        const digest = value => crypto.subtle.digest("SHA-256", encoder.encode(value));
+        const [response, idBytes, keyBytes] = await Promise.all([
+          fetch("assets/invite-labels-20261124.json", {cache:"no-cache", priority:"high"}),
+          digest(slug), digest("ltw:invite-label:v1:" + slug)
+        ]);
+        if (!response.ok) return "";
+        const snapshot = await response.json();
+        if (snapshot.version !== 1) return "";
+        const id = Array.from(new Uint8Array(idBytes), byte => byte.toString(16).padStart(2, "0")).join("");
+        const record = snapshot.labels?.[id];
+        if (!Array.isArray(record) || record.length !== 2) return "";
+        const bytes = value => Uint8Array.from(atob(value), char => char.charCodeAt(0));
+        const key = await crypto.subtle.importKey("raw", keyBytes, "AES-GCM", false, ["decrypt"]);
+        const plain = await crypto.subtle.decrypt({name:"AES-GCM", iv:bytes(record[0]), additionalData:encoder.encode(slug)}, key, bytes(record[1]));
+        const name = new TextDecoder().decode(plain).trim().slice(0, 120);
+        if (!name || window.__ltwAuthoritativeGuestSettled) return "";
+        window.__ltwFastGuestName = name;
+        const paint = () => {
+          if (window.__ltwAuthoritativeGuestSettled) return;
+          const label = document.getElementById("inviteGuestName");
+          if (label) {
+            label.textContent = name;
+            label.classList.remove("hidden");
+          }
+          const notice = document.getElementById("inviteGuestNotice");
+          if (notice?.dataset.messageKey === "guestLoading") {
+            notice.dataset.messageKey = "";
+            notice.textContent = "";
+            notice.classList.add("hidden");
+          }
+        };
+        paint();
+        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", paint, {once:true});
+        return name;
+      } catch (_) { return ""; } // Unsupported crypto/network: use the existing live lookup.
+    })();
+  })();
+  </script>
   <!-- Begin the private guest lookup as soon as the HTML head is parsed.
        The response is held for script.js?v=repeat-hearts-20261104; no names are embedded in public files. -->
   <script>
@@ -56,6 +105,7 @@
       // Paint the verified guest name as soon as the early lookup returns.
       // Do not wait for the main JavaScript bundle or trust a guessed slug.
       window[callback] = data => {
+        if (data && (data.valid === true || data.invalid === true)) window.__ltwAuthoritativeGuestSettled = true;
         if (data && data.valid === true && typeof data.name === "string" && data.name.trim()) {
           const name = data.name.trim().slice(0, 120);
           const cacheEntry = JSON.stringify({
@@ -150,7 +200,7 @@
       (() => {
         const params = new URLSearchParams(window.location.search);
         const slug = (params.get("i") || params.get("invite") || "").trim();
-        let name = (params.get("to") || "").trim().slice(0, 120);
+        let name = (window.__ltwFastGuestName || params.get("to") || "").trim().slice(0, 120);
         if (!name && /^[a-z0-9][a-z0-9-]{1,75}$/.test(slug)) {
           // Only a name previously verified by our backend is saved locally.
           // Show it before the rest of the page finishes parsing.
@@ -395,7 +445,7 @@ Linh &amp; Thang ♡</p>
     <button class="btn primary" id="guestbookSend" type="submit" data-gb-copy="send">Send my wish</button>
   </form>
 </dialog>
-<script src="script.js?v=addressing-copy-20261117"></script>
+<script src="script.js?v=fast-invite-name-20261124"></script>
 <script src="guestbook.js?v=addressing-copy-20261117"></script>
 </body>
 </html>
